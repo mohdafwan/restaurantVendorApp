@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "742342151590",
+    "project_id": "resturantpager-bf7bb",
+    "storage_bucket": "resturantpager-bf7bb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742342151590:android:83ce8a8148ca7dab08d367",
+        "android_client_info": {
+          "package_name": "com.metascifor.restaurant_vendor_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4spP-xulXjmC98z-eS5ULYJxkf-m5QYU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

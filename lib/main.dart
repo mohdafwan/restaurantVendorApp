@@ -1,6 +1,26 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:restaurant_vendor_app/constants/color_palette.dart';
+import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
+import 'package:restaurant_vendor_app/routes/routes.dart';
+import 'package:restaurant_vendor_app/views/splashScreen/splash_screen.dart';
+import 'controllers/notification/notification_settrings_controller.dart';
+import 'firebase/firebase_api.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  Get.put(NotificationsSettingsController());
+  await FirebaseApi().initNotifications();
+  FirebaseAuth.instance.setLanguageCode('en');
+  Get.put(AuthMethods(), permanent: true);
   runApp(const MyApp());
 }
 
@@ -9,17 +29,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Flutter Demo',
-      home: Scaffold(
-        body: Center(
-          child: Text(
-            'Restaurants vendor app',
-            style: TextStyle(
-              fontSize: 24,
-            ),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: GetMaterialApp(
+        title: "Restaurants vendor app",
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          scaffoldBackgroundColor: backgroundColor,
+          textTheme: GoogleFonts.interTextTheme(
+            Theme.of(context).textTheme,
           ),
         ),
+        home: const SplashScreen(),
+        getPages: AppRoutes.routes,
       ),
     );
   }
