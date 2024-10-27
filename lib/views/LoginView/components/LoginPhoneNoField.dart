@@ -5,19 +5,28 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurant_vendor_app/constants/color_palette.dart';
 import 'package:restaurant_vendor_app/controllers/LoginController/LoginController.dart';
-import 'package:restaurant_vendor_app/widgets/Button.dart';
 
-class PhoneNoField extends StatefulWidget {
-  const PhoneNoField({super.key});
+class LoginPhoneNoField extends StatefulWidget {
+  const LoginPhoneNoField({super.key});
 
   @override
-  State<PhoneNoField> createState() => _PhoneNoFieldState();
+  State<LoginPhoneNoField> createState() => _LoginPhoneNoFieldState();
 }
 
-class _PhoneNoFieldState extends State<PhoneNoField> {
+class _LoginPhoneNoFieldState extends State<LoginPhoneNoField> {
   final controller = Get.find<LoginController>();
+  late TextEditingController phoneNumberInputController;
   final GlobalKey<FormFieldState<String>> _formFieldKey =
       GlobalKey<FormFieldState<String>>();
+
+  @override
+  void initState() {
+    phoneNumberInputController = TextEditingController();
+    phoneNumberInputController.addListener((){
+      setState(() { });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +37,28 @@ class _PhoneNoFieldState extends State<PhoneNoField> {
           validator: (value) => controller.validatePhoneNumber(),
           builder: (state) {
             return Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(
+                  'Phone number',
+                  style: GoogleFonts.inter(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                    color: const Color.fromRGBO(32, 37, 56, 1)
+                  ),
+                ),
+                const SizedBox(height: 13,),
                 Container(
                   height: 38,
                   width: 315,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      width: 1,
+                      color: const Color.fromRGBO(216, 218, 220, 1)
+                    )
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -82,11 +106,11 @@ class _PhoneNoFieldState extends State<PhoneNoField> {
                         const VerticalDivider(),
                         Expanded(
                           child: TextField(
+                            controller: phoneNumberInputController,
                             cursorColor: fontColor,
                             keyboardType: TextInputType.phone,
                             inputFormatters: <TextInputFormatter>[
-                              LengthLimitingTextInputFormatter(10),
-                              FilteringTextInputFormatter.digitsOnly,
+                              PhoneNumberInputFormatter()
                             ],
                             decoration: const InputDecoration(
                               border: InputBorder.none,
@@ -100,6 +124,26 @@ class _PhoneNoFieldState extends State<PhoneNoField> {
                             },
                           ),
                         ),
+                        if(phoneNumberInputController.text.isNotEmpty)
+                        SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: IconButton(
+                            padding: const EdgeInsets.all(0),
+                            onPressed: (){
+                              phoneNumberInputController.clear();
+                            },
+                            style: IconButton.styleFrom(
+                              backgroundColor: const Color.fromRGBO(255, 244, 237, 1),
+                              shape: const CircleBorder()
+                            ),
+                            icon: const Icon(
+                              Icons.close,
+                              size: 16,
+                              color: Color.fromRGBO(68, 82, 117, 1),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -119,15 +163,36 @@ class _PhoneNoFieldState extends State<PhoneNoField> {
             );
           },
         ),
-        const SizedBox(height: 24),
-        SizedBox(
-          width: 315,
-          child: Button(
-            onPressed: () => controller.phoneSignIn(context),
-            text: 'Continue',
-          ),
-        ),
       ],
     );
   }
 }
+
+
+class PhoneNumberInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final text = newValue.text;
+
+    final digitsOnly = text.replaceAll(' ', '');
+
+    if (digitsOnly.length > 10) {
+      return oldValue;
+    }
+    String formattedText;
+    if (digitsOnly.length > 5) {
+      formattedText = '${digitsOnly.substring(0, 5)} ${digitsOnly.substring(5)}';
+    } else {
+      formattedText = digitsOnly;
+    }
+
+    return TextEditingValue(
+      text: formattedText,
+      selection: TextSelection.collapsed(offset: formattedText.length),
+    );
+  }
+}
+

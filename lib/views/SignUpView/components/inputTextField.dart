@@ -1,23 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurant_vendor_app/constants/color_palette.dart';
-import 'package:restaurant_vendor_app/controllers/SignUpController/SignUpController.dart';
 
-class NameField extends StatefulWidget {
-  const NameField({super.key});
+class InputTextField extends StatefulWidget {
+  final String? prefill;
+  final String label;
+  final String? hintText;
+  final String? Function(String?)? validator;
+  final void Function(String)? onChanged;
+  final bool digitsOnly;
+  const InputTextField({
+    super.key,
+    this.prefill,
+    required this.label,
+    this.hintText,
+    this.validator,
+    this.onChanged, 
+    this.digitsOnly = false,
+  });
 
   @override
-  State<NameField> createState() => _NameFieldState();
+  State<InputTextField> createState() => _InputTextFieldState();
 }
 
-class _NameFieldState extends State<NameField> {
+class _InputTextFieldState extends State<InputTextField> {
   late TextEditingController nameController;
-  final controller = Get.find<SignUpController>();
 
   @override
   void initState() {
-    nameController = TextEditingController(text: controller.name ?? "");
+    nameController = TextEditingController(text: widget.prefill ?? "");
     super.initState();
   }
 
@@ -30,13 +42,13 @@ class _NameFieldState extends State<NameField> {
   @override
   Widget build(BuildContext context) {
     return FormField<String>(
-      validator: (value) => controller.validateName(),
+      validator: widget.validator,
       builder: (state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Name",
+              widget.label,
               style: GoogleFonts.inter(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
@@ -49,6 +61,9 @@ class _NameFieldState extends State<NameField> {
               height: 40,
               child: TextFormField(
                 controller: nameController,
+                inputFormatters:widget.digitsOnly? [
+                   FilteringTextInputFormatter.digitsOnly,
+                ] : [],
                 cursorColor: fontColor,
                 style: GoogleFonts.inter(
                   fontSize: 13,
@@ -57,7 +72,7 @@ class _NameFieldState extends State<NameField> {
                 maxLines: 1,
                 textAlignVertical: TextAlignVertical.center,
                 decoration: InputDecoration(
-                  hintText: "Enter your name here",
+                  hintText: widget.hintText,
                   hintStyle: GoogleFonts.inter(
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
@@ -94,9 +109,7 @@ class _NameFieldState extends State<NameField> {
                     vertical: 12,
                   ),
                 ),
-                onChanged: (text) {
-                  controller.updateName(text);
-                },
+                onChanged: widget.onChanged,
               ),
             ),
             if (state.hasError)

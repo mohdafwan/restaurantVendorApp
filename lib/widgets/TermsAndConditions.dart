@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:restaurant_vendor_app/constants/ColorPalette.dart';
 
 class TermsAndConditons extends StatelessWidget {
   const TermsAndConditons({super.key});
@@ -13,22 +12,20 @@ class TermsAndConditons extends StatelessWidget {
       text: TextSpan(
         text: 'By creating an account or signing in, you\n agree to our ',
         style: GoogleFonts.inter(
-          textStyle: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
-            height: 1.25,
-            color: Color.fromRGBO(0, 0, 0, 0.7),
-          ),
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          height: 1.25,
+          color: const Color.fromRGBO(0, 0, 0, 0.7),
         ),
         children: [
           TextSpan(
             text: 'Terms and Conditions',
             style: GoogleFonts.inter(
               textStyle: const TextStyle(
-                fontSize: 12,
+                fontSize: 14,
                 fontWeight: FontWeight.w600,
                 decoration: TextDecoration.underline,
-                color: fontColor,
+                color: Color.fromRGBO(66, 133, 244, 1),
                 height: 1.21,
               ),
             ),

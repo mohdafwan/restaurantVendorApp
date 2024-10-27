@@ -30,30 +30,16 @@ class SplashScreenController extends GetxController {
             // User data found, navigate to dashboard
             // todo : send fcm token to backend
             Get.offAllNamed('/dashboard');
-          } else if (userController.phoneNumber != null) {
-            final res = authMethods.fetchUserAccounts();
-            // if user's phone number is linked to multiple account
-            if (res.message == 'success' && res.data.length > 1) {
-              Get.to(() => LinkAccountPage(accounts: res.data));
-            }
-            // Error retrieving user data, navigate to sign up page to get details and register at backend
+          } else{
+            // go to signup route
             Get.offAllNamed('/signup');
-          } else {
-            Get.off(() => const UpdateNumberDetails(title: "Add Phone Number"));
           }
         } catch (error) {
           if (kDebugMode) debugPrint('Error fetching user data: $error');
           Get.offAllNamed('/login');
         }
       } else {
-        if (authMethods.loggedIn) {
-          authMethods.loggedIn = false;
-          // show login page after logging out
-          Get.offAllNamed('/login');
-        } else {
-          // new user
-          Get.offAllNamed('/boarding_screens');
-        }
+        Get.offAllNamed('/login');
       }
     });
   }

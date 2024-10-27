@@ -31,7 +31,7 @@ class _DateFieldState extends State<DateField> {
   @override
   Widget build(BuildContext context) {
     return FormField<String>(
-      validator: (value) => controller.validateDOB(),
+      validator: (value) => controller.validate(value: controller.dateOfBirth,message: "Please provide date of birth"),
       builder: (state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,

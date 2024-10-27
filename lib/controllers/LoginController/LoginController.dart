@@ -2,12 +2,12 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:restaurant_vendor_app/controllers/UserController/UserController.dart';
 import 'package:restaurant_vendor_app/controllers/PhoneNumberController/PhoneNumberController.dart';
-import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
-import 'package:restaurant_vendor_app/utils/toastMessage.dart';
 import 'package:restaurant_vendor_app/views/OTPView/otpPage.dart';
+// import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
+// import 'package:restaurant_vendor_app/utils/toastMessage.dart';
 
 class LoginController extends GetxController {
-  final _authMethods = Get.find<AuthMethods>();
+  // final _authMethods = Get.find<AuthMethods>();
   final userController = Get.find<UserController>();
   PhoneNumberController phoneNumberController =
       Get.put(PhoneNumberController(), permanent: true);
@@ -19,7 +19,7 @@ class LoginController extends GetxController {
   bool get isButtonDisabled => phoneNumberController.isButtonDisabled.value;
 
   void updatePhoneNumber(String number) {
-    phoneNumberController.updatePhoneNumber(number);
+    phoneNumberController.updatePhoneNumber(number.replaceAll(" ", ""));
   }
 
   void setSelectedCountryCode(String countryCode) {
@@ -36,14 +36,14 @@ class LoginController extends GetxController {
     Get.to(() => const OtpPageView());
   }
 
-  void googleSignIn(BuildContext context) async {
-    debugPrint("inside google sign in");
-    final res = await _authMethods.signInWithGoogle();
-    if (res.message != "success") {
-      debugPrint("google sign in error : ${res.message}");
-      if (context.mounted) {
-        showToastMessage(context, res.message!);
-      }
-    }
-  }
+  // void googleSignIn(BuildContext context) async {
+  //   debugPrint("inside google sign in");
+  //   final res = await _authMethods.signInWithGoogle();
+  //   if (res.message != "success") {
+  //     debugPrint("google sign in error : ${res.message}");
+  //     if (context.mounted) {
+  //       showToastMessage(context, res.message!);
+  //     }
+  //   }
+  // }
 }

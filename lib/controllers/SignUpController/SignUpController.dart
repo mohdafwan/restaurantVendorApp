@@ -14,8 +14,9 @@ import 'package:restaurant_vendor_app/utils/imagePicker.dart';
 
 class SignUpController extends GetxController {
   var signUpModel = SignUpModel().obs;
+  final RxInt _page = 0.obs;
   PhoneNumberController phoneNumberController =
-      Get.find<PhoneNumberController>();
+      Get.put(PhoneNumberController());
   EmailController emailController = Get.put(EmailController(), permanent: true);
   final _authMethods = Get.find<AuthMethods>();
   final userController = Get.find<UserController>();
@@ -32,6 +33,7 @@ class SignUpController extends GetxController {
     signUpModel.value.email = emailController.emailAddress;
   }
 
+  int get page => _page.value;
   String? get emailAdress => emailController.emailAddress;
   String? get phoneNumber => phoneNumberController.phoneNumber;
   String? get countryCode => signUpModel.value.phoneNumber!.countryCode;
@@ -42,6 +44,15 @@ class SignUpController extends GetxController {
   File? get profilePic => signUpModel.value.profilePic;
   bool? get whatsAppMessagePreference =>
       signUpModel.value.sendMessageViaWhatsApp;
+  String? get restaurantName => signUpModel.value.restaurantName;
+  String? get address1 => signUpModel.value.address1;
+  String? get address2 => signUpModel.value.address2;
+  String? get city => signUpModel.value.city;
+  String? get country => signUpModel.value.country;
+  String? get state => signUpModel.value.state;
+  set page(int value){
+    _page.value = value;
+  }
 
   Future<void> selectImage() async {
     final file = await pickImage(ImageSource.gallery);
@@ -89,10 +100,9 @@ class SignUpController extends GetxController {
       Get.offAllNamed('/login');
     }
   }
-
-  String? validateName() {
-    if (signUpModel.value.name == null || signUpModel.value.name!.isEmpty) {
-      return "Name can't be empty";
+  String? validate({required String? value,required String message}){
+    if(value == null || value.isEmpty){
+      return message;
     }
     return null;
   }
@@ -108,20 +118,6 @@ class SignUpController extends GetxController {
     return null;
   }
 
-  String? validateDOB() {
-    if (signUpModel.value.dateOfBirth == null ||
-        signUpModel.value.dateOfBirth!.isEmpty) {
-      return "Please Mention Your DOB";
-    }
-    return null;
-  }
-
-  void updateName(String name) {
-    signUpModel.update((model) {
-      model?.name = name;
-    });
-  }
-
   Future<void> selectDateOfBirth(BuildContext context) async {
     DateTime initialDate = DateTime.now();
     DateTime firstDate = DateTime(1900);
@@ -132,6 +128,16 @@ class SignUpController extends GetxController {
       initialDate: initialDate,
       firstDate: firstDate,
       lastDate: lastDate,
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            primaryColor: const Color.fromRGBO(253, 71, 18, 1),
+            colorScheme: const ColorScheme.light(primary: Color.fromRGBO(253, 71, 18, 1)),
+            buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+          ),
+          child: child ?? Container(),
+        );
+      },
     );
 
     if (picked != null && picked != initialDate) {
@@ -141,19 +147,41 @@ class SignUpController extends GetxController {
     }
   }
 
-  void updateGender(String? gender) {
-    signUpModel.update((model) {
-      model?.gender = gender;
-    });
-  }
-
-  void updateEmail(String email) {
-    emailController.updateEmailAddress(email);
-  }
-
-  void updateMessagePreferences(bool value) {
-    signUpModel.update((model) {
-      model?.sendMessageViaWhatsApp = value;
-    });
+  void updateDetails({
+    String? name,
+    String? dateOfBirth,
+    String? gender,
+    PhoneNumberModel? phoneNumber,
+    String? email,
+    bool sendMessageViaWhatsApp = false,
+    File? profilePic,
+    String? address1,
+    String? address2,
+    String? pinCode,
+    String? city,
+    String? state,
+    String? country,
+    String? restaurantName,
+  }) {
+    final newModel = signUpModel.value.copyWith(
+      name: name,
+      dateOfBirth: dateOfBirth,
+      gender: gender,
+      phoneNumber: phoneNumber,
+      email: email,
+      sendMessageViaWhatsApp: sendMessageViaWhatsApp,
+      profilePic: profilePic,
+      address1: address1,
+      address2: address2,
+      pinCode: pinCode,
+      city: city,
+      state: state,
+      country: country,
+      restaurantName: restaurantName
+    );
+    if(email != null) emailController.updateEmailAddress(email);
+    if(phoneNumber != null) phoneNumberController.updatePhoneNumber(phoneNumber.phoneNumber!);
+    
+    signUpModel.value = newModel;
   }
 }

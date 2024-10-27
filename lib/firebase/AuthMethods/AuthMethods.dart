@@ -342,7 +342,7 @@ class AuthMethods {
       };
 
       final response = await _dio.post(
-        '${routes['update_user']!}/${userController.id}',
+        '${routes['update_user']!}${userController.id}/',
         data: data,
       );
 

@@ -30,7 +30,6 @@ class _OtpPageViewState extends State<OtpPageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: backgroundColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

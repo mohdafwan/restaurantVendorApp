@@ -55,7 +55,7 @@ class GenderField extends StatelessWidget {
                   dropdownColor: backgroundColor,
                   borderRadius: BorderRadius.circular(8),
                   onChanged: (String? newValue) {
-                    controller.updateGender(newValue);
+                    controller.updateDetails(gender: newValue);
                     state.didChange(newValue); // Update FormField state
                   },
                   items: genders.map<DropdownMenuItem<String>>((String value) {
