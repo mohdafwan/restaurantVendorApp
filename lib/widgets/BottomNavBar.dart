@@ -15,7 +15,20 @@ class BottomNavBar extends StatefulWidget {
 
 class _BottomNavBarState extends State<BottomNavBar> {
   final dashController = Get.find<DashboardController>();
+  FocusNode focusNode = FocusNode();
   bool showOptions = false;
+
+  @override
+  void initState() {
+    focusNode.addListener(() {
+      if (showOptions) {
+        setState(() {
+          showOptions = focusNode.hasFocus;
+        });
+      }
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -167,6 +180,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
           child: GestureDetector(
             onTap: () {
               setState(() {
+                focusNode.requestFocus();
                 showOptions = !showOptions;
               });
             },
@@ -201,49 +215,52 @@ class _BottomNavBarState extends State<BottomNavBar> {
   }
 
   Widget OptionContainer() {
-    return Container(
-      width: 239,
-      height: 252,
-      padding: const EdgeInsets.all(28),
-      decoration: BoxDecoration(
-        color: const Color.fromRGBO(255, 255, 255, 1),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: Color.fromRGBO(100, 52, 248, 0.15),
-            offset: Offset(1.5, 2.99), 
-            blurRadius: 8.98,
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Option(
-            onTap: () {},
-            svg: 'assets/images/qrCode.svg',
-            label: 'QR Code',
-          ),
-          const SizedBox(height: 16,),
-          Option(
-            onTap: () {},
-            svg: 'assets/images/card.svg',
-            label: 'Unique ID',
-          ),
-          const SizedBox(height: 16,),
-          Option(
-            onTap: () {},
-            svg: 'assets/images/phone.svg',
-            label: 'Mobile Number',
-          ),
-          const SizedBox(height: 16,),
-          Option(
-            onTap: () {},
-            svg: 'assets/images/mail.svg',
-            label: 'Mail id',
-          ),
-        ],
+    return Focus(
+      focusNode: focusNode,
+      child: Container(
+        width: 239,
+        height: 252,
+        padding: const EdgeInsets.all(28),
+        decoration: BoxDecoration(
+          color: const Color.fromRGBO(255, 255, 255, 1),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [
+            BoxShadow(
+              color: Color.fromRGBO(100, 52, 248, 0.15),
+              offset: Offset(1.5, 2.99), 
+              blurRadius: 8.98,
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Option(
+              onTap: () {},
+              svg: 'assets/images/qrCode.svg',
+              label: 'QR Code',
+            ),
+            const SizedBox(height: 16,),
+            Option(
+              onTap: () {},
+              svg: 'assets/images/card.svg',
+              label: 'Unique ID',
+            ),
+            const SizedBox(height: 16,),
+            Option(
+              onTap: () {},
+              svg: 'assets/images/phone.svg',
+              label: 'Mobile Number',
+            ),
+            const SizedBox(height: 16,),
+            Option(
+              onTap: () {},
+              svg: 'assets/images/mail.svg',
+              label: 'Mail id',
+            ),
+          ],
+        ),
       ),
     );
   }
