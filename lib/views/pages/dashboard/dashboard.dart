@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:restaurant_vendor_app/controllers/dashboard_controller/dashboard_controller.dart';
-import 'package:restaurant_vendor_app/views/EditProfileView/EditProfilePage.dart';
-import 'package:restaurant_vendor_app/views/main_screens/history_screen/history_screen.dart';
-import 'package:restaurant_vendor_app/views/main_screens/home_screen/home_screen.dart';
-import 'package:restaurant_vendor_app/views/setting/setting_page.dart';
-import 'package:restaurant_vendor_app/views/tickets/raise_ticket.dart';
-import 'package:restaurant_vendor_app/widgets/custom_bottomNavbar.dart';
+import 'package:restaurant_vendor_app/views/main_screens/home_screen/homePage.dart';
+import 'package:restaurant_vendor_app/widgets/BottomNavBar.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({super.key});
@@ -17,19 +13,11 @@ class Dashboard extends StatelessWidget {
       return Scaffold(
         body: IndexedStack(
           index: controller.tabIndex.value,
-          children: [
-            const HomeScreen(),
-            OrderHistoryView(),
-            const SettingsPagex(),
-            const EditProfilePage(),
-            OrderHistoryView(),
-            const SubmitIssuePage(),
+          children: const [
+            HomePage(),
           ],
         ),
-        bottomNavigationBar: CustomBottomNavBar(
-          selectedIndex: controller.tabIndex.value,
-          onItemTapped: controller.changeTabIndex,
-        ),
+        bottomNavigationBar: const BottomNavBar(), // uncomment order and profile onTap when they are created in navBar
       );
     });
   }

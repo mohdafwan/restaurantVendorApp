@@ -75,6 +75,7 @@ class OTPController extends GetxController {
   }
 
   Future<void> sendOTPtoEmail() async {
+    pinputController.clear();
     final res = await _authMethods
         .sentOTPtoEmail(Get.find<EmailController>().emailAddress!);
     if (res.message == "success") {
@@ -87,6 +88,7 @@ class OTPController extends GetxController {
   }
 
   Future<void> resendOTPtoPhone(BuildContext context) async {
+    pinputController.clear();
     _authMethods.sentOTPtoPhone(
         phoneController.getE164FormattedPhoneNumber(), resendToken, context);
   }

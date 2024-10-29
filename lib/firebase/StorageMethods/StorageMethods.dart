@@ -27,4 +27,25 @@ class StorageMethods {
     }
     return ResponseModel(message: res, data: downloadUrl);
   }
+
+
+    Future<ResponseModel> uploadRestaurantPic({required File file}) async {
+    String res = "some error occured";
+    String? downloadUrl;
+    try {
+      // creating location to our firebase storage
+      Reference ref =
+          _storage.ref().child("restaurant_pics").child(_auth.currentUser!.uid);
+
+      // putting in `File` format -> Upload task like a future but not future
+      UploadTask uploadTask = ref.putFile(file);
+
+      TaskSnapshot snapshot = await uploadTask;
+      downloadUrl = await snapshot.ref.getDownloadURL();
+      res = "success";
+    } catch (error) {
+      res = error.toString();
+    }
+    return ResponseModel(message: res, data: downloadUrl);
+  }
 }

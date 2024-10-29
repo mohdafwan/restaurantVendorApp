@@ -1,10 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:restaurant_vendor_app/controllers/UserController/UserController.dart';
 import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
 import 'package:restaurant_vendor_app/models/ResponseModel/ResponseModel.dart';
-import 'package:restaurant_vendor_app/views/LinkAccountPage/LinkAccountPage.dart';
-import 'package:restaurant_vendor_app/views/UpdateNumberDetails/UpdateNumberDetails.dart';
 
 class SplashScreenController extends GetxController {
   @override
@@ -18,7 +15,7 @@ class SplashScreenController extends GetxController {
         const Duration(seconds: 5)); // will remove in production
 
     final authMethods = Get.find<AuthMethods>();
-    final userController = Get.find<UserController>();
+
 
     // Listen to auth state changes
     authMethods.authChanges.listen((user) async {
@@ -27,7 +24,7 @@ class SplashScreenController extends GetxController {
         try {
           final ResponseModel response = await authMethods.getUserData();
           if (response.message == "success") {
-            // User data found, navigate to dashboard
+            // get restaurent data 
             // todo : send fcm token to backend
             Get.offAllNamed('/dashboard');
           } else{

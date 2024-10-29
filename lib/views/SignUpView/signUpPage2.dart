@@ -4,6 +4,7 @@ import 'package:restaurant_vendor_app/controllers/SignUpController/SignUpControl
 import 'package:restaurant_vendor_app/views/SignUpView/components/inputTextField.dart';
 import 'package:restaurant_vendor_app/views/SignUpView/components/profilePic.dart';
 import 'package:restaurant_vendor_app/views/SignUpView/components/CustomCountryStateCityPackage.dart';
+import 'package:restaurant_vendor_app/views/VerifyEmailUsingOTP/VerifyEmailUsingOTP.dart';
 import 'package:restaurant_vendor_app/widgets/TermsAndConditions.dart';
 import 'package:restaurant_vendor_app/widgets/Button.dart';
 
@@ -30,7 +31,7 @@ class _SignUpPage2State extends State<SignUpPage2> {
 
   void _submitForm() {
     if (!_formKey.currentState!.validate()) return;
-    controller.page = 1;
+    Get.to(()=>const VerifyEmailUsingOTP());
   }
 
   @override

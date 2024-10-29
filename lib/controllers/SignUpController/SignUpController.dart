@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:restaurant_vendor_app/controllers/EmailController/EmailController.dart';
 import 'package:restaurant_vendor_app/controllers/PhoneNumberController/PhoneNumberController.dart';
+import 'package:restaurant_vendor_app/controllers/RestaurantController/RestaurantController.dart';
 import 'package:restaurant_vendor_app/controllers/UserController/UserController.dart';
 import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
 import 'package:restaurant_vendor_app/firebase/StorageMethods/StorageMethods.dart';
@@ -50,6 +51,7 @@ class SignUpController extends GetxController {
   String? get city => signUpModel.value.city;
   String? get country => signUpModel.value.country;
   String? get state => signUpModel.value.state;
+  String? get pinCode => signUpModel.value.pinCode;
   set page(int value){
     _page.value = value;
   }
@@ -66,11 +68,12 @@ class SignUpController extends GetxController {
         phoneNumberController.phoneNumberModel.value;
     signUpModel.value.email = emailController.emailAddress;
     final userData = Get.find<UserController>();
+    final restaurentController = Get.find<RestaurantController>();
 
     // upload profile pic to firebase if provided
     String? downloadUrl;
     if (profilePic != null) {
-      final res = await StorageMethods().uploadProfilePic(file: profilePic!);
+      final res = await StorageMethods().uploadRestaurantPic(file: profilePic!);
       if (res.message == "success") {
         downloadUrl = res.data;
       } else {
@@ -85,18 +88,33 @@ class SignUpController extends GetxController {
       dateOfBirth: dateOfBirth,
       gender: gender,
       phone: phoneNumberController.phoneNumberModel.value,
-      profilePic: downloadUrl,
+      profilePic: null,
       email: emailAdress,
       whatsAppMessagePreference: whatsAppMessagePreference,
+    );
+
+    restaurentController.updateRestaurantDetails(
+      address1: address1,
+      address2: address2,
+      pinCode: pinCode,
+      city: city,
+      country: country,
+      state: state,
+      restaurantName: restaurantName,
+      photoUrl: downloadUrl
     );
 
     // storing user data in backend
     final res = await _authMethods.createAccount(userData.user);
     if (res.message == "success") {
-      Get.offAllNamed('/dashboard');
+      final res2 = await _authMethods.createRestaurentAccount(restaurentController.current);
+      if(res2.message == 'success'){
+        Get.offAllNamed('/dashboard');
+      }
     } else {
       if (kDebugMode) debugPrint(res.message!);
       userData.clearUserData();
+      restaurentController.clearData();
       Get.offAllNamed('/login');
     }
   }
