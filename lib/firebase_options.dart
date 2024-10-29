@@ -41,48 +41,55 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDCUrI2q5lp6rA_UFCBjJ5kyLtSZQWioo4',
-    appId: '1:742342151590:web:5f4a25bf1388dd7208d367',
-    messagingSenderId: '742342151590',
-    projectId: 'resturantpager-bf7bb',
-    authDomain: 'resturantpager-bf7bb.firebaseapp.com',
-    storageBucket: 'resturantpager-bf7bb.appspot.com',
-    measurementId: 'G-TN8WP6Z90X',
+    apiKey: 'AIzaSyD9ZCxE2Pkd_5JKaFEgrQBwPsy74EUv0gg',
+    appId: '1:343106123773:web:19294f15dc3bbec63c8b94',
+    messagingSenderId: '343106123773',
+    projectId: 'restaurants-vendor-app',
+    authDomain: 'restaurants-vendor-app.firebaseapp.com',
+    databaseURL: 'https://restaurants-vendor-app-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'restaurants-vendor-app.appspot.com',
+    measurementId: 'G-QHJNPMB55K',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyB4spP-xulXjmC98z-eS5ULYJxkf-m5QYU',
-    appId: '1:742342151590:android:83ce8a8148ca7dab08d367',
-    messagingSenderId: '742342151590',
-    projectId: 'resturantpager-bf7bb',
-    storageBucket: 'resturantpager-bf7bb.appspot.com',
+    apiKey: 'AIzaSyCviKf9CBwvjF5pjKsTVzVFiCbvyRfyTVU',
+    appId: '1:343106123773:android:774726fb7ea88c343c8b94',
+    messagingSenderId: '343106123773',
+    projectId: 'restaurants-vendor-app',
+    databaseURL: 'https://restaurants-vendor-app-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'restaurants-vendor-app.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCOKmahV05HwJLixsrR4Nq11dwicHiyxEY',
-    appId: '1:742342151590:ios:2f78e0588af1242a08d367',
-    messagingSenderId: '742342151590',
-    projectId: 'resturantpager-bf7bb',
-    storageBucket: 'resturantpager-bf7bb.appspot.com',
-    iosBundleId: 'com.example.restuarantPagerApp',
+    apiKey: 'AIzaSyDLq7j4vPZvIHTP4GbNF-sJ6Qmu_AamCnw',
+    appId: '1:343106123773:ios:b6a186e71b12fe243c8b94',
+    messagingSenderId: '343106123773',
+    projectId: 'restaurants-vendor-app',
+    databaseURL: 'https://restaurants-vendor-app-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'restaurants-vendor-app.appspot.com',
+    iosClientId: '343106123773-ciju0d0u693h0sne3atkcslgbjfuat54.apps.googleusercontent.com',
+    iosBundleId: 'com.metascifor.restaurantVendorApp',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCOKmahV05HwJLixsrR4Nq11dwicHiyxEY',
-    appId: '1:742342151590:ios:2f78e0588af1242a08d367',
-    messagingSenderId: '742342151590',
-    projectId: 'resturantpager-bf7bb',
-    storageBucket: 'resturantpager-bf7bb.appspot.com',
+    apiKey: 'AIzaSyDLq7j4vPZvIHTP4GbNF-sJ6Qmu_AamCnw',
+    appId: '1:343106123773:ios:d777cdf8c2332a3b3c8b94',
+    messagingSenderId: '343106123773',
+    projectId: 'restaurants-vendor-app',
+    databaseURL: 'https://restaurants-vendor-app-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'restaurants-vendor-app.appspot.com',
+    iosClientId: '343106123773-nb2rb9tom6fokkkhq5lv4dvml2jc6g1u.apps.googleusercontent.com',
     iosBundleId: 'com.example.restuarantPagerApp',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDCUrI2q5lp6rA_UFCBjJ5kyLtSZQWioo4',
-    appId: '1:742342151590:web:7df497b1fe50023f08d367',
-    messagingSenderId: '742342151590',
-    projectId: 'resturantpager-bf7bb',
-    authDomain: 'resturantpager-bf7bb.firebaseapp.com',
-    storageBucket: 'resturantpager-bf7bb.appspot.com',
-    measurementId: 'G-SH5QXH55LK',
+    apiKey: 'AIzaSyD9ZCxE2Pkd_5JKaFEgrQBwPsy74EUv0gg',
+    appId: '1:343106123773:web:ce92e14521e4d91a3c8b94',
+    messagingSenderId: '343106123773',
+    projectId: 'restaurants-vendor-app',
+    authDomain: 'restaurants-vendor-app.firebaseapp.com',
+    databaseURL: 'https://restaurants-vendor-app-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'restaurants-vendor-app.appspot.com',
+    measurementId: 'G-2179SRNZ92',
   );
 }

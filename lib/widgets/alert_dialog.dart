@@ -34,11 +34,12 @@ class ReusableAlertDialog extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: backgroundColor ?? Colors.orange[100], // Default light orange
+          color: backgroundColor ?? Colors.orange[50], // Default light orange
           borderRadius: BorderRadius.circular(20.0),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -51,7 +52,7 @@ class ReusableAlertDialog extends StatelessWidget {
                     Text(
                       title,
                       style: TextStyle(
-                        fontSize: sizex ?? 18,
+                        fontSize: sizex ?? 14,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -63,12 +64,12 @@ class ReusableAlertDialog extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
+                      color: Colors.grey.shade100,
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
                       Icons.close,
-                      size: 16,
+                      size: 14,
                       color: Colors.black,
                     ),
                   ),
@@ -79,24 +80,42 @@ class ReusableAlertDialog extends StatelessWidget {
               const SizedBox(height: 10),
               Text(
                 subtitle!,
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
                 style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.black54,
+                  fontSize: 12,
+                  color: Colors.black,
                 ),
               ),
             ],
             const SizedBox(height: 20),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                // Yes Button
+                TextButton(
+                  onPressed: onYesPressed,
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 12,
+                    ),
+                    backgroundColor: Colors.grey.shade100,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: Text(
+                    yesButtonText,
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                ),
+                const SizedBox(width: 10),
                 // No Button
                 TextButton(
                   onPressed: onNoPressed,
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 24),
-                    backgroundColor: Colors.grey.shade300,
+                        vertical: 12, horizontal: 12),
+                    backgroundColor: Colors.grey.shade100,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -104,22 +123,6 @@ class ReusableAlertDialog extends StatelessWidget {
                   child: Text(
                     noButtonText,
                     style: const TextStyle(color: Colors.black),
-                  ),
-                ),
-                // Yes Button
-                TextButton(
-                  onPressed: onYesPressed,
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 24),
-                    backgroundColor: Colors.orange,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                  child: Text(
-                    yesButtonText,
-                    style: const TextStyle(color: Colors.white),
                   ),
                 ),
               ],

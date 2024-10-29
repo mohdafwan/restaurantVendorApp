@@ -65,14 +65,14 @@ class _EditProfilePhoneNoFieldState extends State<EditProfilePhoneNoField> {
                 Row(
                   children: [
                     SvgPicture.asset(
-                      controller.countryFlag!,
+                      controller.countryFlag ?? '',
                       fit: BoxFit.fill,
                       height: 12,
                       width: 12,
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      controller.countryCode!,
+                      controller.countryCode ?? '',
                       style: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,

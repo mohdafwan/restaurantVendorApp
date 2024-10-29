@@ -13,24 +13,26 @@ class Dashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<DashboardController>(builder: (controller) {
-      return Scaffold(
-        body: IndexedStack(
-          index: controller.tabIndex.value,
-          children: [
-            const HomeScreen(),
-            OrderHistoryView(),
-            const SettingsPagex(),
-            const EditProfilePage(),
-            OrderHistoryView(),
-            const SubmitIssuePage(),
-          ],
-        ),
-        bottomNavigationBar: CustomBottomNavBar(
-          selectedIndex: controller.tabIndex.value,
-          onItemTapped: controller.changeTabIndex,
-        ),
-      );
-    });
+    return GetBuilder<DashboardController>(
+        init: DashboardController(),
+        builder: (controller) {
+          return Scaffold(
+            body: IndexedStack(
+              index: controller.tabIndex.value,
+              children: [
+                const HomeScreen(),
+                OrderHistoryView(),
+                const SettingsPagex(),
+                const EditProfilePage(),
+                OrderHistoryView(),
+                const SubmitIssuePage(),
+              ],
+            ),
+            bottomNavigationBar: CustomBottomNavBar(
+              selectedIndex: controller.tabIndex.value,
+              onItemTapped: controller.changeTabIndex,
+            ),
+          );
+        });
   }
 }

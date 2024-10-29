@@ -7,9 +7,13 @@ import 'package:restaurant_vendor_app/constants/color_palette.dart';
 import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
 import 'package:restaurant_vendor_app/routes/routes.dart';
 import 'package:restaurant_vendor_app/views/splashScreen/splash_screen.dart';
+import 'controllers/dashboard_controller/dashboard_controller.dart';
 import 'controllers/notification/notification_settrings_controller.dart';
 import 'firebase/firebase_api.dart';
 import 'firebase_options.dart';
+import 'views/main_screens/home_screen/home_screen.dart';
+import 'views/pages/dashboard/dashboard.dart';
+import 'views/pages/dashboard/dashboard_binding.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,9 +21,9 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  Get.put(NotificationsSettingsController());
-  await FirebaseApi().initNotifications();
-  FirebaseAuth.instance.setLanguageCode('en');
+  // Get.put(NotificationsSettingsController());
+  // await FirebaseApi().initNotifications();
+  // FirebaseAuth.instance.setLanguageCode('en');
   Get.put(AuthMethods(), permanent: true);
   runApp(const MyApp());
 }
@@ -32,20 +36,22 @@ class MyApp extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
+        if (!GetPlatform.isWeb) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        }
       },
       child: GetMaterialApp(
-        title: "Restaurants vendor app",
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          scaffoldBackgroundColor: backgroundColor,
-          textTheme: GoogleFonts.interTextTheme(
-            Theme.of(context).textTheme,
+          title: "Restaurants vendor app",
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            scaffoldBackgroundColor: backgroundColor,
+            textTheme: GoogleFonts.interTextTheme(
+              Theme.of(context).textTheme,
+            ),
           ),
-        ),
-        home: const SplashScreen(),
-        getPages: AppRoutes.routes,
-      ),
+          home: const HomeScreen(),
+          getPages: AppRoutes.routes,
+         ),
     );
   }
 }

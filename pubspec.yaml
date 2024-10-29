@@ -63,6 +63,7 @@ flutter:
     - assets/splashScreenImg/
     - assets/homeImages/
     - assets/historyimages/
+    - assets/notification_settings_assets/
 
   
 

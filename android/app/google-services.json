@@ -1,26 +1,37 @@
 {
   "project_info": {
-    "project_number": "742342151590",
-    "project_id": "resturantpager-bf7bb",
-    "storage_bucket": "resturantpager-bf7bb.appspot.com"
+    "project_number": "343106123773",
+    "firebase_url": "https://restaurants-vendor-app-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "restaurants-vendor-app",
+    "storage_bucket": "restaurants-vendor-app.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:742342151590:android:83ce8a8148ca7dab08d367",
+        "mobilesdk_app_id": "1:343106123773:android:774726fb7ea88c343c8b94",
         "android_client_info": {
           "package_name": "com.metascifor.restaurant_vendor_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "343106123773-q7at0kri81tcfa7uel0ijmnpumigf1rk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyB4spP-xulXjmC98z-eS5ULYJxkf-m5QYU"
+          "current_key": "AIzaSyCviKf9CBwvjF5pjKsTVzVFiCbvyRfyTVU"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "343106123773-q7at0kri81tcfa7uel0ijmnpumigf1rk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

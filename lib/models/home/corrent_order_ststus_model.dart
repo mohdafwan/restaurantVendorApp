@@ -1,27 +1,27 @@
-class CurrentOrderStatusModel {
-  String restaurantName;
-  String place;
-  String status;
+class OrderModel {
+  final String orderId;
+  final String orderNumber;
+  final String status;
+  final String totalAmount;
+  final String orderType; // Food/Drink
+  //user id
+  final String userId;
+  final String userName;
+  final String date;
+  final String time;
+  final String? phoneNumber;
 
-  CurrentOrderStatusModel(
-      {required this.restaurantName,
-      required this.place,
-      required this.status});
-
-  static List<CurrentOrderStatusModel> currentOrderItem() {
-    return [
-      CurrentOrderStatusModel(
-          restaurantName: "KFC",
-          place: "Anna Nagar",
-          status: "Ready to pickup"),
-      CurrentOrderStatusModel(
-          restaurantName: "Café Coffee day",
-          place: "Tambaram",
-          status: "Preparing"),
-      CurrentOrderStatusModel(
-          restaurantName: "Mio Amore",
-          place: "Garia",
-          status: "Ready to pickup")
-    ];
-  }
+  OrderModel({
+    required this.orderId,
+    required this.orderNumber,
+    required this.status,
+    required this.totalAmount,
+    required this.orderType,
+    required this.userId,
+    required this.userName,
+    required this.date,
+    required this.time,
+     this.phoneNumber,
+  });
 }
+ 
