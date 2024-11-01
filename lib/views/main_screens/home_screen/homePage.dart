@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:restaurant_vendor_app/widgets/BottomNavBar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

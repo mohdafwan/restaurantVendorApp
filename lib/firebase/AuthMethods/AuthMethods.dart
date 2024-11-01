@@ -30,7 +30,8 @@ class AuthMethods {
     "get_user": "$host/user_check/",
     "email_otp": "$host/otp/",
     "update_user": "$host/user/",
-    "restaurant":"$host/restaurant/"
+    "restaurant":"$host/restaurant/",
+    "get_restaurent":"$host/restuarant_check/"
   };
 
   Future<ResponseModel> signInUsingPhoneNumber() async {
@@ -219,6 +220,36 @@ class AuthMethods {
         }
       } else {
         res = "user not found";
+      }
+    } catch (error) {
+      res = error.toString();
+    }
+
+    return ResponseModel(message: res);
+  }
+
+    Future<ResponseModel> getRestaurentData() async {
+    String res = "some error occurred";
+    try {
+      final data = {
+        'user':userController.id
+      };
+      final response = await _dio.post(
+        routes["get_restaurent"]!,
+        data: data,
+        options: dio.Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+      if(response.statusCode == 200){
+        res = "success";
+        restaurantController.setModel(RestaurantModel.fromJson(response.data));
+      }else if(response.statusCode == 404){
+        res = "data not found";
+      }else{
+        res = response.statusMessage ?? res;
       }
     } catch (error) {
       res = error.toString();

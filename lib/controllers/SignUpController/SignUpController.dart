@@ -10,6 +10,7 @@ import 'package:restaurant_vendor_app/controllers/UserController/UserController.
 import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
 import 'package:restaurant_vendor_app/firebase/StorageMethods/StorageMethods.dart';
 import 'package:restaurant_vendor_app/models/PhoneNumberModel/PhoneNumber.model.dart';
+import 'package:restaurant_vendor_app/models/ResponseModel/ResponseModel.dart';
 import 'package:restaurant_vendor_app/models/SignUpModel/SignUp.model.dart';
 import 'package:restaurant_vendor_app/utils/imagePicker.dart';
 
@@ -82,33 +83,35 @@ class SignUpController extends GetxController {
         }
       }
     }
-
-    userData.updateUserDetails(
-      name: name,
-      dateOfBirth: dateOfBirth,
-      gender: gender,
-      phone: phoneNumberController.phoneNumberModel.value,
-      profilePic: null,
-      email: emailAdress,
-      whatsAppMessagePreference: whatsAppMessagePreference,
-    );
-
-    restaurentController.updateRestaurantDetails(
-      address1: address1,
-      address2: address2,
-      pinCode: pinCode,
-      city: city,
-      country: country,
-      state: state,
-      restaurantName: restaurantName,
-      photoUrl: downloadUrl
-    );
-
-    // storing user data in backend
-    final res = await _authMethods.createAccount(userData.user);
-    if (res.message == "success") {
-      final res2 = await _authMethods.createRestaurentAccount(restaurentController.current);
-      if(res2.message == 'success'){
+    late ResponseModel res,res2;
+    // loggedIn flag indicates that user has account or not
+    if (!_authMethods.loggedIn) {
+      userData.updateUserDetails(
+        name: name,
+        dateOfBirth: dateOfBirth,
+        gender: gender,
+        phone: phoneNumberController.phoneNumberModel.value,
+        profilePic: null,
+        email: emailAdress,
+        whatsAppMessagePreference: whatsAppMessagePreference,
+      );
+      // storing user data in backend
+      res = await _authMethods.createAccount(userData.user);
+    }
+    if (_authMethods.loggedIn || res.message == "success") {
+      restaurentController.updateRestaurantDetails(
+          address1: address1,
+          address2: address2,
+          pinCode: pinCode,
+          city: city,
+          country: country,
+          state: state,
+          restaurantName: restaurantName,
+        photoUrl: downloadUrl,
+      );
+      res2 = await _authMethods
+          .createRestaurentAccount(restaurentController.current);
+      if (res2.message == 'success') {
         Get.offAllNamed('/dashboard');
       }
     } else {

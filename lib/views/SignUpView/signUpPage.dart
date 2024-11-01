@@ -13,30 +13,12 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final _formKey = GlobalKey<FormState>();
   bool signUpUsingPhone = true;
   final SignUpController controller = Get.put(SignUpController());
   final List<Widget> pages = [
     const SignUpPage1(),
     const SignUpPage2()
   ];
-
-  @override
-  void initState() {
-    if (controller.emailAdress != null) {
-      signUpUsingPhone = false;
-    }
-    super.initState();
-  }
-
-  void _submitForm() {
-    if (!_formKey.currentState!.validate()) return;
-    // if (signUpUsingPhone) {
-    //   Get.to(const VerifyEmailUsingOTP());
-    // } else {
-    //   controller.submit();
-    // }
-  }
 
   @override
   Widget build(BuildContext context) {

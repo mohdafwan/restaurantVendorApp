@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:restaurant_vendor_app/controllers/RestaurantController/RestaurantController.dart';
 import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
 import 'package:restaurant_vendor_app/models/ResponseModel/ResponseModel.dart';
 
@@ -15,6 +16,7 @@ class SplashScreenController extends GetxController {
         const Duration(seconds: 5)); // will remove in production
 
     final authMethods = Get.find<AuthMethods>();
+    final restaurentController = Get.find<RestaurantController>();
 
 
     // Listen to auth state changes
@@ -24,9 +26,19 @@ class SplashScreenController extends GetxController {
         try {
           final ResponseModel response = await authMethods.getUserData();
           if (response.message == "success") {
-            // get restaurent data 
-            // todo : send fcm token to backend
-            Get.offAllNamed('/dashboard');
+            final res = await authMethods.getRestaurentData(); 
+
+            // if restaurent data is not present
+            if(res.message == "data not found"){
+              Get.offAllNamed('/signup2');
+            }else{
+              // todo : send fcm token to backend
+              if(restaurentController.verified!){
+                Get.offAllNamed('/dashboard');
+              }else{
+                Get.offAllNamed('/verification_screen');
+              }
+            }
           } else{
             // go to signup route
             Get.offAllNamed('/signup');
