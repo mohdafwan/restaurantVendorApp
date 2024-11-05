@@ -81,7 +81,7 @@ class _SignUpPage2State extends State<SignUpPage2> {
                 label: 'Pin Code',
                 hintText: "Enter here",
                 digitsOnly: true,
-                onChanged: (text) => controller.updateDetails(pinCode: text),
+                onChanged: (text) => controller.updateDetails(pinCode: int.parse(text)),
               ),
 
               const SizedBox(height: 16),

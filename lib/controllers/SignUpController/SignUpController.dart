@@ -27,8 +27,8 @@ class SignUpController extends GetxController {
   void onInit() {
     super.onInit();
     signUpModel.value.phoneNumber = PhoneNumberModel(
-      phoneNumber: phoneNumberController.phoneNumber,
-      countryCode: phoneNumberController.selectedCountryCode,
+      phoneNumber: phoneNumberController.phoneNumber ?? userController.currentUser.value.phone?.phoneNumber,
+      countryCode: userController.currentUser.value.phone?.countryCode ?? phoneNumberController.selectedCountryCode,
     );
     signUpModel.value.name = userController.name;
     emailController.emailAddress = userController.email;
@@ -52,7 +52,7 @@ class SignUpController extends GetxController {
   String? get city => signUpModel.value.city;
   String? get country => signUpModel.value.country;
   String? get state => signUpModel.value.state;
-  String? get pinCode => signUpModel.value.pinCode;
+  int? get pinCode => signUpModel.value.pinCode;
   set page(int value){
     _page.value = value;
   }
@@ -112,10 +112,17 @@ class SignUpController extends GetxController {
       res2 = await _authMethods
           .createRestaurentAccount(restaurentController.current);
       if (res2.message == 'success') {
-        Get.offAllNamed('/dashboard');
+        if(restaurentController.verified ?? false){
+          Get.offAllNamed('/dashboard');
+        }else{
+          Get.offAllNamed('/verification_screen');
+        }
+      }else{
+        if (kDebugMode) debugPrint(res2.message);
+        Get.offAllNamed('/signup2'); 
       }
     } else {
-      if (kDebugMode) debugPrint(res.message!);
+      if (kDebugMode) debugPrint(res.message);
       userData.clearUserData();
       restaurentController.clearData();
       Get.offAllNamed('/login');
@@ -178,7 +185,7 @@ class SignUpController extends GetxController {
     File? profilePic,
     String? address1,
     String? address2,
-    String? pinCode,
+    int? pinCode,
     String? city,
     String? state,
     String? country,

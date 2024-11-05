@@ -8,7 +8,7 @@ class RestaurantController extends GetxController {
   bool? get verified => model.value.verified;
   String? get address1 => model.value.address1;
   String? get address2 => model.value.address2;
-  String? get pinCode => model.value.pinCode;
+  int? get pinCode => model.value.pinCode;
   String? get city => model.value.city;
   String? get state => model.value.state;
   String? get country => model.value.country;
@@ -23,7 +23,7 @@ class RestaurantController extends GetxController {
    void updateRestaurantDetails({
     String? address1,
     String? address2,
-    String? pinCode,
+    int? pinCode,
     String? city,
     String? state,
     String? country,

@@ -109,8 +109,6 @@ class OTPController extends GetxController {
     if (_emailOTP.trim() == otp?.trim()) {
       // email is verified , submit user data
       Get.find<SignUpController>().submit();
-      // goto home screen
-      Get.offAllNamed('/dashboard');
     } else {
       // error in authentication , go to signup page
       Get.offAllNamed('/signup');

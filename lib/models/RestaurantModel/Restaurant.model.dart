@@ -3,7 +3,7 @@ import 'dart:convert';
 class RestaurantModel {
   String? address1;
   String? address2;
-  String? pinCode;
+  int? pinCode;
   String? city;
   String? state;
   String? country;
@@ -27,7 +27,7 @@ class RestaurantModel {
   RestaurantModel copyWith({
     String? address1,
     String? address2,
-    String? pinCode,
+    int? pinCode,
     String? city,
     String? state,
     String? country,
@@ -67,16 +67,16 @@ class RestaurantModel {
 
   factory RestaurantModel.fromMap(Map<String, dynamic> map) {
     return RestaurantModel(
-      address1: map['address1'] != null ? map['address1'] as String : null,
-      address2: map['address2'] != null ? map['address2'] as String : null,
-      pinCode: map['pinCode'] != null ? map['pinCode'] as String : null,
+      address1: map['address_line1'] != null ? map['address_line1'] as String : null,
+      address2: map['address_line2'] != null ? map['address_line2'] as String : null,
+      pinCode: map['pin_code'] != null ? map['pin_code'] as int : null,
       city: map['city'] != null ? map['city'] as String : null,
       state: map['state'] != null ? map['state'] as String : null,
       country: map['country'] != null ? map['country'] as String : null,
-      restaurantName: map['restaurantName'] != null ? map['restaurantName'] as String : null,
-      photoUrl: map['photoUrl'] != null ? map['photoUrl'] as String : null,
+      restaurantName: map['restaurant_name'] != null ? map['restaurant_name'] as String : null,
+      photoUrl: map['restaurant_image'] != null ? map['restaurant_image'] as String : null,
       id: map['id'] != null ? map['id'] as int : null,
-      verified: map['verified'] != null ? map['verified'] as bool : null,
+      verified: map['verify'] != null ? map['verify'] as bool : null,
     );
   }
 

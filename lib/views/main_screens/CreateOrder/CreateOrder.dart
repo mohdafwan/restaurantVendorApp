@@ -11,14 +11,14 @@ import 'package:restaurant_vendor_app/views/main_screens/CreateOrder/components/
 import 'package:restaurant_vendor_app/widgets/Button.dart';
 
 class CreateOrder extends StatefulWidget {
-  final bool edit;
+  final int? orderId;
   final bool phone;
   final bool mail;
   final bool uid;
   final String? encryptedString;
   const CreateOrder({
     super.key,
-    this.edit = false,
+    this.orderId,
     this.phone = false,
     this.mail = false,
     this.uid = false,
@@ -34,7 +34,10 @@ class _CreateOrderState extends State<CreateOrder> {
   @override
   void initState() {
     Get.delete<OrderController>();
-    controller = Get.put(OrderController(encryptedString: widget.encryptedString));
+    controller = Get.put(OrderController(
+      encryptedString: widget.encryptedString,
+      orderId: widget.orderId,
+    ));
     super.initState();
   }
   @override
@@ -45,7 +48,7 @@ class _CreateOrderState extends State<CreateOrder> {
         surfaceTintColor: Colors.transparent,
         backgroundColor: Colors.white,
         title: Text(
-          widget.edit? "Edit Order" : "Create Order",
+          widget.orderId != null ? "Edit Order" : "Create Order",
           style: GoogleFonts.inter(
             fontWeight: FontWeight.w700,
             fontSize: 20,

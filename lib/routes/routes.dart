@@ -4,7 +4,6 @@ import 'package:restaurant_vendor_app/views/SignUpView/signUpPage.dart';
 import 'package:restaurant_vendor_app/views/SignUpView/signUpPage2.dart';
 import 'package:restaurant_vendor_app/views/main_screens/history_screen/history_screen.dart';
 import 'package:restaurant_vendor_app/views/main_screens/home_screen/VerificationPage.dart';
-import 'package:restaurant_vendor_app/views/main_screens/scanner_screen/scanner_screen.dart';
 import 'package:restaurant_vendor_app/views/notifaicatio/notification_screen_page_priyanka.dart';
 import 'package:restaurant_vendor_app/views/pages/dashboard/dashboard.dart';
 import 'package:restaurant_vendor_app/views/pages/dashboard/dashboard_binding.dart';
@@ -39,12 +38,6 @@ class AppRoutes {
       name: '/dashboard',
       page: () => const Dashboard(),
       binding: DashboardBinding(),
-    ),
-    GetPage(
-      name: '/scanner',
-      page: () => ScannerScreen(),
-      transition: Transition.downToUp,
-      transitionDuration: const Duration(milliseconds: 300),
     ),
     GetPage(
       name: '/orderview',

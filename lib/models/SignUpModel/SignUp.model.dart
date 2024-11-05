@@ -11,7 +11,7 @@ class SignUpModel {
   File? profilePic;
   String? address1;
   String? address2;
-  String? pinCode;
+  int? pinCode;
   String? city;
   String? state;
   String? country;
@@ -44,7 +44,7 @@ class SignUpModel {
     File? profilePic,
     String? address1,
     String? address2,
-    String? pinCode,
+    int? pinCode,
     String? city,
     String? state,
     String? country,

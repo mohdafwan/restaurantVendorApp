@@ -27,13 +27,12 @@ class SplashScreenController extends GetxController {
           final ResponseModel response = await authMethods.getUserData();
           if (response.message == "success") {
             final res = await authMethods.getRestaurentData(); 
-
             // if restaurent data is not present
             if(res.message == "data not found"){
               Get.offAllNamed('/signup2');
-            }else{
+            }else if(res.message == "success"){
               // todo : send fcm token to backend
-              if(restaurentController.verified!){
+              if(restaurentController.verified ?? false){
                 Get.offAllNamed('/dashboard');
               }else{
                 Get.offAllNamed('/verification_screen');
@@ -48,6 +47,7 @@ class SplashScreenController extends GetxController {
           Get.offAllNamed('/login');
         }
       } else {
+        authMethods.loggedIn = false; // set login state to false
         Get.offAllNamed('/login');
       }
     });

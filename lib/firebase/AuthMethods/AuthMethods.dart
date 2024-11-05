@@ -171,7 +171,7 @@ class AuthMethods {
         "restaurant_name": model.restaurantName,
         "address_line1": model.address1,
         "address_line2": model.address2,
-        "pin_code": double.parse(model.pinCode!),
+        "pin_code": model.pinCode,
         "city": model.city,
         "state": model.state,
         "country": model.country,
@@ -185,7 +185,10 @@ class AuthMethods {
 
       if (response.statusCode == 201) {
         loggedIn = true;
-        restaurantController.updateRestaurantDetails(id: response.data['id']);
+        restaurantController.updateRestaurantDetails(
+          id: response.data['id'],
+          verified: response.data['verify']
+        );
         res = "success";
       } else {
         res = response.statusMessage ?? res;
@@ -228,12 +231,10 @@ class AuthMethods {
     return ResponseModel(message: res);
   }
 
-    Future<ResponseModel> getRestaurentData() async {
+  Future<ResponseModel> getRestaurentData() async {
     String res = "some error occurred";
     try {
-      final data = {
-        'user':userController.id
-      };
+      final data = {'user': userController.id};
       final response = await _dio.post(
         routes["get_restaurent"]!,
         data: data,
@@ -243,12 +244,12 @@ class AuthMethods {
           },
         ),
       );
-      if(response.statusCode == 200){
+      if (response.statusCode == 200) {
         res = "success";
-        restaurantController.setModel(RestaurantModel.fromJson(response.data));
-      }else if(response.statusCode == 404){
+        restaurantController.setModel(RestaurantModel.fromMap(response.data));
+      } else if (response.statusCode == 404) {
         res = "data not found";
-      }else{
+      } else {
         res = response.statusMessage ?? res;
       }
     } catch (error) {
