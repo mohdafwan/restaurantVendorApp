@@ -5,17 +5,20 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:restaurant_vendor_app/controllers/EmailController/EmailController.dart';
 import 'package:restaurant_vendor_app/controllers/PhoneNumberController/PhoneNumberController.dart';
+import 'package:restaurant_vendor_app/controllers/RestaurantController/RestaurantController.dart';
 import 'package:restaurant_vendor_app/controllers/UserController/UserController.dart';
 import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
 import 'package:restaurant_vendor_app/firebase/StorageMethods/StorageMethods.dart';
 import 'package:restaurant_vendor_app/models/PhoneNumberModel/PhoneNumber.model.dart';
+import 'package:restaurant_vendor_app/models/ResponseModel/ResponseModel.dart';
 import 'package:restaurant_vendor_app/models/SignUpModel/SignUp.model.dart';
 import 'package:restaurant_vendor_app/utils/imagePicker.dart';
 
 class SignUpController extends GetxController {
   var signUpModel = SignUpModel().obs;
+  final RxInt _page = 0.obs;
   PhoneNumberController phoneNumberController =
-      Get.find<PhoneNumberController>();
+      Get.put(PhoneNumberController());
   EmailController emailController = Get.put(EmailController(), permanent: true);
   final _authMethods = Get.find<AuthMethods>();
   final userController = Get.find<UserController>();
@@ -24,14 +27,15 @@ class SignUpController extends GetxController {
   void onInit() {
     super.onInit();
     signUpModel.value.phoneNumber = PhoneNumberModel(
-      phoneNumber: phoneNumberController.phoneNumber,
-      countryCode: phoneNumberController.selectedCountryCode,
+      phoneNumber: phoneNumberController.phoneNumber ?? userController.currentUser.value.phone?.phoneNumber,
+      countryCode: userController.currentUser.value.phone?.countryCode ?? phoneNumberController.selectedCountryCode,
     );
     signUpModel.value.name = userController.name;
     emailController.emailAddress = userController.email;
     signUpModel.value.email = emailController.emailAddress;
   }
 
+  int get page => _page.value;
   String? get emailAdress => emailController.emailAddress;
   String? get phoneNumber => phoneNumberController.phoneNumber;
   String? get countryCode => signUpModel.value.phoneNumber!.countryCode;
@@ -42,6 +46,16 @@ class SignUpController extends GetxController {
   File? get profilePic => signUpModel.value.profilePic;
   bool? get whatsAppMessagePreference =>
       signUpModel.value.sendMessageViaWhatsApp;
+  String? get restaurantName => signUpModel.value.restaurantName;
+  String? get address1 => signUpModel.value.address1;
+  String? get address2 => signUpModel.value.address2;
+  String? get city => signUpModel.value.city;
+  String? get country => signUpModel.value.country;
+  String? get state => signUpModel.value.state;
+  int? get pinCode => signUpModel.value.pinCode;
+  set page(int value){
+    _page.value = value;
+  }
 
   Future<void> selectImage() async {
     final file = await pickImage(ImageSource.gallery);
@@ -55,11 +69,12 @@ class SignUpController extends GetxController {
         phoneNumberController.phoneNumberModel.value;
     signUpModel.value.email = emailController.emailAddress;
     final userData = Get.find<UserController>();
+    final restaurentController = Get.find<RestaurantController>();
 
     // upload profile pic to firebase if provided
     String? downloadUrl;
     if (profilePic != null) {
-      final res = await StorageMethods().uploadProfilePic(file: profilePic!);
+      final res = await StorageMethods().uploadRestaurantPic(file: profilePic!);
       if (res.message == "success") {
         downloadUrl = res.data;
       } else {
@@ -68,31 +83,54 @@ class SignUpController extends GetxController {
         }
       }
     }
-
-    userData.updateUserDetails(
-      name: name,
-      dateOfBirth: dateOfBirth,
-      gender: gender,
-      phone: phoneNumberController.phoneNumberModel.value,
-      profilePic: downloadUrl,
-      email: emailAdress,
-      whatsAppMessagePreference: whatsAppMessagePreference,
-    );
-
-    // storing user data in backend
-    final res = await _authMethods.createAccount(userData.user);
-    if (res.message == "success") {
-      Get.offAllNamed('/dashboard');
+    late ResponseModel res,res2;
+    // loggedIn flag indicates that user has account or not
+    if (!_authMethods.loggedIn) {
+      userData.updateUserDetails(
+        name: name,
+        dateOfBirth: dateOfBirth,
+        gender: gender,
+        phone: phoneNumberController.phoneNumberModel.value,
+        profilePic: null,
+        email: emailAdress,
+        whatsAppMessagePreference: whatsAppMessagePreference,
+      );
+      // storing user data in backend
+      res = await _authMethods.createAccount(userData.user);
+    }
+    if (_authMethods.loggedIn || res.message == "success") {
+      restaurentController.updateRestaurantDetails(
+          address1: address1,
+          address2: address2,
+          pinCode: pinCode,
+          city: city,
+          country: country,
+          state: state,
+          restaurantName: restaurantName,
+        photoUrl: downloadUrl,
+      );
+      res2 = await _authMethods
+          .createRestaurentAccount(restaurentController.current);
+      if (res2.message == 'success') {
+        if(restaurentController.verified ?? false){
+          Get.offAllNamed('/dashboard');
+        }else{
+          Get.offAllNamed('/verification_screen');
+        }
+      }else{
+        if (kDebugMode) debugPrint(res2.message);
+        Get.offAllNamed('/signup2'); 
+      }
     } else {
-      if (kDebugMode) debugPrint(res.message!);
+      if (kDebugMode) debugPrint(res.message);
       userData.clearUserData();
+      restaurentController.clearData();
       Get.offAllNamed('/login');
     }
   }
-
-  String? validateName() {
-    if (signUpModel.value.name == null || signUpModel.value.name!.isEmpty) {
-      return "Name can't be empty";
+  String? validate({required String? value,required String message}){
+    if(value == null || value.isEmpty){
+      return message;
     }
     return null;
   }
@@ -108,20 +146,6 @@ class SignUpController extends GetxController {
     return null;
   }
 
-  String? validateDOB() {
-    if (signUpModel.value.dateOfBirth == null ||
-        signUpModel.value.dateOfBirth!.isEmpty) {
-      return "Please Mention Your DOB";
-    }
-    return null;
-  }
-
-  void updateName(String name) {
-    signUpModel.update((model) {
-      model?.name = name;
-    });
-  }
-
   Future<void> selectDateOfBirth(BuildContext context) async {
     DateTime initialDate = DateTime.now();
     DateTime firstDate = DateTime(1900);
@@ -132,6 +156,16 @@ class SignUpController extends GetxController {
       initialDate: initialDate,
       firstDate: firstDate,
       lastDate: lastDate,
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            primaryColor: const Color.fromRGBO(253, 71, 18, 1),
+            colorScheme: const ColorScheme.light(primary: Color.fromRGBO(253, 71, 18, 1)),
+            buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+          ),
+          child: child ?? Container(),
+        );
+      },
     );
 
     if (picked != null && picked != initialDate) {
@@ -141,19 +175,41 @@ class SignUpController extends GetxController {
     }
   }
 
-  void updateGender(String? gender) {
-    signUpModel.update((model) {
-      model?.gender = gender;
-    });
-  }
-
-  void updateEmail(String email) {
-    emailController.updateEmailAddress(email);
-  }
-
-  void updateMessagePreferences(bool value) {
-    signUpModel.update((model) {
-      model?.sendMessageViaWhatsApp = value;
-    });
+  void updateDetails({
+    String? name,
+    String? dateOfBirth,
+    String? gender,
+    PhoneNumberModel? phoneNumber,
+    String? email,
+    bool sendMessageViaWhatsApp = false,
+    File? profilePic,
+    String? address1,
+    String? address2,
+    int? pinCode,
+    String? city,
+    String? state,
+    String? country,
+    String? restaurantName,
+  }) {
+    final newModel = signUpModel.value.copyWith(
+      name: name,
+      dateOfBirth: dateOfBirth,
+      gender: gender,
+      phoneNumber: phoneNumber,
+      email: email,
+      sendMessageViaWhatsApp: sendMessageViaWhatsApp,
+      profilePic: profilePic,
+      address1: address1,
+      address2: address2,
+      pinCode: pinCode,
+      city: city,
+      state: state,
+      country: country,
+      restaurantName: restaurantName
+    );
+    if(email != null) emailController.updateEmailAddress(email);
+    if(phoneNumber != null) phoneNumberController.updatePhoneNumber(phoneNumber.phoneNumber!);
+    
+    signUpModel.value = newModel;
   }
 }

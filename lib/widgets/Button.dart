@@ -5,11 +5,13 @@ class Button extends StatefulWidget {
   final VoidCallback onPressed;
   final String text;
   final bool disable;
+  final Color color;
   const Button({
     super.key,
     required this.onPressed,
     required this.text,
-    this.disable = false,
+    this.disable = false, 
+    this.color = themeColor,
   });
 
   @override
@@ -31,7 +33,7 @@ class _ButtonState extends State<Button> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          backgroundColor: themeColor,
+          backgroundColor: widget.color,
           foregroundColor: Colors.white,
         ),
         child: Text(

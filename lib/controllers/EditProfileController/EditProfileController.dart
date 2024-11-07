@@ -1,28 +1,39 @@
 import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:restaurant_vendor_app/controllers/EmailController/EmailController.dart';
+import 'package:restaurant_vendor_app/controllers/PhoneNumberController/PhoneNumberController.dart';
 import 'package:restaurant_vendor_app/controllers/UserController/UserController.dart';
 import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
 import 'package:restaurant_vendor_app/firebase/StorageMethods/StorageMethods.dart';
 import 'package:restaurant_vendor_app/models/EditProfileModel/EditProfile.model.dart';
 import 'package:restaurant_vendor_app/utils/imagePicker.dart';
-import 'package:restaurant_vendor_app/utils/toastMessage.dart';
+
 
 class EditProfileController extends GetxController {
   var model = EditProfileModel().obs;
   final userController = Get.find<UserController>();
-  File? _selectedPic;
+  PhoneNumberController phoneNumberController = Get.put(PhoneNumberController());
+  EmailController emailController = Get.put(EmailController(), permanent: true);
+  var _selectedPic = Rx<File?>(null);
 
   @override
   void onInit() {
     super.onInit();
+    emailController.emailAddress = userController.email;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      phoneNumberController.phoneNumberModel.update((model) {
+        model?.phoneNumber = userController.currentUser.value.phone!.phoneNumber;
+        model?.countryCode = userController.currentUser.value.phone!.countryCode;
+      });
+    });
+
     model.update((model) {
       model?.dateOfBirth = userController.dateOfBirth;
       model?.name = userController.name;
       model?.gender = userController.gender;
-      model?.email = userController.email;
       model?.profilePic = userController.profilePic;
       model?.phoneNumber = userController.currentUser.value.phone;
     });
@@ -30,62 +41,65 @@ class EditProfileController extends GetxController {
 
   // Getters
   String? get profilePic => model.value.profilePic;
-  File? get selectedPic => _selectedPic;
+  File? get selectedPic => _selectedPic.value;  // Updated to return observable value
   String? get gender => model.value.gender;
   String? get dateOfBirth => model.value.dateOfBirth;
   String? get name => model.value.name;
-  String? get emailAddress => model.value.email;
-  String? get phoneNumber => model.value.phoneNumber?.phoneNumber;
-  String? get countryCode => model.value.phoneNumber?.countryCode;
+  String? get emailAddress => emailController.emailAddress;
+  String? get phoneNumber => phoneNumberController.phoneNumber;
+  String? get countryCode => phoneNumberController.selectedCountryCode;
 
   String? get countryFlag {
     final selectedCode = countryCode;
-    final country = model.value.phoneNumber?.countries.firstWhere(
+    final country = phoneNumberController.countries.firstWhere(
       (country) => country['code'] == selectedCode,
       orElse: () => {},
     );
-    return country?['icon'];
+    return country['icon'];
   }
 
   Future<void> selectImage() async {
     final file = await pickImage(ImageSource.gallery);
-    _selectedPic = file;
+    _selectedPic.value = file;  // Update the observable
   }
 
-  void submit(BuildContext context) async {
+  void submit() async {
     final authMethods = Get.find<AuthMethods>();
     // upload profile pic if given
     String? downloadUrl;
-    if (_selectedPic != null) {
-      final res = await StorageMethods().uploadProfilePic(file: _selectedPic!);
+    if (_selectedPic.value != null) {  // Check observable value
+      final res = await StorageMethods().uploadRestaurantPic(file: _selectedPic.value!);
       if (res.message == "success") {
         downloadUrl = res.data;
       } else {
-        if (context.mounted) {
-          showToastMessage(context, "Error uploading file");
-        }
+        if (kDebugMode) debugPrint("error uploading file : ${res.message}");
       }
     }
     // update model
     model.update((model) {
       model?.profilePic = downloadUrl ?? profilePic;
+      model?.email = emailController.emailAddress;
+      model?.phoneNumber = phoneNumberController.phoneNumberModel.value;
     });
 
     userController.updateUserDetails(
-      name: name,
-      dateOfBirth: dateOfBirth,
-      profilePic: profilePic,
-      gender: gender,
-    );
+        name: name,
+        dateOfBirth: dateOfBirth,
+        profilePic: profilePic,
+        gender: gender,
+        phone: phoneNumberController.phoneNumberModel.value,
+        email: emailController.emailAddress);
     final res = await authMethods.updateUser(userController.user);
     if (res.message != "success") {
-      if (context.mounted) showToastMessage(context, "Error updating details");
+      if (kDebugMode) debugPrint("error updating details : ${res.message}");
     }
   }
 
   String? validateName() {
     if (model.value.name == null || model.value.name!.isEmpty) {
       return "Name can't be empty";
+    } else if (model.value.name!.contains(RegExp(r'\s'))) {
+      return "Name can't contain spaces";
     }
     return null;
   }
@@ -113,6 +127,16 @@ class EditProfileController extends GetxController {
       initialDate: initialDate,
       firstDate: firstDate,
       lastDate: lastDate,
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            primaryColor: const Color.fromRGBO(253, 71, 18, 1),
+            colorScheme: const ColorScheme.light(primary: Color.fromRGBO(253, 71, 18, 1)),
+            buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+          ),
+          child: child ?? Container(),
+        );
+      },
     );
 
     if (picked != null && picked != initialDate) {
@@ -120,6 +144,17 @@ class EditProfileController extends GetxController {
         model?.dateOfBirth = "${picked.toLocal()}".split(' ')[0];
       });
     }
+  }
+
+  String? validatePhoneNumber() {
+    return phoneNumberController.validate();
+  }
+
+  String? validateEmail() {
+    if (!emailController.validate()) {
+      return "Invalid Email address";
+    }
+    return null;
   }
 
   void clearDateOfBirth() {
@@ -130,5 +165,9 @@ class EditProfileController extends GetxController {
     model.update((model) {
       model?.gender = gender;
     });
+  }
+
+  void updateEmail(String email) {
+    emailController.updateEmailAddress(email);
   }
 }

@@ -1,8 +1,9 @@
 import 'package:get/get.dart';
 import 'package:restaurant_vendor_app/views/LoginView/loginPage.dart';
 import 'package:restaurant_vendor_app/views/SignUpView/signUpPage.dart';
+import 'package:restaurant_vendor_app/views/SignUpView/signUpPage2.dart';
 import 'package:restaurant_vendor_app/views/main_screens/history_screen/history_screen.dart';
-import 'package:restaurant_vendor_app/views/main_screens/scanner_screen/scanner_screen.dart';
+import 'package:restaurant_vendor_app/views/main_screens/home_screen/VerificationPage.dart';
 import 'package:restaurant_vendor_app/views/notifaicatio/notification_screen_page_priyanka.dart';
 import 'package:restaurant_vendor_app/views/pages/dashboard/dashboard.dart';
 import 'package:restaurant_vendor_app/views/pages/dashboard/dashboard_binding.dart';
@@ -26,15 +27,17 @@ class AppRoutes {
       page: () => const SignUpPage(),
     ),
     GetPage(
+      name: '/signup2',
+      page: () => const SignUpPage2(),
+    ),
+    GetPage(
+      name: '/verification_screen',
+      page: () => const VerificationPage(),
+    ),
+    GetPage(
       name: '/dashboard',
       page: () => const Dashboard(),
       binding: DashboardBinding(),
-    ),
-    GetPage(
-      name: '/scanner',
-      page: () => ScannerScreen(),
-      transition: Transition.downToUp,
-      transitionDuration: const Duration(milliseconds: 300),
     ),
     GetPage(
       name: '/orderview',

@@ -1,10 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:restaurant_vendor_app/controllers/UserController/UserController.dart';
+import 'package:restaurant_vendor_app/controllers/RestaurantController/RestaurantController.dart';
 import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
 import 'package:restaurant_vendor_app/models/ResponseModel/ResponseModel.dart';
-import 'package:restaurant_vendor_app/views/LinkAccountPage/LinkAccountPage.dart';
-import 'package:restaurant_vendor_app/views/UpdateNumberDetails/UpdateNumberDetails.dart';
 
 class SplashScreenController extends GetxController {
   @override
@@ -18,7 +16,8 @@ class SplashScreenController extends GetxController {
         const Duration(seconds: 5)); // will remove in production
 
     final authMethods = Get.find<AuthMethods>();
-    final userController = Get.find<UserController>();
+    final restaurentController = Get.find<RestaurantController>();
+
 
     // Listen to auth state changes
     authMethods.authChanges.listen((user) async {
@@ -26,34 +25,33 @@ class SplashScreenController extends GetxController {
         // If a user is signed in, fetch user data
         try {
           final ResponseModel response = await authMethods.getUserData();
+          // todo : check if session is active , if not... end current session and signout user 
           if (response.message == "success") {
-            // User data found, navigate to dashboard
-            // todo : send fcm token to backend
-            Get.offAllNamed('/dashboard');
-          } else if (userController.phoneNumber != null) {
-            final res = authMethods.fetchUserAccounts();
-            // if user's phone number is linked to multiple account
-            if (res.message == 'success' && res.data.length > 1) {
-              Get.to(() => LinkAccountPage(accounts: res.data));
+            final res = await authMethods.getRestaurentData(); 
+            // if restaurent data is not present
+            if(res.message == "data not found"){
+              Get.offAllNamed('/signup2');
+            }else if(res.message == "success"){
+              if(authMethods.justLoggedIn){
+                //todo : create/resume session
+              }
+              if(restaurentController.verified ?? false){
+                Get.offAllNamed('/dashboard');
+              }else{
+                Get.offAllNamed('/verification_screen');
+              }
             }
-            // Error retrieving user data, navigate to sign up page to get details and register at backend
+          } else{
+            // go to signup route
             Get.offAllNamed('/signup');
-          } else {
-            Get.off(() => const UpdateNumberDetails(title: "Add Phone Number"));
           }
         } catch (error) {
           if (kDebugMode) debugPrint('Error fetching user data: $error');
           Get.offAllNamed('/login');
         }
       } else {
-        if (authMethods.loggedIn) {
-          authMethods.loggedIn = false;
-          // show login page after logging out
-          Get.offAllNamed('/login');
-        } else {
-          // new user
-          Get.offAllNamed('/boarding_screens');
-        }
+        authMethods.loggedIn = false; // set login state to false
+        Get.offAllNamed('/login');
       }
     });
   }

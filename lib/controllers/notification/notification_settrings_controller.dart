@@ -1,13 +1,14 @@
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:get_storage/get_storage.dart';
 import '../../models/notification/notification_model.dart';
 
 class NotificationsSettingsController extends GetxController {
-  RxBool orderReadyAlerts = true.obs;
-  RxBool vibrationAlerts = true.obs;
-  RxBool flashlightAlerts = true.obs;
+  final orderReadyAlerts = true.obs;
+  final vibrationAlerts = true.obs;
+  final flashlightAlerts = true.obs;
   final List<NotificationModel> notificationsList = [];
+
+  final storage = GetStorage();
 
   @override
   void onInit() {
@@ -15,18 +16,16 @@ class NotificationsSettingsController extends GetxController {
     _loadSettings();
   }
 
-  Future<void> _loadSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    orderReadyAlerts.value = prefs.getBool('orderReadyAlerts') ?? true;
-    vibrationAlerts.value = prefs.getBool('vibrationAlerts') ?? true;
-    flashlightAlerts.value = prefs.getBool('flashlightAlerts') ?? true;
+  void _loadSettings() {
+    orderReadyAlerts.value = storage.read('orderReadyAlerts') ?? true;
+    vibrationAlerts.value = storage.read('vibrationAlerts') ?? true;
+    flashlightAlerts.value = storage.read('flashlightAlerts') ?? true;
   }
 
-  Future<void> _saveSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setBool('orderReadyAlerts', orderReadyAlerts.value);
-    prefs.setBool('vibrationAlerts', vibrationAlerts.value);
-    prefs.setBool('flashlightAlerts', flashlightAlerts.value);
+  void _saveSettings() {
+    storage.write('orderReadyAlerts', orderReadyAlerts.value);
+    storage.write('vibrationAlerts', vibrationAlerts.value);
+    storage.write('flashlightAlerts', flashlightAlerts.value);
   }
 
   void toggleOrderReadyAlerts(bool value) {

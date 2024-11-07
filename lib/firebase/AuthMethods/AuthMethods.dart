@@ -2,13 +2,13 @@ import 'package:dio/dio.dart' as dio;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:restaurant_vendor_app/controllers/OTPController/OTPContoller.dart';
+import 'package:restaurant_vendor_app/controllers/RestaurantController/RestaurantController.dart';
 import 'package:restaurant_vendor_app/controllers/UserController/UserController.dart';
 import 'package:restaurant_vendor_app/models/ResponseModel/ResponseModel.dart';
+import 'package:restaurant_vendor_app/models/RestaurantModel/Restaurant.model.dart';
 import 'package:restaurant_vendor_app/models/UserModel/UserModel.dart';
 import 'package:restaurant_vendor_app/utils/toastMessage.dart';
-import 'package:restaurant_vendor_app/views/LinkAccountPage/components/AccountCard.dart';
 
 // http://10.0.2.2:8000 for emulation
 // replace with your machine ip address to test on real device
@@ -18,8 +18,10 @@ class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final UserController userController =
       Get.put(UserController(), permanent: true);
+  final RestaurantController restaurantController = Get.put(RestaurantController(),permanent: true);
   final dio.Dio _dio = dio.Dio();
   bool loggedIn = false;
+  bool justLoggedIn = false;
 
   Stream<User?> get authChanges => _auth.authStateChanges();
   User? get user => _auth.currentUser;
@@ -28,43 +30,10 @@ class AuthMethods {
     "create_user": "$host/user/",
     "get_user": "$host/user_check/",
     "email_otp": "$host/otp/",
-    "update_user": "$host/user/"
+    "update_user": "$host/user/",
+    "restaurant":"$host/restaurant/",
+    "get_restaurent":"$host/restuarant_check/"
   };
-
-  Future<ResponseModel> signInWithGoogle() async {
-    String res = "some error occurred";
-    try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn(scopes: [
-        "email", // only request email
-      ]).signIn();
-
-      // Check if the user canceled the sign-in
-      if (googleUser == null) {
-        return ResponseModel(message: "Sign-in aborted by user", data: null);
-      }
-
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
-      User? user = userCredential.user;
-
-      if (user != null) {
-        userController.updateUserDetails(
-            uid: user.uid, email: user.email, name: user.displayName);
-        res = "success";
-      }
-    } on FirebaseAuthException catch (error) {
-      res = error.message ?? error.toString();
-    }
-    return ResponseModel(message: res);
-  }
 
   Future<ResponseModel> signInUsingPhoneNumber() async {
     final otpController = Get.find<OTPController>();
@@ -80,6 +49,7 @@ class AuthMethods {
         User? user = userCredential.user;
         if (user != null) {
           userController.updateUserDetails(uid: user.uid);
+          justLoggedIn = true;
           res = "success";
         }
       } else {
@@ -173,6 +143,7 @@ class AuthMethods {
         'gender': user.gender?.toLowerCase(),
         'date_of_birth': user.dateOfBirth,
         'is_active': user.whatsAppMessagePreference,
+        'is_superuser': true,
         'password': "temp",
       };
 
@@ -192,6 +163,41 @@ class AuthMethods {
       res = error.toString();
     }
 
+    return ResponseModel(message: res);
+  }
+
+  Future<ResponseModel> createRestaurentAccount(RestaurantModel model)async{
+    String res = "some error occurred";
+    try {
+      final data = {
+        "restaurant_name": model.restaurantName,
+        "address_line1": model.address1,
+        "address_line2": model.address2,
+        "pin_code": model.pinCode,
+        "city": model.city,
+        "state": model.state,
+        "country": model.country,
+        "restaurant_image": model.photoUrl,
+        "user": userController.id,
+      };
+      final response = await _dio.post(
+        routes['restaurant']!,
+        data: data,
+      );
+
+      if (response.statusCode == 201) {
+        loggedIn = true;
+        restaurantController.updateRestaurantDetails(
+          id: response.data['id'],
+          verified: response.data['verify']
+        );
+        res = "success";
+      } else {
+        res = response.statusMessage ?? res;
+      }
+    } catch (error){
+      res = error.toString();
+    }
     return ResponseModel(message: res);
   }
 
@@ -219,6 +225,34 @@ class AuthMethods {
         }
       } else {
         res = "user not found";
+      }
+    } catch (error) {
+      res = error.toString();
+    }
+
+    return ResponseModel(message: res);
+  }
+
+  Future<ResponseModel> getRestaurentData() async {
+    String res = "some error occurred";
+    try {
+      final data = {'user': userController.id};
+      final response = await _dio.post(
+        routes["get_restaurent"]!,
+        data: data,
+        options: dio.Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+      if (response.statusCode == 200) {
+        res = "success";
+        restaurantController.setModel(RestaurantModel.fromMap(response.data));
+      } else if (response.statusCode == 404) {
+        res = "data not found";
+      } else {
+        res = response.statusMessage ?? res;
       }
     } catch (error) {
       res = error.toString();
@@ -286,46 +320,6 @@ class AuthMethods {
     return ResponseModel(message: res, data: user);
   }
 
-  ResponseModel fetchUserAccounts() {
-    String res = "some error occurred";
-    List<AccountCard> accounts = [];
-    try {
-      if (user != null) {
-        for (final providerData in user!.providerData) {
-          String? provider;
-          switch (providerData.providerId) {
-            case 'google.com':
-              provider = 'google';
-              break;
-            case 'facebook.com':
-              provider = 'facebook';
-              break;
-            case 'password':
-              provider = 'email';
-              break;
-            default:
-              provider = providerData.providerId;
-          }
-
-          // add to list if required data is available to us
-          if (providerData.displayName != null && providerData.email != null) {
-            accounts.add(
-              AccountCard(
-                name: providerData.displayName!,
-                mail: providerData.email!,
-                provider: provider,
-              ),
-            );
-          }
-        }
-        res = "success";
-      }
-    } catch (error) {
-      res = error.toString();
-    }
-    return ResponseModel(message: res, data: accounts);
-  }
-
   Future<ResponseModel> updateUser(UserModel newData) async {
     String res = "some error occurred";
     try {
@@ -342,7 +336,7 @@ class AuthMethods {
       };
 
       final response = await _dio.post(
-        '${routes['update_user']!}/${userController.id}',
+        '${routes['update_user']!}${userController.id}/',
         data: data,
       );
 

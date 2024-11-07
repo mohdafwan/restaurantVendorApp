@@ -46,7 +46,7 @@ class _MessagePerferenceState extends State<MessagePerference> {
               () => Checkbox(
                 value: controller.signUpModel.value.sendMessageViaWhatsApp,
                 onChanged: (value) {
-                  controller.updateMessagePreferences(value ?? false);
+                  controller.updateDetails(sendMessageViaWhatsApp: value ?? false);
                 },
                 checkColor: Colors.white,
                 activeColor: themeColor,

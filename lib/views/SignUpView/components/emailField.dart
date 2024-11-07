@@ -95,7 +95,7 @@ class _EmailFieldState extends State<EmailField> {
                         ),
                       ),
                       keyboardType: TextInputType.emailAddress,
-                      onChanged: (email) => controller.updateEmail(email),
+                      onChanged: (email) => controller.updateDetails(email: email),
                       focusNode: focusNode,
                       readOnly: !isEditing, // Make it read-only if not editing
                     ),

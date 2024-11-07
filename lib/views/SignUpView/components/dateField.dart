@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurant_vendor_app/constants/color_palette.dart';
@@ -31,7 +32,7 @@ class _DateFieldState extends State<DateField> {
   @override
   Widget build(BuildContext context) {
     return FormField<String>(
-      validator: (value) => controller.validateDOB(),
+      validator: (value) => controller.validate(value: controller.dateOfBirth, message: "Please provide date of birth"),
       builder: (state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,66 +46,62 @@ class _DateFieldState extends State<DateField> {
               ),
             ),
             const SizedBox(height: 13),
-            SizedBox(
+            Container(
               width: double.infinity,
               height: 40,
-              child: TextFormField(
-                onTap: () async {
-                  await controller.selectDateOfBirth(context);
-                  setState(() {
-                    dateController.text =
-                        controller.signUpModel.value.dateOfBirth ?? '';
-                    state.didChange(
-                        dateController.text); // Update FormField state
-                  });
-                },
-                controller: dateController,
-                cursorColor: fontColor,
-                style: GoogleFonts.inter(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: state.hasError ? Colors.red : const Color.fromRGBO(216, 218, 220, 1),
+                  width: 1,
                 ),
-                maxLines: 1,
-                textAlignVertical: TextAlignVertical.center,
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  hintText: "Select Date",
-                  hintStyle: GoogleFonts.inter(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: const Color.fromRGBO(128, 128, 128, 1),
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                      color: state.hasError
-                          ? Colors.red
-                          : const Color.fromRGBO(216, 218, 220, 1),
-                      width: 1,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      onTap: () async {
+                        await controller.selectDateOfBirth(context);
+                        setState(() {
+                          dateController.text = controller.signUpModel.value.dateOfBirth ?? '';
+                          state.didChange(dateController.text); // Update FormField state
+                        });
+                      },
+                      controller: dateController,
+                      cursorColor: fontColor,
+                      style: GoogleFonts.inter(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 1,
+                      textAlignVertical: TextAlignVertical.center,
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        hintText: "Select Date",
+                        hintStyle: GoogleFonts.inter(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: const Color.fromRGBO(128, 128, 128, 1),
+                        ),
+                        border: InputBorder.none,
+                        // contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      ),
+                      readOnly: true,
                     ),
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                      color: state.hasError
-                          ? Colors.red
-                          : const Color.fromRGBO(216, 218, 220, 1),
-                      width: 1,
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: SvgPicture.asset(
+                        'assets/signUpAssets/Date.svg',
+                        width: 24,
+                        height: 24,
+                      ),
                     ),
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: themeColor,
-                      width: 1,
-                    ),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                ),
-                readOnly: true,
+                ],
               ),
             ),
             if (state.hasError)

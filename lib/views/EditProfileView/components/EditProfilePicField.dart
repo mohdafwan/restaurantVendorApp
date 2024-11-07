@@ -13,10 +13,6 @@ class EditProfilePicField extends StatefulWidget {
 
 class _EditProfilePicFieldState extends State<EditProfilePicField> {
   final controller = Get.find<EditProfileController>();
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,29 +26,29 @@ class _EditProfilePicFieldState extends State<EditProfilePicField> {
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
             ),
-            child: Obx(() => CircleAvatar(
-                  backgroundColor: const Color.fromRGBO(247, 249, 250, 1),
-                  radius: 36.5,
-                  backgroundImage: controller.selectedPic != null
-                      ? FileImage(controller.selectedPic!)
-                      : controller.profilePic != null
-                          ? NetworkImage(controller.profilePic!)
-                              as ImageProvider
-                          : null,
-                  child: controller.profilePic == null &&
-                          controller.selectedPic == null
-                      ? Text(
-                          "SS",
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.inter(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w600,
-                            height: 1.21,
-                            color: Colors.black,
-                          ),
-                        )
-                      : null,
-                )),
+            child: Obx(() {
+              return CircleAvatar(
+                backgroundColor: const Color.fromRGBO(247, 249, 250, 1),
+                radius: 36.5,
+                backgroundImage: controller.selectedPic != null
+                    ? FileImage(controller.selectedPic!)
+                    : controller.profilePic != null
+                        ? NetworkImage(controller.profilePic!) as ImageProvider
+                        : null,
+                child: controller.profilePic == null && controller.selectedPic == null
+                    ? Text(
+                        "SS",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.inter(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                          height: 1.21,
+                          color: Colors.black,
+                        ),
+                      )
+                    : null,
+              );
+            }),
           ),
         ),
         Positioned(
