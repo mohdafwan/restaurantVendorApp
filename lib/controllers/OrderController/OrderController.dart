@@ -12,9 +12,9 @@ import 'package:encrypt/encrypt.dart' as encrypt;
 
 class OrderController extends GetxController {
   var model = OrderModel(tags: []).obs;
-  final storage = GetStorage();
+  final storage = GetStorage(); // settings
   final restaurantController = Get.find<RestaurantController>();
-  var items = <Map<String, dynamic>>[].obs;
+  var items = <Map<String, dynamic>>[].obs; // settings
   final dio.Dio _dio = dio.Dio();
 
   int? _orderId;
@@ -51,7 +51,7 @@ class OrderController extends GetxController {
       items.assignAll(_initializeListWithPredefinedValues());
       storage.write('items', items);
     } else {
-      items.assignAll(List<Map<String, dynamic>>.from(storage.read('items')));
+      items.assignAll(List<Map<String, dynamic>>.from(storage.read('items'))); // settings
     }
     ever(items, (_) => storage.write('items', items));
   }
@@ -180,8 +180,8 @@ class OrderController extends GetxController {
 
   void addElement(String label) {
     final newItem = {
-      'label': label,
-      'color': _generateRandomColor().value,
+      'label': label,// text
+      'color': _generateRandomColor().value, // color value Color(int value)
     };
     items.add(newItem);
   }

@@ -25,13 +25,16 @@ class SplashScreenController extends GetxController {
         // If a user is signed in, fetch user data
         try {
           final ResponseModel response = await authMethods.getUserData();
+          // todo : check if session is active , if not... end current session and signout user 
           if (response.message == "success") {
             final res = await authMethods.getRestaurentData(); 
             // if restaurent data is not present
             if(res.message == "data not found"){
               Get.offAllNamed('/signup2');
             }else if(res.message == "success"){
-              // todo : send fcm token to backend
+              if(authMethods.justLoggedIn){
+                //todo : create/resume session
+              }
               if(restaurentController.verified ?? false){
                 Get.offAllNamed('/dashboard');
               }else{

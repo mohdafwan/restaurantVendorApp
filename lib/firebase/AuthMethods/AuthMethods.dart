@@ -21,6 +21,7 @@ class AuthMethods {
   final RestaurantController restaurantController = Get.put(RestaurantController(),permanent: true);
   final dio.Dio _dio = dio.Dio();
   bool loggedIn = false;
+  bool justLoggedIn = false;
 
   Stream<User?> get authChanges => _auth.authStateChanges();
   User? get user => _auth.currentUser;
@@ -48,6 +49,7 @@ class AuthMethods {
         User? user = userCredential.user;
         if (user != null) {
           userController.updateUserDetails(uid: user.uid);
+          justLoggedIn = true;
           res = "success";
         }
       } else {
