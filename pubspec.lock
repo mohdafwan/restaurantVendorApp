@@ -966,7 +966,7 @@ packages:
     source: hosted
     version: "0.5.1"
   win32:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: win32
       sha256: e1d0cc62e65dc2561f5071fcbccecf58ff20c344f8f3dc7d4922df372a11df1f
