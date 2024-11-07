@@ -100,7 +100,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             children: [
               GestureDetector(
                 onTap: () {
-                  // dashController.changeTabIndex(1);
+                  dashController.changeTabIndex(1);
                 },
                 child: _navItem(
                   svg: dashController.currentTab == 1
