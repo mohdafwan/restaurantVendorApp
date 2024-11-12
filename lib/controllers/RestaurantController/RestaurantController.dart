@@ -15,12 +15,14 @@ class RestaurantController extends GetxController {
   String? get restaurantName => model.value.restaurantName;
   String? get photoUrl => model.value.photoUrl;
   int? get id => model.value.id;
+  bool? get status => model.value.status;
+  List<String> get labels => model.value.labels;
 
-  void setModel(RestaurantModel newModel){
+  void setModel(RestaurantModel newModel) {
     model.value = newModel;
   }
 
-   void updateRestaurantDetails({
+  void updateRestaurantDetails({
     String? address1,
     String? address2,
     int? pinCode,
@@ -30,7 +32,9 @@ class RestaurantController extends GetxController {
     String? restaurantName,
     String? photoUrl,
     int? id,
-    bool? verified
+    bool? verified,
+    bool? status,
+    List<String>? labels,
   }) {
     RestaurantModel updatedRestaurant = model.value.copyWith(
       address1: address1 ?? model.value.address1,
@@ -42,13 +46,14 @@ class RestaurantController extends GetxController {
       restaurantName: restaurantName ?? model.value.restaurantName,
       photoUrl: photoUrl ?? model.value.photoUrl,
       id: id ?? model.value.id,
-      verified: verified ?? model.value.verified
+      verified: verified ?? model.value.verified,
+      status: status ?? model.value.status,
+      labels: labels ?? List.from(model.value.labels),
     );
-
     model.value = updatedRestaurant;
   }
 
-  void clearData(){
+  void clearData() {
     model.value = RestaurantModel();
   }
 }

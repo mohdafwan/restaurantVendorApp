@@ -24,13 +24,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
       builder: (context) => Positioned(
         bottom: 134,
         right: MediaQuery.of(context).size.width / 2 - 119.5,
-        child: Material(
-          child: TapRegion(
-            onTapOutside: (_){
-              _removeOverlay();
-            },
-            child: OptionContainer(close: _removeOverlay),
-          ),
+        child: TapRegion(
+          onTapOutside: (_){
+            _removeOverlay();
+          },
+          child: OptionContainer(close: _removeOverlay),
         ),
       ),
     );
@@ -283,6 +281,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
               fontWeight: FontWeight.w500,
               fontSize: 16,
               color: const Color.fromRGBO(30, 30, 30, 1),
+              decoration: TextDecoration.none,
             ),
           )
         ],

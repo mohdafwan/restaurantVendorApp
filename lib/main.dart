@@ -1,6 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,13 +8,7 @@ import 'package:restaurant_vendor_app/constants/color_palette.dart';
 import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
 import 'package:restaurant_vendor_app/routes/routes.dart';
 import 'package:restaurant_vendor_app/views/splashScreen/splash_screen.dart';
-import 'controllers/dashboard_controller/dashboard_controller.dart';
-import 'controllers/notification/notification_settrings_controller.dart';
-import 'firebase/firebase_api.dart';
 import 'firebase_options.dart';
-import 'views/main_screens/home_screen/home_screen.dart';
-import 'views/pages/dashboard/dashboard.dart';
-import 'views/pages/dashboard/dashboard_binding.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +16,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await GetStorage.init();
-
+  debugPaintBaselinesEnabled = false;
   // Get.put(NotificationsSettingsController());
   // await FirebaseApi().initNotifications();
   // FirebaseAuth.instance.setLanguageCode('en');

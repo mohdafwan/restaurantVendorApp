@@ -11,6 +11,9 @@ class RestaurantModel {
   String? photoUrl;
   int? id;
   bool? verified;
+  bool status;
+  List<String> labels;
+
   RestaurantModel({
     this.address1,
     this.address2,
@@ -22,6 +25,8 @@ class RestaurantModel {
     this.photoUrl,
     this.id,
     this.verified = false,
+    this.status = false,
+    this.labels = const [],
   });
 
   RestaurantModel copyWith({
@@ -35,6 +40,8 @@ class RestaurantModel {
     String? photoUrl,
     int? id,
     bool? verified,
+    bool? status,
+    List<String>? labels,
   }) {
     return RestaurantModel(
       address1: address1 ?? this.address1,
@@ -47,6 +54,8 @@ class RestaurantModel {
       photoUrl: photoUrl ?? this.photoUrl,
       id: id ?? this.id,
       verified: verified ?? this.verified,
+      status: status ?? this.status,
+      labels: labels ?? List.from(this.labels),
     );
   }
 
@@ -62,6 +71,8 @@ class RestaurantModel {
       'photoUrl': photoUrl,
       'id': id,
       'verified': verified,
+      'status': status,
+      'labels': labels,
     };
   }
 
@@ -76,7 +87,9 @@ class RestaurantModel {
       restaurantName: map['restaurant_name'] != null ? map['restaurant_name'] as String : null,
       photoUrl: map['restaurant_image'] != null ? map['restaurant_image'] as String : null,
       id: map['id'] != null ? map['id'] as int : null,
-      verified: map['verify'] != null ? map['verify'] as bool : null,
+      verified: map['verify'] != null ? map['verify'] as bool : false,
+      status: map['status'] != null ? map['status'] as bool : false,
+      labels: map['labels'] != null ? List<String>.from(map['labels']) : [],
     );
   }
 
@@ -86,37 +99,6 @@ class RestaurantModel {
 
   @override
   String toString() {
-    return 'RestaurantModel(address1: $address1, address2: $address2, pinCode: $pinCode, city: $city, state: $state, country: $country, restaurantName: $restaurantName, photoUrl: $photoUrl, id: $id, verified: $verified)';
-  }
-
-  @override
-  bool operator ==(covariant RestaurantModel other) {
-    if (identical(this, other)) return true;
-  
-    return 
-      other.address1 == address1 &&
-      other.address2 == address2 &&
-      other.pinCode == pinCode &&
-      other.city == city &&
-      other.state == state &&
-      other.country == country &&
-      other.restaurantName == restaurantName &&
-      other.photoUrl == photoUrl &&
-      other.id == id &&
-      other.verified == verified;
-  }
-
-  @override
-  int get hashCode {
-    return address1.hashCode ^
-      address2.hashCode ^
-      pinCode.hashCode ^
-      city.hashCode ^
-      state.hashCode ^
-      country.hashCode ^
-      restaurantName.hashCode ^
-      photoUrl.hashCode ^
-      id.hashCode ^
-      verified.hashCode;
+    return 'RestaurantModel(address1: $address1, address2: $address2, pinCode: $pinCode, city: $city, state: $state, country: $country, restaurantName: $restaurantName, photoUrl: $photoUrl, id: $id, verified: $verified, status: $status, labels: $labels)';
   }
 }

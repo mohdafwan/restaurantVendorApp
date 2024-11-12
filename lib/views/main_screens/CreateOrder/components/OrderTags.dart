@@ -20,14 +20,14 @@ class _OrderTagsState extends State<OrderTags> {
   @override
   void initState() {
     tagNameController = TextEditingController();
-    tagNameController.addListener((){
-      setState(() { });
+    tagNameController.addListener(() {
+      setState(() {});
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-
     return FormField<String>(
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -50,75 +50,62 @@ class _OrderTagsState extends State<OrderTags> {
             const SizedBox(height: 15),
             Container(
               width: double.infinity,
-              height: isExpanded ? null : 32,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
                 color: isExpanded
                     ? Colors.white
                     : const Color.fromRGBO(244, 246, 250, 1),
-                boxShadow: isExpanded ? [
-                  BoxShadow(
-                    color: Colors.black
-                        .withOpacity(0.1), 
-                    spreadRadius: 1, 
-                    blurRadius: 4, 
-                    offset:
-                        const Offset(0, 2), 
-                  ),
-                ]:null,
+                boxShadow: isExpanded
+                    ? [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          spreadRadius: 1,
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ]
+                    : null,
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                        setState(() {
-                          isExpanded = !isExpanded;
-                          editing = false;
-                          tagNameController.clear();
-                        });
-                      
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        if (controller.tags!.isEmpty)
-                          Text(
-                            'Choose Tag',
-                            style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                              color: const Color.fromRGBO(30, 30, 30, 1)
-                            ),
-                          ),
-                          if(controller.tags!.isNotEmpty)
-                          Text(
-                            controller.tags!.join(', '),
-                            style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                              color: const Color.fromRGBO(30, 30, 30, 1)
-                            ),
-                          ),
-                          Icon(isExpanded
-                              ? Icons.keyboard_arrow_up_rounded
-                              : Icons.keyboard_arrow_down_rounded),
-                        ],
-                      ),
+              child: ExpansionTile(
+                minTileHeight: 32,
+                title: Text(
+                  controller.tags!.isEmpty
+                      ? 'Choose Tag'
+                      : controller.tags!.join(', '),
+                  style: GoogleFonts.inter(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                    color: const Color.fromRGBO(30, 30, 30, 1),
                   ),
-                    if(isExpanded)...[
-                      const SizedBox(
-                        height: 26,
-                      ),
-                      add(),
-                      const SizedBox(
-                      height: 16,
-                    ),
-                    Obx(() {
-                      return Column(
-                          children: controller.items.map((elem) {
+                ),
+                trailing: Icon(
+                  isExpanded
+                      ? Icons.keyboard_arrow_up_rounded
+                      : Icons.keyboard_arrow_down_rounded,
+                  color: Colors.black,
+                ),
+                onExpansionChanged: (value) {
+                  setState(() {
+                    isExpanded = value;
+                  });
+                },
+                // Remove the horizontal lines by setting custom shape properties
+                collapsedShape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4),
+                  side: BorderSide.none,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4),
+                  side: BorderSide.none,
+                ),
+                children: [
+                  const SizedBox(height: 26),
+                  add(),
+                  const SizedBox(height: 16),
+                  Obx(() {
+                    return Column(
+                      children: controller.items.map((elem) {
                         String label = elem['label'];
                         Color color = Color(elem['color']);
                         return Column(
@@ -129,46 +116,40 @@ class _OrderTagsState extends State<OrderTags> {
                               selected: controller.tags!.contains(label),
                               onChanged: (value) {
                                 if (value == null) return;
-                                if (value) {
-                                  setState(() {
+                                setState(() {
+                                  if (value) {
                                     controller.tags!.add(label);
-                                  });
-                                } else {
-                                  setState(() {
+                                  } else {
                                     controller.tags!.remove(label);
-                                  });
-                                }
+                                  }
+                                });
                               },
                             ),
                             const SizedBox(height: 16),
                           ],
                         );
-                      }).toList());
-                    }),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    Center(
-                      child: SizedBox(
-                        width: 176,
-                        child: Button(
-                          onPressed: () {
-                            controller.addElement(tagNameController.text);
-                            setState(() {
-                              tagNameController.clear();
-                              editing = false;
-                            });
-                          },
-                          disable: tagNameController.text.isEmpty,
-                          text: "Save",
-                          color: const Color.fromRGBO(44, 44, 44, 1),
-                        ),
+                      }).toList(),
+                    );
+                  }),
+                  const SizedBox(height: 16),
+                  Center(
+                    child: SizedBox(
+                      width: 176,
+                      child: Button(
+                        onPressed: () {
+                          controller.addElement(tagNameController.text);
+                          setState(() {
+                            tagNameController.clear();
+                            editing = false;
+                          });
+                        },
+                        disable: tagNameController.text.isEmpty,
+                        text: "Save",
+                        color: const Color.fromRGBO(44, 44, 44, 1),
                       ),
                     ),
-                    const SizedBox(
-                        height: 16,
-                      ),
-                  ]
+                  ),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),
@@ -189,13 +170,13 @@ class _OrderTagsState extends State<OrderTags> {
     );
   }
 
-  Widget add(){
+  Widget add() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         GestureDetector(
-          onTap: (){
+          onTap: () {
             setState(() {
               editing = true;
             });
@@ -247,30 +228,31 @@ class _OrderTagsState extends State<OrderTags> {
             ),
           ),
         ),
-        const SizedBox(width: 20,),
-        if(editing)
-        IconButton(
-          onPressed: () {
-            if (tagNameController.text.isEmpty) {
+        const SizedBox(
+          width: 20,
+        ),
+        if (editing)
+          IconButton(
+            onPressed: () {
+              if (tagNameController.text.isEmpty) {
                 setState(() {
                   editing = false;
                 });
               }
-            tagNameController.clear();
-          },
-          padding: const EdgeInsets.all(0),
-          icon: const Icon(Icons.close),
-        )
+              tagNameController.clear();
+            },
+            padding: const EdgeInsets.all(0),
+            icon: const Icon(Icons.close),
+          )
       ],
     );
   }
 
-  Widget item({
-    required bool selected,
-    required void Function(bool?) onChanged,
-    required String label,
-    required Color color
-  }) {
+  Widget item(
+      {required bool selected,
+      required void Function(bool?) onChanged,
+      required String label,
+      required Color color}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -278,10 +260,7 @@ class _OrderTagsState extends State<OrderTags> {
         Container(
           width: 36,
           height: 36,
-          decoration:BoxDecoration(
-            shape: BoxShape.circle,
-            color: color
-          ),
+          decoration: BoxDecoration(shape: BoxShape.circle, color: color),
           child: Center(
             child: SizedBox(
               width: 16,
@@ -290,12 +269,14 @@ class _OrderTagsState extends State<OrderTags> {
             ),
           ),
         ),
-        const SizedBox(width: 20,),
+        const SizedBox(
+          width: 20,
+        ),
         Text(
           label,
           style: GoogleFonts.inter(
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
+            fontWeight: FontWeight.w500,
+            fontSize: 14,
             color: const Color.fromRGBO(30, 30, 30, 1),
           ),
         ),
@@ -306,13 +287,10 @@ class _OrderTagsState extends State<OrderTags> {
           child: Checkbox(
             value: selected,
             onChanged: onChanged,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8)
-            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             side: const BorderSide(
-              color: Color.fromRGBO(254, 110, 57, 1),
-              width: 1
-            ),
+                color: Color.fromRGBO(254, 110, 57, 1), width: 1),
             activeColor: const Color.fromRGBO(254, 110, 57, 1),
           ),
         )
