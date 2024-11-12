@@ -4,6 +4,8 @@ import 'package:restaurant_vendor_app/controllers/dashboard_controller/dashboard
 import 'package:restaurant_vendor_app/views/main_screens/home_screen/homePage.dart';
 import 'package:restaurant_vendor_app/widgets/BottomNavBar.dart';
 
+import '../../main_screens/home_screen/home_screen.dart';
+
 class Dashboard extends StatelessWidget {
   const Dashboard({super.key});
 
@@ -15,6 +17,7 @@ class Dashboard extends StatelessWidget {
           index: controller.tabIndex.value,
           children: const [
             HomePage(),
+            HomeScreen(),
           ],
         ),
         bottomNavigationBar: const BottomNavBar(), // uncomment order and profile onTap when they are created in navBar

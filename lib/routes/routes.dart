@@ -11,6 +11,8 @@ import 'package:restaurant_vendor_app/views/pages/onboarding/boarding_screen.dar
 import 'package:restaurant_vendor_app/views/setting/setting_page.dart';
 import 'package:restaurant_vendor_app/views/tickets/raise_ticket.dart';
 
+import '../views/main_screens/home_screen/search_screen/search_page.dart';
+
 class AppRoutes {
   static final routes = [
     GetPage(
@@ -80,6 +82,13 @@ class AppRoutes {
       transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 250),
       page: () => const SubmitIssuePage(),
+    ),
+
+    GetPage(
+      name: '/search',
+      transition: Transition.rightToLeft,
+      transitionDuration: const Duration(milliseconds: 250),
+      page: () => const SearchPage(),
     ),
   ];
 }
