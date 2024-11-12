@@ -1,413 +1,10 @@
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:restaurant_vendor_app/controllers/dashboard_controller/dashboard_controller.dart';
-// import 'package:restaurant_vendor_app/controllers/pages_controller/home_controller/home_controller.dart';
-// import 'package:share_plus/share_plus.dart';
-// import 'package:logger/logger.dart';
-
-// class HomeScreen extends StatefulWidget {
-//   const HomeScreen({super.key});
-
-//   @override
-//   State<HomeScreen> createState() => _HomeScreenState();
-// }
-
-// class _HomeScreenState extends State<HomeScreen> {
-//   var logger = Logger();
-//   CurrentOrderController currentOrders = Get.put(CurrentOrderController());
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: const Color(0xffFE6E39),
-//       appBar: AppBar(
-//         elevation: 0,
-//         scrolledUnderElevation: 0,
-//         backgroundColor: const Color(0xffFE6E39),
-//         title: const Padding(
-//           padding: EdgeInsets.only(left: 16.0),
-//           child: Text(
-//             "Hi, Sahib",
-//             style: TextStyle(
-//                 fontSize: 24, fontWeight: FontWeight.w600, color: Colors.white),
-//           ),
-//         ),
-//         centerTitle: false,
-//         actions: [
-//           GestureDetector(
-//             onTap: () {
-//               Get.find<DashboardController>().changeTabIndex(2);
-//             },
-//             child: const Padding(
-//               padding: EdgeInsets.only(right: 16),
-//               child: CircleAvatar(
-//                 child: Icon(Icons.person),
-//               ),
-//             ),
-//           )
-//         ],
-//       ),
-//       body: Container(
-//         decoration: const BoxDecoration(
-//             color: Colors.white,
-//             borderRadius: BorderRadius.only(
-//                 topLeft: Radius.circular(12), topRight: Radius.circular(12))),
-//         child: Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 23, vertical: 20),
-//           child: Column(
-//             children: [
-//               const Row(
-//                 children: [
-//                   Text(
-//                     "Current order status",
-//                     style: TextStyle(
-//                         fontSize: 16,
-//                         fontWeight: FontWeight.w600,
-//                         color: Color(0xff090A0A)),
-//                   ),
-//                 ],
-//               ),
-//               const SizedBox(height: 10),
-
-//               Expanded(
-//                 child: Obx(() {
-//                   if (currentOrders.isLoading.value) {
-//                     // Loading state
-//                     return const Center(child: CircularProgressIndicator());
-//                   } else if (currentOrders.hasError.value) {
-//                     // Error state
-//                     return Center(
-//                       child: Column(
-//                         mainAxisSize: MainAxisSize.min,
-//                         children: [
-//                           const Icon(Icons.error_outline,
-//                               size: 60, color: Colors.red),
-//                           const SizedBox(height: 10),
-//                           Text(currentOrders.errorMessage.value,
-//                               style: const TextStyle(
-//                                   fontSize: 18, color: Colors.black)),
-//                         ],
-//                       ),
-//                     );
-//                   } else if (currentOrders.currentOrder.isEmpty) {
-//                     // No data state (empty list)
-//                     return const Center(
-//                       child: Text('No orders found',
-//                           style: TextStyle(fontSize: 18)),
-//                     );
-//                   } else {
-//                     // Data state (display list of orders)
-//                     return ListView.builder(
-//                         itemCount: currentOrders.currentOrder.length,
-//                         itemBuilder: (BuildContext context, int index) {
-//                           final order = currentOrders.currentOrder[index];
-//                           return CurrentOrderTile(
-//                             title: order.restaurantName,
-//                             place: order.place,
-//                             status: order.status,
-//                           );
-//                         });
-//                   }
-//                 }),
-//               ),
-
-//               const SizedBox(height: 20),
-
-//               //View order history Btn
-//               Padding(
-//                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
-//                 child: InkWell(
-//                   onTap: () {
-//                     Get.find<DashboardController>().changeTabIndex(4);
-//                   },
-//                   child: Container(
-//                     width: double.infinity * 0.6,
-//                     height: 39,
-//                     decoration: BoxDecoration(
-//                         borderRadius: BorderRadius.circular(8),
-//                         border: Border.all(
-//                           color: const Color(0xffFC440E),
-//                           width: 1,
-//                         )),
-//                     child: const Center(
-//                       child: Text(
-//                         "View order history",
-//                         style: TextStyle(
-//                           fontSize: 14,
-//                           fontWeight: FontWeight.w500,
-//                           color: Color(0xffFC440E),
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//               ),
-
-//               const SizedBox(height: 30),
-
-//               //Settings
-//               Padding(
-//                 padding: const EdgeInsets.symmetric(horizontal: 14.0),
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     const Text(
-//                       "Settings",
-//                       style: TextStyle(
-//                           fontSize: 16,
-//                           fontWeight: FontWeight.w600,
-//                           color: Color(0xff090A0A)),
-//                     ),
-//                     const SizedBox(height: 5),
-//                     InkWell(
-//                       //Setting page route
-//                       onTap: () {
-//                         Get.toNamed("/onsettingnotification");
-//                       },
-//                       child: const Row(
-//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                         children: [
-//                           Text(
-//                             "Notification settings",
-//                             style: TextStyle(
-//                                 fontSize: 14,
-//                                 fontWeight: FontWeight.w400,
-//                                 color: Color(0xff090A0A)),
-//                           ),
-//                           CircleAvatar(
-//                             backgroundColor: Color(0xffFBF5E8),
-//                             radius: 16,
-//                             child: Icon(
-//                               Icons.arrow_forward,
-//                               color: Color(0xff1E1E1E),
-//                               size: 20,
-//                             ),
-//                           )
-//                         ],
-//                       ),
-//                     )
-//                   ],
-//                 ),
-//               ),
-//               const SizedBox(height: 24),
-
-//               //Refer
-//               Stack(
-//                 children: [
-//                   Container(
-//                     width: double.infinity,
-//                     height: 117,
-//                     decoration: BoxDecoration(
-//                       borderRadius: BorderRadius.circular(20),
-//                       color: const Color(0xffFFF4ED),
-//                       boxShadow: [
-//                         BoxShadow(
-//                           color: Colors.black.withOpacity(0.25),
-//                           offset: const Offset(0, 4),
-//                           blurRadius: 8.98,
-//                           spreadRadius: 0,
-//                         )
-//                       ],
-//                     ),
-//                   ),
-//                   Row(
-//                     children: [
-//                       const Expanded(
-//                         child: SizedBox(),
-//                       ),
-//                       SizedBox(
-//                         width: 150,
-//                         height: 117,
-//                         child: ClipRRect(
-//                           borderRadius: const BorderRadius.only(
-//                               topRight: Radius.circular(20),
-//                               bottomRight: Radius.circular(20)),
-//                           clipBehavior: Clip.hardEdge,
-//                           child: OverflowBox(
-//                             maxHeight: 250,
-//                             maxWidth: 250,
-//                             child: Padding(
-//                               padding: const EdgeInsets.only(left: 63.0),
-//                               child: Container(
-//                                 height: 230,
-//                                 width: 230,
-//                                 decoration: const BoxDecoration(
-//                                     color: Color(0xffFFE5D4),
-//                                     shape: BoxShape.circle),
-//                               ),
-//                             ),
-//                           ),
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                   Padding(
-//                     padding: const EdgeInsets.only(
-//                         top: 18, bottom: 15, left: 16, right: 8),
-//                     child: Row(
-//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                       children: [
-//                         Column(
-//                           crossAxisAlignment: CrossAxisAlignment.start,
-//                           children: [
-//                             const Text(
-//                               "Refer your friends",
-//                               style: TextStyle(
-//                                 fontSize: 14,
-//                                 fontWeight: FontWeight.w600,
-//                                 color: Color(0xff1E1E1E),
-//                               ),
-//                             ),
-//                             const SizedBox(height: 14),
-//                             InkWell(
-//                               onTap: () {
-//                                 Share.share(
-//                                     'check out my website https://example.com');
-//                               },
-//                               child: Container(
-//                                 decoration: BoxDecoration(
-//                                     color: const Color(0xffFED7B3),
-//                                     borderRadius: BorderRadius.circular(8)),
-//                                 child: const Padding(
-//                                   padding: EdgeInsets.symmetric(
-//                                       horizontal: 12, vertical: 8),
-//                                   child: Text(
-//                                     "Refer now",
-//                                     style: TextStyle(
-//                                       fontSize: 12,
-//                                       fontWeight: FontWeight.w600,
-//                                       color: Color(0xffFC440E),
-//                                     ),
-//                                   ),
-//                                 ),
-//                               ),
-//                             )
-//                           ],
-//                         ),
-//                         const Padding(
-//                           padding: EdgeInsets.only(right: 12.0),
-//                           child: Image(
-//                             image: AssetImage(
-//                               "assets/homeImages/referfriendimage.png",
-//                             ),
-//                           ),
-//                         )
-//                       ],
-//                     ),
-//                   ),
-//                 ],
-//               ),
-
-//               const SizedBox(height: 24),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// class CurrentOrderTile extends StatelessWidget {
-//   const CurrentOrderTile({
-//     super.key,
-//     required this.title,
-//     required this.place,
-//     required this.status,
-//   });
-//   final String title;
-//   final String place;
-//   final String status;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10),
-//       child: Container(
-//         decoration: BoxDecoration(
-//             color: Colors.white,
-//             borderRadius: BorderRadius.circular(8),
-//             boxShadow: [
-//               BoxShadow(
-//                   color: const Color(0xff6434F8).withOpacity(0.15),
-//                   offset: const Offset(1.5, 2.99),
-//                   blurRadius: 8.98,
-//                   spreadRadius: 0)
-//             ]),
-//         child: Padding(
-//           padding: const EdgeInsets.all(22.0),
-//           child: Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   Text(
-//                     title,
-//                     style: const TextStyle(
-//                         fontSize: 15,
-//                         fontWeight: FontWeight.w600,
-//                         color: Color(0xff1E1E1E)),
-//                   ),
-//                   const SizedBox(height: 11),
-//                   Row(
-//                     children: [
-//                       Container(
-//                         height: 4,
-//                         width: 4,
-//                         decoration: BoxDecoration(
-//                             color: Colors.red,
-//                             borderRadius: BorderRadius.circular(100)),
-//                       ),
-//                       const SizedBox(
-//                         width: 6,
-//                       ),
-//                       Text(
-//                         place,
-//                         style: const TextStyle(
-//                             fontSize: 13,
-//                             fontWeight: FontWeight.w400,
-//                             color: Color(0xff1E1E1E)),
-//                       )
-//                     ],
-//                   )
-//                 ],
-//               ),
-//               Container(
-//                 decoration: BoxDecoration(
-//                     color: (status == "Preparing")
-//                         ? const Color(0xffFED7B3)
-//                         : const Color(0xffE6F5EE),
-//                     borderRadius: BorderRadius.circular(8)),
-//                 child: Padding(
-//                   padding:
-//                       const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-//                   child: Text(
-//                     status,
-//                     style: TextStyle(
-//                       fontSize: 12,
-//                       fontWeight: FontWeight.w700,
-//                       color: (status == "Preparing")
-//                           ? const Color(0xffFC440E)
-//                           : const Color(0xff069855),
-//                     ),
-//                   ),
-//                 ),
-//               )
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:restaurant_vendor_app/models/home/corrent_order_ststus_model.dart';
 import '../../../constants/color_palette.dart';
 import '../../../controllers/pages_controller/home_controller/home_controller.dart';
-import 'components/popup.dart';
+import 'components/order_tile.dart';
+import 'components/total_order_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -455,10 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: DefaultTabController(
             length: 4, // Number of tabs
             child: TabBar(
-              onTap: (index) {
-                final tabs = ['Daily', 'Custom', 'Monthly', 'All'];
-                currentOrders.updateDateLabel(tabs[index]);
-              },
+              onTap: (index) => currentOrders.updateDateLabel(index),
               tabs: const [
                 Tab(text: 'Daily'),
                 Tab(text: 'Custom'),
@@ -491,69 +85,42 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               color: Colors.grey.shade100,
               height: 50,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () async {
-                        // Open date range picker
-                        final pickedDateRange = await showDateRangePicker(
-                          context: context,
-                          firstDate: DateTime(2020),
-                          lastDate: DateTime.now(),
-                          initialDateRange: DateTimeRange(
-                            start: DateTime.now()
-                                .subtract(const Duration(days: 1)),
-                            end: DateTime.now(),
-                          ),
-                        );
-                        if (pickedDateRange != null) {
-                          currentOrders.dateRange.value = pickedDateRange;
-                          currentOrders
-                              .updateDateLabel(currentOrders.selectedTab.value);
-                        }
-                      },
-                      child: Obx(
-                        () => Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              currentOrders.dateLabel.value,
-                              style: const TextStyle(
-                                  color: Colors.black, fontSize: 16),
-                            ),
-                            const SizedBox(width: 10),
-                            const Icon(Icons.keyboard_arrow_down_sharp,
-                                color: Colors.black),
-                          ],
-                        ),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Obx(() {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    if (currentOrders.selectedTab.value != 3) ...[
+                      GestureDetector(
+                        onTap: () => currentOrders.selectDate(context),
+                        child: Obx(() => Row(
+                              children: [
+                                Text(
+                                  currentOrders.dateLabel.value,
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 14),
+                                ),
+                                const SizedBox(width: 10),
+                                const Icon(Icons.keyboard_arrow_down_sharp,
+                                    color: Colors.black),
+                              ],
+                            )),
                       ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: GestureDetector(
+                      const SizedBox(width: 10),
+                    ],
+                    GestureDetector(
                       onTap: () {
-                        // Open filter bottom sheet
                         showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
-                          builder: (context) {
-                            return const FilterBottomSheet();
-                          },
+                          builder: (context) => const FilterBottomSheet(),
                         );
                       },
                       child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
                             "All Orders",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                            ),
+                            style: TextStyle(color: Colors.black, fontSize: 14),
                           ),
                           SizedBox(width: 10),
                           Icon(Icons.keyboard_arrow_down_sharp,
@@ -561,72 +128,83 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                );
+              }),
             ),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // show total order count if there are orders in the order list
-                    Obx(() {
-                      if (currentOrders.orderList.isNotEmpty) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          child: Text(
-                            'Total Order: ${currentOrders.orderList.length}',
-                            style: GoogleFonts.inter(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
+              child: CustomScrollView(
+                slivers: [
+                  Obx(() {
+                    if (currentOrders.isLoading.value) {
+                      return const SliverFillRemaining(
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    } else if (currentOrders.isError.value) {
+                      return const SliverFillRemaining(
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.error_outline,
+                                  size: 60, color: Colors.red),
+                              SizedBox(height: 10),
+                              Text(
+                                'Error loading orders',
+                                style: TextStyle(
+                                    fontSize: 18, color: Colors.black),
+                              ),
+                            ],
                           ),
-                        );
-                      } else {
-                        return const SizedBox.shrink();
-                      }
-                    }),
-                    Expanded(
-                      child: Obx(() {
-                        if (currentOrders.isLoading.value) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        } else if (currentOrders.isError.value) {
-                          return const Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.error_outline,
-                                    size: 60, color: Colors.red),
-                                SizedBox(height: 10),
-                                Text(
-                                  'Error loading orders',
-                                  style: TextStyle(
-                                      fontSize: 18, color: Colors.black),
-                                ),
-                              ],
-                            ),
-                          );
-                        } else if (currentOrders.orderList.isEmpty) {
-                          return const Center(
+                        ),
+                      );
+                    } else if (currentOrders.orderList.isEmpty) {
+                      return const SliverFillRemaining(
+                        child: Center(
                             child: Text('No orders found',
-                                style: TextStyle(fontSize: 18)),
-                          );
-                        } else {
-                          return ListView.builder(
-                            itemCount: currentOrders.orderList.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final order = currentOrders.orderList[index];
-                              return OrderTile(order: order);
-                            },
-                          );
-                        }
-                      }),
-                    ),
-                  ],
-                ),
+                                style: TextStyle(fontSize: 18))),
+                      );
+                    } else {
+                      return SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            if (index == 0) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 16),
+                                      child: Text(
+                                        'Total Order: ${currentOrders.orderList.length}',
+                                        style: GoogleFonts.inter(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                    OrderSummaryCard(),
+                                    const SizedBox(height: 20),
+                                  ],
+                                ),
+                              );
+                            }
+                            final order = currentOrders.orderList[index - 1];
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: OrderTile(order: order),
+                            );
+                          },
+                          childCount: currentOrders.orderList.length + 1,
+                        ),
+                      );
+                    }
+                  }),
+                ],
               ),
             ),
           ],
@@ -752,397 +330,9 @@ class FilterBottomSheet extends StatelessWidget {
   }
 }
 
-class OrderTile extends StatelessWidget {
-  final OrderModel order;
 
-  const OrderTile({super.key, required this.order});
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xffE5E9EB)),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xff6434F8).withOpacity(0.15),
-            blurRadius: 8.98,
-            offset: const Offset(1.5, 2.99),
-          )
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.grey.shade200,
-                      child: const Icon(
-                        Icons.credit_card,
-                        size: 20,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      order.orderId,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Text("Total: "),
-                    Text(
-                      order.totalAmount,
-                    ),
-                    const SizedBox(width: 5),
-                    if (order.status == 'Ongoing')
-                      OngoingPopup(
-                        onEdit: () =>
-                            PopupController.showEditDialog(context, () {
-                          // Implement edit action
-                          Navigator.pop(context);
-                        }),
-                        onDelete: () =>
-                            PopupController.showDeleteDialog(context, () {
-                          // Implement delete action
-                          Navigator.pop(context);
-                        }),
-                      )
-                    else if (order.status == 'Order Ready')
-                      OrderReadyPopup(
-                        onEdit: () =>
-                            PopupController.showEditDialog(context, () {
-                          // Implement edit action
-                          Navigator.pop(context);
-                        }),
-                        onOngoing: () =>
-                            PopupController.showRevertToOngoingDialog(context,
-                                () {
-                          // Mark as Ongoing action
-                          Navigator.pop(context);
-                        }),
-                        onCompleted: () =>
-                            PopupController.showRevertToCompletedDialog(context,
-                                () {
-                          // Mark as Completed action
-                          Navigator.pop(context);
-                        }),
-                        onDelete: () =>
-                            PopupController.showDeleteDialog(context, () {
-                          // Implement delete action
-                          Navigator.pop(context);
-                        }),
-                      )
-                    else if (order.status == 'Completed')
-                      CompletedPopup(
-                        onEdit: () =>
-                            PopupController.showEditDialog(context, () {
-                          // Implement edit action
-                          Navigator.pop(context);
-                        }),
-                        onOngoing: () =>
-                            PopupController.showRevertToOngoingDialog(context,
-                                () {
-                          // Mark as Ongoing action
-                          Navigator.pop(context);
-                        }),
-                        onOrderReady: () =>
-                            PopupController.showRevertToOrderReadyDialog(
-                                context, () {
-                          // Mark as Order Ready action
-                          Navigator.pop(context);
-                        }),
-                        onDelete: () =>
-                            PopupController.showDeleteDialog(context, () {
-                          // Implement delete action
-                          Navigator.pop(context);
-                        }),
-                      ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const Divider(
-            color: Color(0xffE5E9EB),
-            height: 0,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      order.userId,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    _StatusBadge(status: order.status),
-                  ],
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        order.userName,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(order.date),
-                  ],
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(order.orderNumber),
-                    const SizedBox(width: 10),
-                    Text(order.time),
-                  ],
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(order.phoneNumber ?? ''),
-                    const SizedBox(width: 10),
-                    _OrderTypeBadge(orderType: order.orderType),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          if (order.status != 'Completed')
-            Container(
-              padding: const EdgeInsets.all(10.0),
-              decoration: const BoxDecoration(
-                color: Color(0xffF5F5F5),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(8),
-                  bottomRight: Radius.circular(8),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  order.status == 'Ongoing'
-                      ? Expanded(
-                          child: CustomButton(
-                            text: 'Order Ready',
-                            onPressed: () {
-                              // Action for Order Ready
-                            },
-                            backgroundColor: ColorPalette.primaryColor,
-                            textColor: Colors.white,
-                            fontSize: 16,
-                            height: 44,
-                            borderRadius: 10,
-                          ),
-                        )
-                      : order.status == 'Order Ready'
-                          ? Expanded(
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: CustomButton(
-                                      text: 'Notify Again',
-                                      onPressed: () {
-                                        // Button action
-                                      },
-                                      isOutlined: true,
-                                      textColor: Colors.blue,
-                                      borderSide:
-                                          const BorderSide(color: Colors.blue),
-                                      fontSize: 16,
-                                      height: 44,
-                                      borderRadius: 10,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: CustomButton(
-                                      text: 'Complete',
-                                      onPressed: () {
-                                        // Button action
-                                      },
-                                      backgroundColor: Colors.green,
-                                      textColor: Colors.white,
-                                      fontSize: 16,
-                                      height: 44,
-                                      borderRadius: 10,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : Container(),
-                ],
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
 
-class _StatusBadge extends StatelessWidget {
-  final String status;
-
-  const _StatusBadge({required this.status});
-
-  @override
-  Widget build(BuildContext context) {
-    Color statusColor = Colors.green;
-    if (status == 'Order Ready') {
-      statusColor = Colors.orange;
-    } else if (status == 'Ongoing') {
-      statusColor = Colors.lightGreen;
-    }
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      decoration: BoxDecoration(
-        color: statusColor.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        status,
-        style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-          color: statusColor,
-        ),
-      ),
-    );
-  }
-}
-
-class _OrderTypeBadge extends StatelessWidget {
-  final String orderType;
-
-  const _OrderTypeBadge({required this.orderType});
-
-  @override
-  Widget build(BuildContext context) {
-    Color badgeColor = Colors.blue;
-    if (orderType == 'Food') {
-      badgeColor = Colors.blue;
-    } else if (orderType == 'Drink') {
-      badgeColor = Colors.purple;
-    }
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: badgeColor.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        orderType,
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-          color: badgeColor,
-        ),
-      ),
-    );
-  }
-}
-
-class CustomButton extends StatefulWidget {
-  final String text;
-  final VoidCallback onPressed;
-  final Color backgroundColor;
-  final Color textColor;
-  final double fontSize;
-  final double height;
-  final double borderRadius;
-  final bool isOutlined; // To determine if it's an outlined button
-  final BorderSide? borderSide;
-
-  const CustomButton({
-    super.key,
-    required this.text,
-    required this.onPressed,
-    this.backgroundColor = const Color(0xffFD4712),
-    this.textColor = Colors.white,
-    this.fontSize = 16,
-    this.height = 44,
-    this.borderRadius = 8,
-    this.isOutlined = false,
-    this.borderSide,
-  });
-
-  @override
-  State<CustomButton> createState() => _CustomButtonState();
-}
-
-class _CustomButtonState extends State<CustomButton> {
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: widget.height,
-      width: double.infinity,
-      child: widget.isOutlined
-          ? OutlinedButton(
-              onPressed: widget.onPressed,
-              style: OutlinedButton.styleFrom(
-                foregroundColor: widget.textColor,
-                side: widget.borderSide ??
-                    BorderSide(color: widget.backgroundColor),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(widget.borderRadius),
-                ),
-              ),
-              child: Text(
-                widget.text,
-                style: GoogleFonts.inter(
-                  color: widget.textColor,
-                  fontWeight: FontWeight.w700,
-                  fontSize: widget.fontSize,
-                ),
-              ),
-            )
-          : ElevatedButton(
-              onPressed: widget.onPressed,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: widget.backgroundColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(widget.borderRadius),
-                ),
-              ),
-              child: Text(
-                widget.text,
-                style: GoogleFonts.inter(
-                  color: widget.textColor,
-                  fontWeight: FontWeight.w700,
-                  fontSize: widget.fontSize,
-                ),
-              ),
-            ),
-    );
-  }
-}
 
 // class FilterRowWidget extends StatefulWidget {
 //   const FilterRowWidget({super.key});

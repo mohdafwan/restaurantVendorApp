@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
               Theme.of(context).textTheme,
             ),
           ),
-         home: const SplashScreen(),
+         home: const HomeScreen(),
           getPages: AppRoutes.routes,
          ),
     );

@@ -12,7 +12,8 @@ import 'package:restaurant_vendor_app/utils/toastMessage.dart';
 
 // http://10.0.2.2:8000 for emulation
 // replace with your machine ip address to test on real device
-const host = "http://192.168.29.88:8000";
+const host = "http://192.168.1.5:8000";
+// 192.168.1.5
 
 class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;

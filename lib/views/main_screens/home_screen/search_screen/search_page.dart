@@ -1,64 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import '../../../../controllers/pages_controller/home_controller/home_controller.dart';
-import '../home_screen.dart';
+import '../components/order_tile.dart';
 
-class SearchPage extends StatefulWidget {
+class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
 
   @override
-  State<SearchPage> createState() => _SearchPageState();
-}
-
-class _SearchPageState extends State<SearchPage> {
-  final TextEditingController searchController = TextEditingController();
-  final box = GetStorage();
-  final CurrentOrderController currentOrderController = Get.find();
-
-  @override
-  void initState() {
-    super.initState();
-    loadSearchHistory();
-  }
-
-  void loadSearchHistory() {
-    final savedHistory = box.read('searchHistory');
-    if (savedHistory != null && savedHistory is List) {
-      currentOrderController.searchHistory
-          .assignAll(List<String>.from(savedHistory));
-    }
-  }
-
-  void saveSearchHistory(String searchQuery) {
-    if (searchQuery.isNotEmpty &&
-        !currentOrderController.searchHistory.contains(searchQuery)) {
-      currentOrderController.searchHistory.insert(0, searchQuery);
-      box.write('searchHistory', currentOrderController.searchHistory);
-    }
-  }
-
-  void clearSearchHistoryItem(String searchItem) {
-    currentOrderController.searchHistory.remove(searchItem);
-    box.write('searchHistory', currentOrderController.searchHistory);
-    setState(() {});
-  }
-
-  void onSearchChanged(String value) {
-    currentOrderController
-        .filterOrders(value); // Filter orders based on search input
-    saveSearchHistory(
-        value); // Save search query to history if not already saved
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final CurrentOrderController currentOrderController = Get.find();
+    final TextEditingController searchController = TextEditingController();
+    RxBool isTextEmpty = false.obs; // Observable to manage text field state
+
+    // Listen to changes in the search controller text
+    searchController.addListener(() {
+      isTextEmpty.value = searchController.text.isEmpty;
+      currentOrderController.filterOrders(searchController.text);
+    });
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: _SearchWidget(
           controller: searchController,
-          onSearch: onSearchChanged,
+          onSearch: (query) {
+            currentOrderController.filterOrders(query);
+            currentOrderController.saveSearchHistory(query);
+          },
+          isTextEmpty: isTextEmpty, // Pass observable to the search widget
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -70,6 +39,7 @@ class _SearchPageState extends State<SearchPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Showing number of results if search query is not empty
           Obx(() {
             if (currentOrderController.filteredOrders.isNotEmpty &&
                 searchController.text.isNotEmpty) {
@@ -115,11 +85,13 @@ class _SearchPageState extends State<SearchPage> {
                       title: Text(searchItem),
                       trailing: IconButton(
                         icon: const Icon(Icons.clear),
-                        onPressed: () => clearSearchHistoryItem(searchItem),
+                        onPressed: () => currentOrderController
+                            .clearSearchHistoryItem(searchItem),
                       ),
                       onTap: () {
                         searchController.text = searchItem;
-                        onSearchChanged(searchItem); // Trigger search on tap
+                        currentOrderController.filterOrders(searchItem);
+                        currentOrderController.saveSearchHistory(searchItem);
                       },
                     );
                   },
@@ -155,10 +127,12 @@ class _SearchPageState extends State<SearchPage> {
 class _SearchWidget extends StatelessWidget {
   final TextEditingController controller;
   final Function(String) onSearch;
+  final RxBool isTextEmpty; // Observable to check if the text is empty
 
   const _SearchWidget({
     required this.controller,
     required this.onSearch,
+    required this.isTextEmpty,
   });
 
   @override
@@ -177,44 +151,51 @@ class _SearchWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: TextFormField(
-        style: const TextStyle(
-          color: Color(0xff111111),
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-        ),
-        controller: controller,
-        onChanged: onSearch,
-        maxLines: 1,
-        decoration: InputDecoration(
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+      child: Obx(() {
+        return TextFormField(
+          style: const TextStyle(
+            color: Color(0xff111111),
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
           ),
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: const EdgeInsets.symmetric(vertical: 8),
-          prefixIcon: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Icon(Icons.search),
+          controller: controller,
+          onChanged: (value) {
+            onSearch(value);
+          },
+          onFieldSubmitted: (value) {
+            onSearch(value);
+          },
+          maxLines: 1,
+          decoration: InputDecoration(
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.symmetric(vertical: 8),
+            prefixIcon: const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Icon(Icons.search),
+            ),
+            hintText: "Search here",
+            hintStyle:
+                TextStyle(color: const Color(0xff111111).withOpacity(0.2)),
+            border: const OutlineInputBorder(
+              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
+            suffixIcon: isTextEmpty.value
+                ? null
+                : IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      controller.clear();
+                      onSearch(''); // Trigger search with empty query
+                    },
+                  ),
           ),
-          hintText: "Search here",
-          hintStyle: TextStyle(color: const Color(0xff111111).withOpacity(0.2)),
-          border: const OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
-          
-          suffixIcon: controller.text.isNotEmpty
-              ? IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: () {
-                    controller.clear();
-                    onSearch(''); // Trigger search with empty query
-                  },
-                )
-              : null,
-        ),
-      ),
+        );
+      }),
     );
   }
 }
