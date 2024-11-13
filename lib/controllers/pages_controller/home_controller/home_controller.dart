@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
 import 'package:restaurant_vendor_app/models/home/corrent_order_ststus_model.dart';
+import 'package:web_socket_client/web_socket_client.dart';
 
 class CurrentOrderController extends GetxController {
   final box = GetStorage();
@@ -12,6 +14,16 @@ class CurrentOrderController extends GetxController {
   var allOrders = <OrderModel>[].obs;
   var filteredOrders = <OrderModel>[].obs;
   var searchHistory = <String>[].obs; // Store search history
+  final socket = WebSocket(Uri.parse(wsHost));
+  // changes for home page
+  var homePageOrderList = <OrderModel>[].obs; // for home page
+  var todaysOrders = <OrderModel>[].obs; // for home page
+
+  Map<String, OrderModel> orderMap =
+      <String, OrderModel>{}; // for fast updation of order
+
+  late TextEditingController _searchController;
+  TextEditingController get searchControllerHomePage => _searchController;
 
   // Mock data for status and order types
   final List<String> statusOptions = ['Ongoing', 'Order Ready', 'Completed'];
@@ -32,6 +44,28 @@ class CurrentOrderController extends GetxController {
     fetchOrders();
     setDateLabel();
     loadSearchHistory();
+    socket.messages.listen(onChange);
+    _searchController = TextEditingController();
+    _searchController.addListener(() {
+      if (_searchController.text.isNotEmpty) {
+        homePageOrderList.value = todaysOrders
+            .where((model) =>
+                model.orderId.startsWith("#${_searchController.text}"))
+            .toList();
+      } else {
+        homePageOrderList.value = todaysOrders;
+      }
+    });
+  }
+
+  void onChange(dynamic data){
+    // implement
+    // on status update
+    // data => map => orderId => update order model
+
+    // new data 
+    // data => map => list
+
   }
 
   void toggleStatusFilter(String status, bool isSelected) {
@@ -123,7 +157,7 @@ class CurrentOrderController extends GetxController {
       await Future.delayed(const Duration(seconds: 1));
       allOrders.value = List<OrderModel>.generate(300, (index) {
         DateTime date = DateTime.now().subtract(Duration(days: index));
-        return OrderModel(
+        OrderModel model = OrderModel(
           orderId: '#1234$index',
           orderNumber: '#8576$index',
           status: index % 3 == 0
@@ -139,6 +173,8 @@ class CurrentOrderController extends GetxController {
           time: DateFormat('h:mm a').format(date),
           phoneNumber: '+91 91999919${100 + index}',
         );
+        orderMap[model.orderId] = model;
+        return model;
       });
 
       applyFilters();
@@ -180,6 +216,13 @@ class CurrentOrderController extends GetxController {
     }
 
     orderList.assignAll(tempOrders);
+
+    // fill todays order list
+    final todayFormattedDate =
+        DateFormat('MMM dd, yyyy').format(DateTime.now());
+    todaysOrders.value =
+        allOrders.where((entry) => entry.date == todayFormattedDate).toList();
+    homePageOrderList.value = todaysOrders; // initialize with todays order
   }
 
   bool _isSameDay(DateTime date1, DateTime date2) =>

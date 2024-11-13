@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
 import 'package:torch_light/torch_light.dart';
 import '../controllers/notification/notification_settrings_controller.dart';
 import '../models/notification/notification_model.dart';
@@ -163,9 +164,11 @@ class FirebaseApi {
     await _firebaseMessaging.requestPermission();
     final fCMToken = await _firebaseMessaging.getToken();
     if (fCMToken != null) {
-      print('saved token: $fCMToken');
+      Get.find<AuthMethods>().fcmToken = fCMToken; // store fcm token
+      if(kDebugMode){
+        print('saved token: $fCMToken');
+      }
     }
-    print('Token: ${fCMToken!}');
     await initPushNotification();
     await initLocalNotifications();
   }

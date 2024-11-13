@@ -96,30 +96,36 @@ class _BottomNavBarState extends State<BottomNavBar> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              GestureDetector(
-                onTap: () {
-                  dashController.changeTabIndex(1);
-                },
-                child: _navItem(
-                  svg: dashController.currentTab == 1
-                      ? 'assets/images/cart_selected.svg'
-                      : 'assets/images/cart.svg',
-                  label: 'Order',
-                  isSelected: dashController.currentTab == 1,
-                ),
+              Obx((){
+                  return GestureDetector(
+                    onTap: () {
+                      dashController.changeTabIndex(1);
+                    },
+                    child: _navItem(
+                      svg: dashController.currentTab == 1
+                          ? 'assets/images/cart_selected.svg'
+                          : 'assets/images/cart.svg',
+                      label: 'Order',
+                      isSelected: dashController.currentTab == 1,
+                    ),
+                  );
+                }
               ),
               const SizedBox(width: 40),
-              GestureDetector(
-                onTap: () {
-                  // dashController.changeTabIndex(2);
-                },
-                child: _navItem(
-                  svg: dashController.currentTab == 2
-                      ? 'assets/images/person_selected.svg'
-                      : 'assets/images/person.svg',
-                  label: 'Profile',
-                  isSelected: dashController.currentTab == 2,
-                ),
+              Obx((){
+                  return GestureDetector(
+                    onTap: () {
+                      // dashController.changeTabIndex(2); // yeh uncomment kar lena jub ban jae setting page
+                    },
+                    child: _navItem(
+                      svg: dashController.currentTab == 2
+                          ? 'assets/images/person_selected.svg'
+                          : 'assets/images/person.svg',
+                      label: 'Profile',
+                      isSelected: dashController.currentTab == 2,
+                    ),
+                  );
+                }
               ),
             ],
           ),

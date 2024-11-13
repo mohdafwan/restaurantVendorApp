@@ -32,9 +32,12 @@ class SplashScreenController extends GetxController {
               Get.offAllNamed('/signup2');
             }else if(res.message == "success"){
               if(authMethods.justLoggedIn){
-                //todo : create/resume session
+                authMethods.startSession();
               }else{
-                // todo : check if session is active , if not... end current session and signout user 
+                final active = await authMethods.checkSession();
+                if(active.data != null && !active.data){
+                  await authMethods.signOut(); // session expired , logout user
+                }
               }
               if(restaurentController.verified ?? false){
                 Get.offAllNamed('/dashboard');

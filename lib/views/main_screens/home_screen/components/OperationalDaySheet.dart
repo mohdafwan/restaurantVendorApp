@@ -109,7 +109,7 @@ class _OperatinalDaySheetState extends State<OperatinalDaySheet> {
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                showOptionDialog(context); 
+                                showConfirmDialog(context); 
                               },
                           ),
                         ],

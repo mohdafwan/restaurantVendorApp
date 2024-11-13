@@ -16,8 +16,8 @@ class Dashboard extends StatelessWidget {
         body: IndexedStack(
           index: controller.tabIndex.value,
           children: const [
-            HomePage(),
-            HomeScreen(),
+            HomePage(), // 0
+            HomeScreen(),//1
           ],
         ),
         bottomNavigationBar: const BottomNavBar(), // uncomment order and profile onTap when they are created in navBar
