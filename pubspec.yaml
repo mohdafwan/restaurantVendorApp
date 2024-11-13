@@ -39,7 +39,7 @@ dependencies:
   qr_flutter: ^4.1.0
   share_plus: ^10.0.0
   path_provider: ^2.1.4
-  # win32: ^5.7.1
+  win32: ^5.7.1
   get_storage: ^2.1.1
   qr_code_scanner: ^1.0.1
   flutter_switch: ^0.3.2
@@ -66,8 +66,19 @@ flutter:
     - assets/homeImages/
     - assets/historyimages/
     - assets/notification_settings_assets/
+    - assets/images/settings/
+    - assets/images/help&settings/
+    - assets/images/labels/
 
-  
+
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter_28pt-Regular.ttf
+        - asset: assets/fonts/Inter_28pt-Italic.ttf
+          style: italic
+        - asset: assets/fonts/Inter_28pt-Medium.ttf  
 
  
 

@@ -111,7 +111,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
               const SizedBox(width: 40),
               GestureDetector(
                 onTap: () {
-                  // dashController.changeTabIndex(2);
+                   dashController.changeTabIndex(2);
                 },
                 child: _navItem(
                   svg: dashController.currentTab == 2

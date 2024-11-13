@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:restaurant_vendor_app/controllers/dashboard_controller/dashboard_controller.dart';
+import 'package:restaurant_vendor_app/views/EditProfileView/EditProfilePage.dart';
 import 'package:restaurant_vendor_app/views/main_screens/home_screen/homePage.dart';
+import 'package:restaurant_vendor_app/views/settings/help&settings.dart';
+import 'package:restaurant_vendor_app/views/settings/settings_page.dart';
 import 'package:restaurant_vendor_app/widgets/BottomNavBar.dart';
 
 import '../../main_screens/home_screen/home_screen.dart';
@@ -18,6 +21,10 @@ class Dashboard extends StatelessWidget {
           children: const [
             HomePage(),
             HomeScreen(),
+            SettingsPage(),
+            HelpAndSettings(),
+            EditProfilePage(),
+            
           ],
         ),
         bottomNavigationBar: const BottomNavBar(), // uncomment order and profile onTap when they are created in navBar
