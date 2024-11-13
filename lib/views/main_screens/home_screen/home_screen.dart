@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:restaurant_vendor_app/controllers/dashboard_controller/dashboard_controller.dart';
+import 'package:restaurant_vendor_app/widgets/CustomCircularProgressIndicator.dart';
 import '../../../constants/color_palette.dart';
 import '../../../controllers/pages_controller/home_controller/home_controller.dart';
 import 'components/order_tile.dart';
@@ -20,194 +22,202 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorPalette.backgroundColor,
-      appBar: AppBar(
-        elevation: 0,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop,result){
+        Get.find<DashboardController>().changeTabIndex(0);
+      },
+      child: Scaffold(
         backgroundColor: ColorPalette.backgroundColor,
-        foregroundColor: ColorPalette.backgroundColor,
-        surfaceTintColor: ColorPalette.backgroundColor,
-        title: const Text(
-          "Order History",
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
-            color: ColorPalette.textColor,
-          ),
-        ),
-        centerTitle: false,
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.search,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: ColorPalette.backgroundColor,
+          foregroundColor: ColorPalette.backgroundColor,
+          surfaceTintColor: ColorPalette.backgroundColor,
+          title: const Text(
+            "Order History",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
               color: ColorPalette.textColor,
             ),
-            onPressed: () {
-              Get.toNamed('/search'); // Navigate to search page
-            },
           ),
-        ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(50),
-          child: DefaultTabController(
-            length: 4, // Number of tabs
-            child: TabBar(
-              onTap: (index) => currentOrders.updateDateLabel(index),
-              tabs: const [
-                Tab(text: 'Daily'),
-                Tab(text: 'Custom'),
-                Tab(text: 'Monthly'),
-                Tab(text: 'All'),
-              ],
-              indicatorColor: Colors.orange,
-              indicatorSize: TabBarIndicatorSize.tab,
-              indicatorWeight: 3,
-              labelColor: Colors.black,
-              labelStyle: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+          centerTitle: false,
+          actions: [
+            IconButton(
+              icon: const Icon(
+                Icons.search,
+                color: ColorPalette.textColor,
               ),
-              unselectedLabelColor: Colors.grey,
-              unselectedLabelStyle: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.normal,
+              onPressed: () {
+                Get.toNamed('/search'); // Navigate to search page
+              },
+            ),
+          ],
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(50),
+            child: DefaultTabController(
+              length: 4, // Number of tabs
+              child: TabBar(
+                onTap: (index) => currentOrders.updateDateLabel(index),
+                tabs: const [
+                  Tab(text: 'Daily'),
+                  Tab(text: 'Custom'),
+                  Tab(text: 'Monthly'),
+                  Tab(text: 'All'),
+                ],
+                indicatorColor: Colors.orange,
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicatorWeight: 3,
+                labelColor: Colors.black,
+                labelStyle: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                unselectedLabelColor: Colors.grey,
+                unselectedLabelStyle: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.normal,
+                ),
               ),
             ),
           ),
         ),
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          currentOrders.fetchOrders();
-        },
-        child: Column(
-          children: [
-            Container(
-              color: Colors.grey.shade100,
-              height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Obx(() {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    if (currentOrders.selectedTab.value != 3) ...[
-                      GestureDetector(
-                        onTap: () => currentOrders.selectDate(context),
-                        child: Obx(() => Row(
-                              children: [
-                                Text(
-                                  currentOrders.dateLabel.value,
-                                  style: const TextStyle(
-                                      color: Colors.black, fontSize: 14),
-                                ),
-                                const SizedBox(width: 10),
-                                const Icon(Icons.keyboard_arrow_down_sharp,
-                                    color: Colors.black),
-                              ],
-                            )),
-                      ),
-                      const SizedBox(width: 10),
-                    ],
-                    GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (context) => const FilterBottomSheet(),
-                        );
-                      },
-                      child: const Row(
-                        children: [
-                          Text(
-                            "All Orders",
-                            style: TextStyle(color: Colors.black, fontSize: 14),
-                          ),
-                          SizedBox(width: 10),
-                          Icon(Icons.keyboard_arrow_down_sharp,
-                              color: Colors.black),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              }),
-            ),
-            Expanded(
-              child: CustomScrollView(
-                slivers: [
-                  Obx(() {
-                    if (currentOrders.isLoading.value) {
-                      return const SliverFillRemaining(
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    } else if (currentOrders.isError.value) {
-                      return const SliverFillRemaining(
-                        child: Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.error_outline,
-                                  size: 60, color: Colors.red),
-                              SizedBox(height: 10),
-                              Text(
-                                'Error loading orders',
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.black),
-                              ),
-                            ],
-                          ),
+        body: RefreshIndicator(
+          onRefresh: () async {
+            currentOrders.fetchOrders();
+          },
+          color: themeColor,
+          backgroundColor: Colors.white,
+          child: Column(
+            children: [
+              Container(
+                color: Colors.grey.shade100,
+                height: 50,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Obx(() {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (currentOrders.selectedTab.value != 3) ...[
+                        GestureDetector(
+                          onTap: () => currentOrders.selectDate(context),
+                          child: Obx(() => Row(
+                                children: [
+                                  Text(
+                                    currentOrders.dateLabel.value,
+                                    style: const TextStyle(
+                                        color: Colors.black, fontSize: 14),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  const Icon(Icons.keyboard_arrow_down_sharp,
+                                      color: Colors.black),
+                                ],
+                              )),
                         ),
-                      );
-                    } else if (currentOrders.orderList.isEmpty) {
-                      return const SliverFillRemaining(
-                        child: Center(
-                            child: Text('No orders found',
-                                style: TextStyle(fontSize: 18))),
-                      );
-                    } else {
-                      return SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            if (index == 0) {
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 16),
-                                      child: Text(
-                                        'Total Order: ${currentOrders.orderList.length}',
-                                        style: GoogleFonts.inter(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
+                        const SizedBox(width: 10),
+                      ],
+                      GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (context) => const FilterBottomSheet(),
+                          );
+                        },
+                        child: const Row(
+                          children: [
+                            Text(
+                              "All Orders",
+                              style: TextStyle(color: Colors.black, fontSize: 14),
+                            ),
+                            SizedBox(width: 10),
+                            Icon(Icons.keyboard_arrow_down_sharp,
+                                color: Colors.black),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+              ),
+              Expanded(
+                child: CustomScrollView(
+                  slivers: [
+                    Obx(() {
+                      if (currentOrders.isLoading.value) {
+                        return const SliverFillRemaining(
+                          child: Center(child: CustomCircularProgressIndicator()),
+                        );
+                      } else if (currentOrders.isError.value) {
+                        return const SliverFillRemaining(
+                          child: Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.error_outline,
+                                    size: 60, color: Colors.red),
+                                SizedBox(height: 10),
+                                Text(
+                                  'Error loading orders',
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.black),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      } else if (currentOrders.orderList.isEmpty) {
+                        return const SliverFillRemaining(
+                          child: Center(
+                              child: Text('No orders found',
+                                  style: TextStyle(fontSize: 18))),
+                        );
+                      } else {
+                        return SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              if (index == 0) {
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 16),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 16),
+                                        child: Text(
+                                          'Total Order: ${currentOrders.orderList.length}',
+                                          style: GoogleFonts.inter(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    OrderSummaryCard(),
-                                    const SizedBox(height: 20),
-                                  ],
-                                ),
+                                      OrderSummaryCard(),
+                                      const SizedBox(height: 20),
+                                    ],
+                                  ),
+                                );
+                              }
+                              final order = currentOrders.orderList[index - 1];
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20.0),
+                                child: OrderTile(order: order),
                               );
-                            }
-                            final order = currentOrders.orderList[index - 1];
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: OrderTile(order: order),
-                            );
-                          },
-                          childCount: currentOrders.orderList.length + 1,
-                        ),
-                      );
-                    }
-                  }),
-                ],
+                            },
+                            childCount: currentOrders.orderList.length + 1,
+                          ),
+                        );
+                      }
+                    }),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -112,6 +112,7 @@ class SignUpController extends GetxController {
       res2 = await _authMethods
           .createRestaurentAccount(restaurentController.current);
       if (res2.message == 'success') {
+        await _authMethods.startSession();
         if(restaurentController.verified ?? false){
           Get.offAllNamed('/dashboard');
         }else{

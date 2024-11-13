@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +15,8 @@ import 'package:restaurant_vendor_app/utils/toastMessage.dart';
 
 // http://10.0.2.2:8000 for emulation
 // replace with your machine ip address to test on real device
-const host = "http://192.168.1.5:8000";
+const host = "http://192.168.29.88:8000";
+const wsHost = "ws://192.168.29.88:8000";
 // 192.168.1.5
 
 class AuthMethods {
@@ -23,6 +27,7 @@ class AuthMethods {
   final dio.Dio _dio = dio.Dio();
   bool loggedIn = false;
   bool justLoggedIn = false;
+  late String fcmToken;
 
   Stream<User?> get authChanges => _auth.authStateChanges();
   User? get user => _auth.currentUser;
@@ -33,7 +38,9 @@ class AuthMethods {
     "email_otp": "$host/otp/",
     "update_user": "$host/user/",
     "restaurant":"$host/restaurant/",
-    "get_restaurent":"$host/restuarant_check/"
+    "get_restaurent":"$host/restuarant_check/",
+    "start_session":"$host/startsession/",
+    "check_session":"$host/sessioncheck/"
   };
 
   Future<ResponseModel> signInUsingPhoneNumber() async {
@@ -350,6 +357,74 @@ class AuthMethods {
       res = error.toString();
     }
     return ResponseModel(message: res);
+  }
+
+  Future<ResponseModel> startSession()async {
+    String res = "some error occurred";
+    try{
+      String model,platform;
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      if(Platform.isAndroid){
+        platform = "android";
+        final device = await deviceInfo.androidInfo;
+        model = device.model;
+      }else if(Platform.isIOS){
+        platform = "ios";
+        final device = await deviceInfo.iosInfo;
+        model = device.model;
+      }else{
+        return ResponseModel(message: "device not supported");
+      }  
+      final data = {
+        "device":model,
+        "id":userController.id,
+        "platform":platform,
+        "fcm_token":fcmToken,
+        "active":true, // mark true in start
+      };
+      final response =await _dio.post(
+        routes["start_session"]!,
+        data: data,
+        options: dio.Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+      if(response.statusCode == 200 || response.statusCode == 201){
+        res = "success";
+      }
+    }catch(error){
+      res = error.toString();
+    }
+    return ResponseModel(message: res);
+  }
+
+  Future<ResponseModel> checkSession() async {
+    String res = "some error occurred";
+    bool? active;
+    try{
+      final data = {
+        "id":userController.id,
+        "fcm_token":fcmToken,
+      };
+      final response = await _dio.post(
+        routes["check_session"]!,
+        data: data,
+        options: dio.Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+      if(response.statusCode == 200){
+        active = response.data as bool;
+        res = "success";
+      }
+    }catch(error){
+      res = error.toString();
+    }
+    return ResponseModel(message: res,data: active);
   }
 
   Future<ResponseModel> signOut() async {

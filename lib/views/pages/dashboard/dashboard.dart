@@ -24,7 +24,6 @@ class Dashboard extends StatelessWidget {
             SettingsPage(),
             HelpAndSettings(),
             EditProfilePage(),
-            
           ],
         ),
         bottomNavigationBar: const BottomNavBar(), // uncomment order and profile onTap when they are created in navBar

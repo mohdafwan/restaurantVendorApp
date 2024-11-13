@@ -17,7 +17,7 @@ class RestaurantController extends GetxController {
   int? get id => model.value.id;
   bool? get status => model.value.status;
   List<String> get labels => model.value.labels;
-
+  
   void setModel(RestaurantModel newModel) {
     model.value = newModel;
   }

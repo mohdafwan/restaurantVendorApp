@@ -96,17 +96,20 @@ class _BottomNavBarState extends State<BottomNavBar> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              GestureDetector(
-                onTap: () {
-                  dashController.changeTabIndex(1);
-                },
-                child: _navItem(
-                  svg: dashController.currentTab == 1
-                      ? 'assets/images/cart_selected.svg'
-                      : 'assets/images/cart.svg',
-                  label: 'Order',
-                  isSelected: dashController.currentTab == 1,
-                ),
+              Obx((){
+                  return GestureDetector(
+                    onTap: () {
+                      dashController.changeTabIndex(1);
+                    },
+                    child: _navItem(
+                      svg: dashController.currentTab == 1
+                          ? 'assets/images/cart_selected.svg'
+                          : 'assets/images/cart.svg',
+                      label: 'Order',
+                      isSelected: dashController.currentTab == 1,
+                    ),
+                  );
+                }
               ),
               const SizedBox(width: 40),
               GestureDetector(
