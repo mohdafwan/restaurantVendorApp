@@ -21,9 +21,9 @@ const wsHost = "ws://192.168.29.88:8000";
 
 class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final UserController userController =
+  final UserController _userController =
       Get.put(UserController(), permanent: true);
-  final RestaurantController restaurantController = Get.put(RestaurantController(),permanent: true);
+  final RestaurantController _restaurantController = Get.put(RestaurantController(),permanent: true);
   final dio.Dio _dio = dio.Dio();
   bool loggedIn = false;
   bool justLoggedIn = false;
@@ -52,11 +52,11 @@ class AuthMethods {
         verificationId: verificationId,
         smsCode: otpController.otp!,
       );
-      if (userController.uid == null) {
+      if (_userController.uid == null) {
         final userCredential = await _auth.signInWithCredential(credential);
         User? user = userCredential.user;
         if (user != null) {
-          userController.updateUserDetails(uid: user.uid);
+          _userController.updateUserDetails(uid: user.uid);
           justLoggedIn = true;
           res = "success";
         }
@@ -162,7 +162,7 @@ class AuthMethods {
 
       if (response.statusCode == 201) {
         loggedIn = true;
-        userController.updateUserDetails(id: response.data['id']);
+        _userController.updateUserDetails(id: response.data['id']);
         res = "success";
       } else {
         res = response.statusMessage ?? res;
@@ -186,7 +186,7 @@ class AuthMethods {
         "state": model.state,
         "country": model.country,
         "restaurant_image": model.photoUrl,
-        "user": userController.id,
+        "user": _userController.id,
       };
       final response = await _dio.post(
         routes['restaurant']!,
@@ -195,7 +195,7 @@ class AuthMethods {
 
       if (response.statusCode == 201) {
         loggedIn = true;
-        restaurantController.updateRestaurantDetails(
+        _restaurantController.updateRestaurantDetails(
           id: response.data['id'],
           verified: response.data['verify']
         );
@@ -224,8 +224,8 @@ class AuthMethods {
         }
 
         if (response.message == "success") {
-          userController.setUser(response.data);
-          userController.updateUserDetails(uid: user!.uid);
+          _userController.setUser(response.data);
+          _userController.updateUserDetails(uid: user!.uid);
           loggedIn = true;
           res = "success";
         } else {
@@ -244,7 +244,7 @@ class AuthMethods {
   Future<ResponseModel> getRestaurentData() async {
     String res = "some error occurred";
     try {
-      final data = {'user': userController.id};
+      final data = {'user': _userController.id};
       final response = await _dio.post(
         routes["get_restaurent"]!,
         data: data,
@@ -256,7 +256,7 @@ class AuthMethods {
       );
       if (response.statusCode == 200) {
         res = "success";
-        restaurantController.setModel(RestaurantModel.fromMap(response.data));
+        _restaurantController.setModel(RestaurantModel.fromMap(response.data));
       } else if (response.statusCode == 404) {
         res = "data not found";
       } else {
@@ -344,7 +344,7 @@ class AuthMethods {
       };
 
       final response = await _dio.post(
-        '${routes['update_user']!}${userController.id}/',
+        '${routes['update_user']!}${_userController.id}/',
         data: data,
       );
 
@@ -377,7 +377,7 @@ class AuthMethods {
       }  
       final data = {
         "device":model,
-        "id":userController.id,
+        "id":_userController.id,
         "platform":platform,
         "fcm_token":fcmToken,
         "active":true, // mark true in start
@@ -405,7 +405,7 @@ class AuthMethods {
     bool? active;
     try{
       final data = {
-        "id":userController.id,
+        "id":_userController.id,
         "fcm_token":fcmToken,
       };
       final response = await _dio.post(
@@ -431,7 +431,7 @@ class AuthMethods {
     String res = "some error occurred";
     try {
       _auth.signOut();
-      userController.clearUserData();
+      _userController.clearUserData();
       res = "success";
     } catch (error) {
       res = error.toString();
