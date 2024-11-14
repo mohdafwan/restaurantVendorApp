@@ -60,17 +60,16 @@ class CurrentOrderController extends GetxController {
       }
     });
 
-    socket.listen((data){
-      switch(data['type']){
+    socket.listen((data) {
+      switch (data['type']) {
         case 'new':
-        // allOrders.value.add(OrderModel.fromMap(data));
-        // applyFilter()
-        break;
+          // allOrders.value.add(OrderModel.fromMap(data));
+          // applyFilter()
+          break;
 
         case 'updated':
-        // 
-        break;
-
+          //
+          break;
       }
     });
   }
@@ -165,7 +164,7 @@ class CurrentOrderController extends GetxController {
       final response = await _dio.post(
         "$host/restaurant/order-history/",
         data: {
-          "id":restaurantController.id,
+          "id": restaurantController.id,
         },
         options: dio.Options(
           headers: {
@@ -174,23 +173,23 @@ class CurrentOrderController extends GetxController {
         ),
       );
 
-      if(response.statusCode != 200){
+      if (response.statusCode != 200) {
         isError(true);
         return;
       }
 
-      List<Map<String,dynamic>> data = response.data;
+      final data = response.data;
 
-      allOrders.value = data.map((entry){
+      allOrders.value = (data as List).map((entry) {
         OrderModel model = OrderModel(
           orderId: entry['id'],
           orderNumber: entry["bill_id"],
-          status: entry['order_status'], 
-          totalAmount: entry['amount'], 
+          status: entry['order_status'],
+          totalAmount: entry['amount'],
           orderType: 'Food', // labels [string]
-          userId: entry['user'], 
+          userId: entry['user'],
           userName: entry['customer_name'],
-          date: entry['order_date'], 
+          date: entry['order_date'],
           time: entry['delivery_data'],
         );
         orderMap[model.orderId] = model;
@@ -222,6 +221,7 @@ class CurrentOrderController extends GetxController {
 
       applyFilters();
     } catch (e) {
+      print("error :  $e");
       isError(true);
     } finally {
       isLoading(false);
