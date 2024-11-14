@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 const Color backgroundColor = Color.fromRGBO(255, 255, 255, 1);
 const Color fontColor = Color.fromRGBO(30, 30, 30, 1);
@@ -38,4 +37,23 @@ class ColorPalette {
   static const Color red = Colors.red;
   static const Color white = Colors.white;
   static const Color orange = Colors.orange;
+
+  //Settings, labels, popups
+static const Color primaryText = Color(0xff1E1E1E);
+static const Color backgroundGrey = Color(0xffF7F9FA);
+static const Color greyText = Color(0xff000000);
+static const Color historyShadow = Color(0xff6434F8);
+static const Color circleicon = Color(0xffFFF4ED);
+static const Color secondaryText = Color(0xff090A0A);
+static const Color paletteCircle = Color(0xffFFA072);
+static const Color saveText = Color(0xff4A5660);
+static const Color textShadow = Color(0xff0A7AFF);
+static const Color deleteText = Color(0xff949292);
+static const Color shadowColor = Color(0xff101828);
+static const Color hintTextColor = Color(0xffC9C9C9);
+static const Color saveLabelText = Color(0xffDADADA);
+static const Color labelBg = Color(0xffFFFFFF);
+static const Color saveLabelHiglight = Color(0xff303030);
+static const Color allDevice = Color(0xffFC440E);
+static const Color dividerColor = Color(0xffEAECF0);
 }

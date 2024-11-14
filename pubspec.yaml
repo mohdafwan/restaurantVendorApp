@@ -68,8 +68,19 @@ flutter:
     - assets/homeImages/
     - assets/historyimages/
     - assets/notification_settings_assets/
+    - assets/images/settings/
+    - assets/images/help&settings/
+    - assets/images/labels/
 
-  
+
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter_28pt-Regular.ttf
+        - asset: assets/fonts/Inter_28pt-Italic.ttf
+          style: italic
+        - asset: assets/fonts/Inter_28pt-Medium.ttf  
 
  
 

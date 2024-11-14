@@ -5,11 +5,10 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurant_vendor_app/constants/color_palette.dart';
-import 'package:restaurant_vendor_app/controllers/notification/notification_settrings_controller.dart';
 import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
-import 'package:restaurant_vendor_app/firebase/firebase_api.dart';
 import 'package:restaurant_vendor_app/routes/routes.dart';
 import 'package:restaurant_vendor_app/views/splashScreen/splash_screen.dart';
+
 import 'firebase_options.dart';
 
 void main() async {
@@ -20,8 +19,8 @@ void main() async {
   await GetStorage.init();
   Get.put(AuthMethods(), permanent: true);
   debugPaintBaselinesEnabled = false;
-  Get.put(NotificationsSettingsController());
-  await FirebaseApi().initNotifications();
+  // Get.put(NotificationsSettingsController());
+  // await FirebaseApi().initNotifications();
   // FirebaseAuth.instance.setLanguageCode('en');
   runApp(const MyApp());
 }
@@ -48,7 +47,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
          home: const SplashScreen(),
-          getPages: AppRoutes.routes,
+         getPages: AppRoutes.routes,
          ),
     );
   }
