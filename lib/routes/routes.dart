@@ -14,10 +14,13 @@ import 'package:restaurant_vendor_app/views/pages/dashboard/dashboard.dart';
 import 'package:restaurant_vendor_app/views/pages/dashboard/dashboard_binding.dart';
 import 'package:restaurant_vendor_app/views/pages/onboarding/boarding_screen.dart';
 import 'package:restaurant_vendor_app/views/setting/setting_page.dart';
+import 'package:restaurant_vendor_app/views/settings/about_us.dart';
 import 'package:restaurant_vendor_app/views/settings/help_page.dart';
+import 'package:restaurant_vendor_app/views/settings/terms_and_conditions.dart';
 import 'package:restaurant_vendor_app/views/tickets/raise_ticket.dart';
 
 import '../views/main_screens/home_screen/search_screen/search_page.dart';
+import '../views/settings/privacy.dart';
 
 class AppRoutes {
   static final routes = [
@@ -131,5 +134,23 @@ GetPage(
       page: () => const EditProfilePage(),
     ),
 
+GetPage(
+      name: '/t&c',
+      transition: Transition.rightToLeft,
+      transitionDuration: const Duration(milliseconds: 250),
+      page: () => const TermsAndConditionView(),
+    ),
+    GetPage(
+      name: '/privacy',
+      transition: Transition.rightToLeft,
+      transitionDuration: const Duration(milliseconds: 250),
+      page: () => const PrivacyPoliciesView(),
+    ),    
+  GetPage(
+      name: '/aboutUs',
+      transition: Transition.rightToLeft,
+      transitionDuration: const Duration(milliseconds: 250),
+      page: () => const AboutUs(),
+    ),    
   ];
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurant_vendor_app/constants/color_palette.dart';
 import 'package:restaurant_vendor_app/constants/imageConstants.dart';
-import 'package:restaurant_vendor_app/views/EditProfileView/EditProfilePage.dart';
-import 'package:restaurant_vendor_app/views/settings/help_page.dart';
+import 'package:restaurant_vendor_app/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:restaurant_vendor_app/views/settings/widgets/setting_tile.dart';
 
 class HelpAndSettings extends StatelessWidget {
@@ -44,7 +44,8 @@ class HelpAndSettings extends StatelessWidget {
         child: Column(
           children: [
             SettingTile(title: 'Profile', icon: ImageConstants.profile,
-            onTap: () => const EditProfilePage(),),
+            onTap: () => Get.find<DashboardController>().changeTabIndex(4),
+            ),
             const SizedBox(height: 10,),
             SettingTile(title: 'View Tickets', icon: ImageConstants.ticket,
             onTap: () {
@@ -57,7 +58,8 @@ class HelpAndSettings extends StatelessWidget {
             },),
             const SizedBox(height: 10,),
             SettingTile(title: 'Help & Support', icon: ImageConstants.helpsupport,
-            onTap: () => const HelpPage(),),
+            onTap: () => Get.toNamed('/help'),
+            ),
           ],
         ),
       ),

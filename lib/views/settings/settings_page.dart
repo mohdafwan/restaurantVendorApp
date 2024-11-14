@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurant_vendor_app/constants/color_palette.dart';
 import 'package:restaurant_vendor_app/constants/imageConstants.dart';
 import 'package:restaurant_vendor_app/constants/text_constants.dart';
-import 'package:restaurant_vendor_app/views/Labels/labels.dart';
+import 'package:restaurant_vendor_app/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:restaurant_vendor_app/views/main_screens/home_screen/components/total_order_card.dart';
-import 'package:restaurant_vendor_app/views/settings/help&settings.dart';
-import 'package:restaurant_vendor_app/views/settings/help_page.dart';
 import 'package:restaurant_vendor_app/views/settings/widgets/logout_dialog.dart';
 import 'package:restaurant_vendor_app/views/settings/widgets/setting_tile.dart';
 import 'package:restaurant_vendor_app/widgets/Button.dart';
@@ -60,7 +59,7 @@ class SettingsPage extends StatelessWidget {
                           title: TextConstants.label,
                           icon: ImageConstants.label,
                           onTap: (){
-                            const Labels();
+                            Get.toNamed('/labels');
                           }
                         ),
                ),
@@ -69,7 +68,7 @@ class SettingsPage extends StatelessWidget {
                         child: SettingTile(
                           title: TextConstants.help,
                           icon: ImageConstants.helpSettings,
-                          onTap: () => const HelpAndSettings(),
+                          onTap: () => Get.find<DashboardController>().changeTabIndex(3),
                         ),
                       ),
                       Padding(
@@ -77,7 +76,7 @@ class SettingsPage extends StatelessWidget {
                         child: SettingTile(
                           title: TextConstants.support,
                           icon: ImageConstants.supportChat,
-                          onTap: () => const HelpPage(),
+                          onTap: () => (){}
                         ),
                       ),
                       Padding(

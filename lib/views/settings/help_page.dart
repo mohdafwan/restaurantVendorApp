@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurant_vendor_app/constants/color_palette.dart';
 import 'package:restaurant_vendor_app/constants/imageConstants.dart';
@@ -44,16 +45,18 @@ class HelpPage extends StatelessWidget {
           children: [
             HelpTile(title: TextConstants.aboutUs,
             onTap: () {
-              
+              Get.toNamed("/aboutUs");
             },),
             const SizedBox(height: 20,),
             HelpTile(title: TextConstants.policy,
             onTap: () {
+              Get.toNamed("/privacy");
               
             },),
             const SizedBox(height: 20,),
             HelpTile(title: TextConstants.conditions,
             onTap: () {
+              Get.toNamed("/t&c");
               
             },),
             
