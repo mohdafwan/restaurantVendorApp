@@ -60,17 +60,17 @@ class CurrentOrderController extends GetxController {
       }
     });
 
-    socket.listen((data){
-      switch(data['type']){
+    socket.listen((data) {
+      switch (data['type']) {
         case 'new':
-        // allOrders.value.add(OrderModel.fromMap(data));
-        // applyFilter()
-        break;
+          // allOrders.value.add(OrderModel.fromMap(data));
+          // applyFilter()
+          break;
 
         case 'updated':
-        // 
-        break;
+          // orderMap
 
+          break;
       }
     });
   }
@@ -123,6 +123,18 @@ class CurrentOrderController extends GetxController {
         initialDate: DateTime.now(),
         firstDate: DateTime(2020),
         lastDate: DateTime.now(),
+        builder: (BuildContext context, Widget? child) {
+          return Theme(
+            data: ThemeData.light().copyWith(
+              primaryColor: const Color.fromRGBO(253, 71, 18, 1),
+              colorScheme: const ColorScheme.light(
+                  primary: Color.fromRGBO(253, 71, 18, 1)),
+              buttonTheme:
+                  const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            ),
+            child: child ?? Container(),
+          );
+        },
       );
       if (pickedDate != null) {
         dateLabel.value = "Today: ${_formatDate(pickedDate)}";
@@ -134,6 +146,18 @@ class CurrentOrderController extends GetxController {
         context: context,
         firstDate: DateTime(2020),
         lastDate: DateTime.now(),
+        builder: (BuildContext context, Widget? child) {
+          return Theme(
+            data: ThemeData.light().copyWith(
+              primaryColor: const Color.fromRGBO(253, 71, 18, 1),
+              colorScheme: const ColorScheme.light(
+                  primary: Color.fromRGBO(253, 71, 18, 1)),
+              buttonTheme:
+                  const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            ),
+            child: child ?? Container(),
+          );
+        },
       );
       if (pickedRange != null) {
         dateRange.value = pickedRange;
@@ -147,6 +171,18 @@ class CurrentOrderController extends GetxController {
         initialDate: DateTime.now(),
         firstDate: DateTime(2020),
         lastDate: DateTime.now(),
+        builder: (BuildContext context, Widget? child) {
+          return Theme(
+            data: ThemeData.light().copyWith(
+              primaryColor: const Color.fromRGBO(253, 71, 18, 1),
+              colorScheme: const ColorScheme.light(
+                  primary: Color.fromRGBO(253, 71, 18, 1)),
+              buttonTheme:
+                  const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            ),
+            child: child ?? Container(),
+          );
+        },
       );
       if (pickedDate != null) {
         selectedMonth.value = pickedDate.month;
@@ -165,7 +201,7 @@ class CurrentOrderController extends GetxController {
       final response = await _dio.post(
         "$host/restaurant/order-history/",
         data: {
-          "id":restaurantController.id,
+          "id": restaurantController.id,
         },
         options: dio.Options(
           headers: {
@@ -174,25 +210,16 @@ class CurrentOrderController extends GetxController {
         ),
       );
 
-      if(response.statusCode != 200){
+      if (response.statusCode != 200) {
         isError(true);
         return;
       }
 
-      List<Map<String,dynamic>> data = response.data;
-
-      allOrders.value = data.map((entry){
-        OrderModel model = OrderModel(
-          orderId: entry['id'],
-          orderNumber: entry["bill_id"],
-          status: entry['order_status'], 
-          totalAmount: entry['amount'], 
-          orderType: 'Food', // labels [string]
-          userId: entry['user'], 
-          userName: entry['customer_name'],
-          date: entry['order_date'], 
-          time: entry['delivery_data'],
-        );
+      // List<Map<String, dynamic>> data = response.data;
+      List<Map<String, dynamic>> data =
+          List<Map<String, dynamic>>.from(response.data);
+      allOrders.value = data.map((entry) {
+        OrderModel model = OrderModel.fromMap(entry);
         orderMap[model.orderId] = model;
         return model;
       }).toList();
@@ -254,8 +281,11 @@ class CurrentOrderController extends GetxController {
           .retainWhere((order) => selectedStatuses.contains(order.status));
     }
     if (selectedOrderTypes.isNotEmpty) {
-      tempOrders
-          .retainWhere((order) => selectedOrderTypes.contains(order.orderType));
+      tempOrders.retainWhere((order) {
+        return
+            // .retainWhere((order) => selectedOrderTypes.contains(order.orderType));
+            order.orderType.any((type) => selectedOrderTypes.contains(type));
+      });
     }
 
     orderList.assignAll(tempOrders);

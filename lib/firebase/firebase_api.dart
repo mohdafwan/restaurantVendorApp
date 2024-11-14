@@ -39,6 +39,11 @@ class FirebaseApi {
 
   void handleMessage(RemoteMessage? message) async {
     if (message == null) return;
+    // if notification came with title = Session Expired then do use session logout
+    if (message.notification?.title == 'Session Expired') {
+      Get.find<AuthMethods>().signOut();
+      return;
+    }
 
     final notificationTitle = message.notification?.title ?? "No title";
     final notificationBody = message.notification?.body ?? "No body";
@@ -165,7 +170,7 @@ class FirebaseApi {
     final fCMToken = await _firebaseMessaging.getToken();
     if (fCMToken != null) {
       Get.find<AuthMethods>().fcmToken = fCMToken; // store fcm token
-      if(kDebugMode){
+      if (kDebugMode) {
         print('saved token: $fCMToken');
       }
     }

@@ -46,17 +46,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop,_) async {
-        debugPrint("inside popscope : $didPop");
-        if (!didPop) {
-          Get.find<DashboardController>().changeTabIndex(2);
-        }
-      },
-      // onPopInvoked: (didPop) {
+      // onPopInvokedWithResult: (didPop,_) async {
+      //   debugPrint("inside popscope : $didPop");
       //   if (!didPop) {
       //     Get.find<DashboardController>().changeTabIndex(2);
       //   }
       // },
+      onPopInvoked: (didPop) {
+        if (!didPop) {
+          Get.find<DashboardController>().changeTabIndex(2);
+        }
+      },
       child: Scaffold(
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,

@@ -291,17 +291,22 @@ class _StatusBadge extends StatelessWidget {
 }
 
 class _OrderTypeBadge extends StatelessWidget {
-  final String orderType;
+  final List<String> orderType;
 
   const _OrderTypeBadge({required this.orderType});
 
   @override
   Widget build(BuildContext context) {
-    Color badgeColor = Colors.blue;
-    if (orderType == 'Food') {
+    String displayType = orderType.isNotEmpty ? orderType[0] : '';
+
+    // Set badge color based on the first item in orderType list
+    Color badgeColor;
+    if (displayType == 'Food') {
       badgeColor = Colors.blue;
-    } else if (orderType == 'Drink') {
+    } else if (displayType == 'Drink') {
       badgeColor = Colors.purple;
+    } else {
+      badgeColor = Colors.grey; // Default color for unspecified types
     }
 
     return Container(
@@ -311,7 +316,7 @@ class _OrderTypeBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
-        orderType,
+        displayType,
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.bold,

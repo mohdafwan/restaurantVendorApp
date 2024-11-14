@@ -11,7 +11,7 @@ class SocketClient {
 
   SocketClient._internal() {
     _channel = WebSocketChannel.connect(
-      Uri.parse("$wsHost/order/"),
+      Uri.parse("$wsHost/ws/order/"),
     );
     
     final data = {

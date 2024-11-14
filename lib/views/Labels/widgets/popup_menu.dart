@@ -40,7 +40,8 @@ void showPopupMenu(BuildContext context, Function(Color) onColorSelected) {
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(8),
     ),
-    menuPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+    
+    // menuPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
     context: context,
     position: const RelativeRect.fromLTRB(174, 105, 32, 0), // Adjust position as needed
     items: [
