@@ -70,6 +70,7 @@ class CurrentOrderController extends GetxController {
         case 'updated':
           // orderMap
 
+          //
           break;
       }
     });
@@ -249,6 +250,7 @@ class CurrentOrderController extends GetxController {
 
       applyFilters();
     } catch (e) {
+      print("error :  $e");
       isError(true);
     } finally {
       isLoading(false);

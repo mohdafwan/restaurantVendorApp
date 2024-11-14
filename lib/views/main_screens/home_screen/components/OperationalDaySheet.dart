@@ -5,7 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:restaurant_vendor_app/constants/ColorPalette.dart';
 import 'package:restaurant_vendor_app/controllers/RestaurantController/RestaurantController.dart';
+import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
 import 'package:restaurant_vendor_app/widgets/Button.dart';
+import 'package:dio/dio.dart' as dio;
 
 void showOperationalDaySheet(BuildContext context) {
   showModalBottomSheet(
@@ -25,6 +27,7 @@ class OperatinalDaySheet extends StatefulWidget {
 
 class _OperatinalDaySheetState extends State<OperatinalDaySheet> {
   final restaurentController = Get.find<RestaurantController>();
+  final dio.Dio _dio = dio.Dio();
   final currentDate = DateTime.now();
   late String todayDate;
   late String yesterdayDate;
@@ -123,6 +126,21 @@ class _OperatinalDaySheetState extends State<OperatinalDaySheet> {
                     onPressed: () {
                       restaurentController.updateRestaurantDetails(
                           status: true);
+                      try {
+                        _dio.put(
+                          "$host/restaurant/${restaurentController.id}/",
+                          data: {
+                            "status": true,
+                          },
+                          options: dio.Options(
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                          ),
+                        );
+                      } catch (error) {
+                        print(error);
+                      }
                       Navigator.of(context).pop();
                     },
                     text: "Go Online",

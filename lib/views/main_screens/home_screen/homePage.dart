@@ -8,10 +8,12 @@ import 'package:restaurant_vendor_app/constants/ColorPalette.dart';
 import 'package:restaurant_vendor_app/controllers/RestaurantController/RestaurantController.dart';
 import 'package:restaurant_vendor_app/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:restaurant_vendor_app/controllers/pages_controller/home_controller/home_controller.dart';
+import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
 import 'package:restaurant_vendor_app/views/main_screens/home_screen/components/OperationalDaySheet.dart';
 import 'package:restaurant_vendor_app/views/main_screens/home_screen/components/order_tile.dart';
 import 'package:restaurant_vendor_app/widgets/Button.dart';
 import 'package:restaurant_vendor_app/widgets/CustomCircularProgressIndicator.dart';
+import 'package:dio/dio.dart' as dio;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,6 +25,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final restaurentController = Get.find<RestaurantController>();
   final currentOrderController = Get.put(CurrentOrderController());
+  final dio.Dio _dio = dio.Dio();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,6 +66,22 @@ class _HomePageState extends State<HomePage> {
                     showOperationalDaySheet(context);
                   } else {
                     restaurentController.updateRestaurantDetails(status: false);
+                    try{
+                      _dio.put(
+                        "$host/restaurant/${restaurentController.id}/",
+                        data: {
+                          "status":false,
+                        },
+                        options: dio.Options(
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                        ),
+                      );
+                    }catch(error){
+                      // just printing for now , till update came from backend team
+                      print(error);
+                    }
                   }
                 },
               );

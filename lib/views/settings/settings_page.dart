@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurant_vendor_app/constants/color_palette.dart';
 import 'package:restaurant_vendor_app/constants/imageConstants.dart';
 import 'package:restaurant_vendor_app/constants/text_constants.dart';
+import 'package:restaurant_vendor_app/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:restaurant_vendor_app/views/Labels/labels.dart';
 import 'package:restaurant_vendor_app/views/main_screens/home_screen/components/total_order_card.dart';
 import 'package:restaurant_vendor_app/views/settings/help&settings.dart';
@@ -36,7 +38,7 @@ class SettingsPage extends StatelessWidget {
           width: 24,
           child: InkWell(
             onTap: () {
-              Navigator.pop(context);
+              Get.find<DashboardController>().changeTabIndex(0);
             },
             //splashColor: Colors.grey,
             child: Image.asset(ImageConstants.backArrow),
