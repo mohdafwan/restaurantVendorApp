@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:restaurant_vendor_app/models/label/label.model.dart';
+
 class RestaurantModel {
   String? address1;
   String? address2;
@@ -12,7 +14,7 @@ class RestaurantModel {
   int? id;
   bool? verified;
   bool status;
-  List<String> labels;
+  List<Label> labels;
 
   RestaurantModel({
     this.address1,
@@ -41,7 +43,7 @@ class RestaurantModel {
     int? id,
     bool? verified,
     bool? status,
-    List<String>? labels,
+    List<Label>? labels,
   }) {
     return RestaurantModel(
       address1: address1 ?? this.address1,
@@ -89,7 +91,9 @@ class RestaurantModel {
       id: map['id'] != null ? map['id'] as int : null,
       verified: map['verify'] != null ? map['verify'] as bool : false,
       status: map['status'] != null ? map['status'] as bool : false,
-      labels: map['labels'] != null ? List<String>.from(map['labels']) : [],
+      labels: map['labels'] != null 
+    ? List<Label>.from(map['labels'].map((item) => Label.fromMap(item))) 
+    : [],
     );
   }
 

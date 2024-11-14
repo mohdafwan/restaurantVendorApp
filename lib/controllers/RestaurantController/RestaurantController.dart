@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:restaurant_vendor_app/models/RestaurantModel/Restaurant.model.dart';
+import 'package:restaurant_vendor_app/models/label/label.model.dart';
 
 class RestaurantController extends GetxController {
   Rx<RestaurantModel> model = RestaurantModel().obs;
@@ -16,7 +17,7 @@ class RestaurantController extends GetxController {
   String? get photoUrl => model.value.photoUrl;
   int? get id => model.value.id;
   bool? get status => model.value.status;
-  List<String> get labels => model.value.labels;
+  List<Label> get labels => model.value.labels;
   
   void setModel(RestaurantModel newModel) {
     model.value = newModel;
@@ -34,7 +35,7 @@ class RestaurantController extends GetxController {
     int? id,
     bool? verified,
     bool? status,
-    List<String>? labels,
+    List<Label>? labels,
   }) {
     RestaurantModel updatedRestaurant = model.value.copyWith(
       address1: address1 ?? model.value.address1,
