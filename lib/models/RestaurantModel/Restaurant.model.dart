@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:restaurant_vendor_app/constants/ColorPalette.dart';
 import 'package:restaurant_vendor_app/models/label/label.model.dart';
 
 class RestaurantModel {
@@ -15,6 +16,13 @@ class RestaurantModel {
   bool? verified;
   bool status;
   List<Label> labels;
+
+  static List<Label> initialLabels = [
+    Label(label: "Delivered", color: generateRandomLabelColor().value),
+    Label(label: "Not Delivered", color: generateRandomLabelColor().value),
+    Label(label: "Pickup", color: generateRandomLabelColor().value),
+    Label(label: "Order", color: generateRandomLabelColor().value),
+  ];
 
   RestaurantModel({
     this.address1,

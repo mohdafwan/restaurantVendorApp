@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -53,7 +54,7 @@ class CurrentOrderController extends GetxController {
       if (_searchController.text.isNotEmpty) {
         homePageOrderList.value = todaysOrders
             .where((model) =>
-                model.orderId.startsWith("#${_searchController.text}"))
+                model.orderId.startsWith(_searchController.text))
             .toList();
       } else {
         homePageOrderList.value = todaysOrders;
@@ -61,16 +62,20 @@ class CurrentOrderController extends GetxController {
     });
 
     socket.listen((data) {
+      if(kDebugMode){
+        print("data received : $data");
+      }
+      OrderModel model = OrderModel.fromMap(data);
       switch (data['type']) {
         case 'new':
-          // allOrders.value.add(OrderModel.fromMap(data));
-          // applyFilter()
+          orderMap[model.orderId] = model;
+          allOrders.add(model);
+          applyFilters();
           break;
 
         case 'updated':
-          // orderMap
-
-          //
+          orderMap[model.orderId] = model;
+          applyFilters();
           break;
       }
     });
@@ -216,7 +221,6 @@ class CurrentOrderController extends GetxController {
         return;
       }
 
-      // List<Map<String, dynamic>> data = response.data;
       List<Map<String, dynamic>> data =
           List<Map<String, dynamic>>.from(response.data);
       allOrders.value = data.map((entry) {
@@ -224,29 +228,6 @@ class CurrentOrderController extends GetxController {
         orderMap[model.orderId] = model;
         return model;
       }).toList();
-
-      // await Future.delayed(const Duration(seconds: 1));
-      // allOrders.value = List<OrderModel>.generate(300, (index) {
-      //   DateTime date = DateTime.now().subtract(Duration(days: index));
-      //   OrderModel model = OrderModel(
-      //     orderId: '#1234$index',
-      //     orderNumber: '#8576$index',
-      //     status: index % 3 == 0
-      //         ? 'Ongoing'
-      //         : index % 3 == 1
-      //             ? 'Order Ready'
-      //             : 'Completed',
-      //     totalAmount: '₹${(index + 1) * 100}',
-      //     orderType: index % 2 == 0 ? 'Food' : 'Drink',
-      //     userId: '#52$index',
-      //     userName: 'User ${index + 1}',
-      //     date: DateFormat('MMM dd, yyyy').format(date),
-      //     time: DateFormat('h:mm a').format(date),
-      //     phoneNumber: '+91 91999919${100 + index}',
-      //   );
-      //   orderMap[model.orderId] = model;
-      //   return model;
-      // });
 
       applyFilters();
     } catch (e) {

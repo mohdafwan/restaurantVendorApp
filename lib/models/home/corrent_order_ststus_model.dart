@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class OrderModel {
   final String orderId;
   final String orderNumber;
@@ -45,7 +47,9 @@ class OrderModel {
       orderType: List<String>.from(entry['tag'] ?? []), // Convert to List<String>
       userId: entry['user'].toString(),
       userName: entry['customer_name'],
-      date: entry['order_date'],
+      date: entry['order_date'] != null
+          ? DateFormat('MMM dd, yyyy').format(DateTime.parse(entry['order_date']))
+          : "",
       time: entry['delivery_data'] ?? '',
       phoneNumber: entry['phone_number'],
     );

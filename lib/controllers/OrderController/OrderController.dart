@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
-import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -14,7 +12,6 @@ class OrderController extends GetxController {
   var model = OrderModel(tags: []).obs;
   final storage = GetStorage(); // settings
   final restaurantController = Get.find<RestaurantController>();
-  var items = <Map<String, dynamic>>[].obs; // settings
   final dio.Dio _dio = dio.Dio();
 
   int? _orderId;
@@ -47,13 +44,6 @@ class OrderController extends GetxController {
     if(_orderId != null){
       findOrderById(id: _orderId!);
     }
-    if (storage.read('items') == null) {
-      items.assignAll(_initializeListWithPredefinedValues());
-      storage.write('items', items);
-    } else {
-      items.assignAll(List<Map<String, dynamic>>.from(storage.read('items'))); // settings
-    }
-    ever(items, (_) => storage.write('items', items));
   }
 
   String? get customerName => model.value.customerName;
@@ -78,26 +68,6 @@ class OrderController extends GetxController {
   set uid(int? value) => model.update((m) => m?.uid = value);
   set mail(String? value) => model.update((m) => m?.mail = value);
   set tags(List<String>? value) => model.update((m) => m?.tags = value);
-
-  List<Map<String, dynamic>> _initializeListWithPredefinedValues() {
-    List<String> labels = ['Delivered', 'Not Delivered', 'Pickup', 'Order'];
-    return labels.map((label) {
-      return {
-        'label': label,
-        'color': _generateRandomColor().value,
-      };
-    }).toList();
-  }
-
-  Color _generateRandomColor() {
-    Random random = Random();
-    return Color.fromRGBO(
-      238 + random.nextInt(17),
-      238 + random.nextInt(17),
-      238 + random.nextInt(17),
-      1.0,
-    );
-  }
 
   void find({int? uid, String? mail, String? phone}) async {
     try {
@@ -176,14 +146,6 @@ class OrderController extends GetxController {
             "Error finding Order in OrderController : ${error.toString()}");
       }
     }
-  }
-
-  void addElement(String label) {
-    final newItem = {
-      'label': label,// text
-      'color': _generateRandomColor().value, // color value Color(int value)
-    };
-    items.add(newItem);
   }
 
   Future<String?> submit() async {

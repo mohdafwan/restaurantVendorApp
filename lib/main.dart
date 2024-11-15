@@ -8,7 +8,6 @@ import 'package:restaurant_vendor_app/constants/color_palette.dart';
 import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
 import 'package:restaurant_vendor_app/routes/routes.dart';
 import 'package:restaurant_vendor_app/views/splashScreen/splash_screen.dart';
-
 import 'controllers/notification/notification_settrings_controller.dart';
 import 'firebase/firebase_api.dart';
 import 'firebase_options.dart';

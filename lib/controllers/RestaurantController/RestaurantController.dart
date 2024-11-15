@@ -1,9 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
 import 'package:restaurant_vendor_app/models/RestaurantModel/Restaurant.model.dart';
 import 'package:restaurant_vendor_app/models/label/label.model.dart';
+import 'package:dio/dio.dart' as dio;
 
 class RestaurantController extends GetxController {
   Rx<RestaurantModel> model = RestaurantModel().obs;
+  final dio.Dio _dio = dio.Dio();
 
   RestaurantModel get current => model.value;
   bool? get verified => model.value.verified;
@@ -52,6 +56,27 @@ class RestaurantController extends GetxController {
       labels: labels ?? List.from(model.value.labels),
     );
     model.value = updatedRestaurant;
+  }
+
+  void updateLabel(List<Label> newList){
+    model.value.labels = newList; // update locally first
+    try {
+      _dio.put(
+        "$host/restaurant/$id/",
+        data: {
+          "labels": newList.map((label) => label.toMap()).toList(),
+        },
+        options: dio.Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+    }
   }
 
   void clearData() {

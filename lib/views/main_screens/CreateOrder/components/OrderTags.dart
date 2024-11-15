@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurant_vendor_app/controllers/OrderController/OrderController.dart';
+import 'package:restaurant_vendor_app/controllers/RestaurantController/RestaurantController.dart';
+import 'package:restaurant_vendor_app/models/label/label.model.dart';
 import 'package:restaurant_vendor_app/widgets/Button.dart';
 
 class OrderTags extends StatefulWidget {
@@ -17,6 +19,7 @@ class _OrderTagsState extends State<OrderTags> {
   bool editing = false;
   late TextEditingController tagNameController;
   final controller = Get.find<OrderController>();
+  final restaurentController = Get.find<RestaurantController>();
   @override
   void initState() {
     tagNameController = TextEditingController();
@@ -68,8 +71,7 @@ class _OrderTagsState extends State<OrderTags> {
                     : null,
               ),
               child: ExpansionTile(
-                // minTileHeight: 32,
-                
+                minTileHeight: 32,
                 title: Text(
                   controller.tags!.isEmpty
                       ? 'Choose Tag'
@@ -91,7 +93,6 @@ class _OrderTagsState extends State<OrderTags> {
                     isExpanded = value;
                   });
                 },
-                // Remove the horizontal lines by setting custom shape properties
                 collapsedShape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4),
                   side: BorderSide.none,
@@ -106,9 +107,9 @@ class _OrderTagsState extends State<OrderTags> {
                   const SizedBox(height: 16),
                   Obx(() {
                     return Column(
-                      children: controller.items.map((elem) {
-                        String label = elem['label'];
-                        Color color = Color(elem['color']);
+                      children: restaurentController.labels.map((value) {
+                        String label = value.label;
+                        Color color = value.color;
                         return Column(
                           children: [
                             item(
@@ -138,7 +139,12 @@ class _OrderTagsState extends State<OrderTags> {
                       width: 176,
                       child: Button(
                         onPressed: () {
-                          controller.addElement(tagNameController.text);
+                          restaurentController.updateLabel([
+                            ...restaurentController.labels,
+                            Label(
+                              label: tagNameController.text,
+                            )
+                          ]);
                           setState(() {
                             tagNameController.clear();
                             editing = false;

@@ -1,13 +1,15 @@
 import 'dart:ui';
 
+import 'package:restaurant_vendor_app/constants/ColorPalette.dart';
+
 class Label {
   String label;
   Color color;
 
   Label({
     required this.label,
-    required int color,
-  }) : color = Color(color);
+    int? color,
+  }) : color = color == null? generateRandomLabelColor(): Color(color);
 
   factory Label.fromMap(Map<String, dynamic> map) {
     return Label(

@@ -15,10 +15,10 @@ import 'package:restaurant_vendor_app/utils/toastMessage.dart';
 
 // http://10.0.2.2:8000 for emulation
 // replace with your machine ip address to test on real device
-// const host = "http://192.168.29.88:8000";
-// const wsHost = "ws://192.168.29.88:8000";
-const host = "http://192.168.29.48:8000";
-const wsHost = "ws://192.168.29.48:8000";
+const host = "http://192.168.29.88:8000";
+const wsHost = "ws://192.168.29.88:8000";
+// const host = "http://192.168.29.48:8000";
+// const wsHost = "ws://192.168.29.48:8000";
 // 192.168.1.5
 //192.168.29.48
 
@@ -192,6 +192,7 @@ class AuthMethods {
         "country": model.country,
         "restaurant_image": model.photoUrl,
         "user": _userController.id,
+        "labels":RestaurantModel.initialLabels.map((label) => label.toMap()).toList()
       };
       final response = await _dio.post(
         routes['restaurant']!,
@@ -305,7 +306,6 @@ class AuthMethods {
 
   Future<ResponseModel> getUserWithPhoneNumber(
       {required String e164phoneNumber}) async {
-    print('get user with phone number: ' + e164phoneNumber);
     String res = "some error occurred";
     UserModel? user;
     try {
