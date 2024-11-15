@@ -15,15 +15,20 @@ import 'package:restaurant_vendor_app/utils/toastMessage.dart';
 
 // http://10.0.2.2:8000 for emulation
 // replace with your machine ip address to test on real device
-const host = "http://192.168.29.88:8000";
-const wsHost = "ws://192.168.29.88:8000";
+// const host = "http://192.168.29.88:8000";
+// const wsHost = "ws://192.168.29.88:8000";
+const host = "http://192.168.29.48:8000";
+const wsHost = "ws://192.168.29.48:8000";
 // 192.168.1.5
+//192.168.29.48
 
 class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final UserController userController =
+  final UserController _userController =
       Get.put(UserController(), permanent: true);
-  final RestaurantController restaurantController = Get.put(RestaurantController(),permanent: true);
+
+  final RestaurantController _restaurantController =
+      Get.put(RestaurantController(), permanent: true);
   final dio.Dio _dio = dio.Dio();
   bool loggedIn = false;
   bool justLoggedIn = false;
@@ -37,10 +42,10 @@ class AuthMethods {
     "get_user": "$host/user_check/",
     "email_otp": "$host/otp/",
     "update_user": "$host/user/",
-    "restaurant":"$host/restaurant/",
-    "get_restaurent":"$host/restuarant_check/",
-    "start_session":"$host/startsession/",
-    "check_session":"$host/sessioncheck/"
+    "restaurant": "$host/restaurant/",
+    "get_restaurent": "$host/restuarant_check/",
+    "start_session": "$host/startsession/",
+    "check_session": "$host/sessioncheck/"
   };
 
   Future<ResponseModel> signInUsingPhoneNumber() async {
@@ -52,11 +57,11 @@ class AuthMethods {
         verificationId: verificationId,
         smsCode: otpController.otp!,
       );
-      if (userController.uid == null) {
+      if (_userController.uid == null) {
         final userCredential = await _auth.signInWithCredential(credential);
         User? user = userCredential.user;
         if (user != null) {
-          userController.updateUserDetails(uid: user.uid);
+          _userController.updateUserDetails(uid: user.uid);
           justLoggedIn = true;
           res = "success";
         }
@@ -162,7 +167,7 @@ class AuthMethods {
 
       if (response.statusCode == 201) {
         loggedIn = true;
-        userController.updateUserDetails(id: response.data['id']);
+        _userController.updateUserDetails(id: response.data['id']);
         res = "success";
       } else {
         res = response.statusMessage ?? res;
@@ -174,7 +179,7 @@ class AuthMethods {
     return ResponseModel(message: res);
   }
 
-  Future<ResponseModel> createRestaurentAccount(RestaurantModel model)async{
+  Future<ResponseModel> createRestaurentAccount(RestaurantModel model) async {
     String res = "some error occurred";
     try {
       final data = {
@@ -186,7 +191,7 @@ class AuthMethods {
         "state": model.state,
         "country": model.country,
         "restaurant_image": model.photoUrl,
-        "user": userController.id,
+        "user": _userController.id,
       };
       final response = await _dio.post(
         routes['restaurant']!,
@@ -195,15 +200,14 @@ class AuthMethods {
 
       if (response.statusCode == 201) {
         loggedIn = true;
-        restaurantController.updateRestaurantDetails(
-          id: response.data['id'],
-          verified: response.data['verify']
-        );
+
+        _restaurantController.updateRestaurantDetails(
+            id: response.data['id'], verified: response.data['verify']);
         res = "success";
       } else {
         res = response.statusMessage ?? res;
       }
-    } catch (error){
+    } catch (error) {
       res = error.toString();
     }
     return ResponseModel(message: res);
@@ -224,8 +228,8 @@ class AuthMethods {
         }
 
         if (response.message == "success") {
-          userController.setUser(response.data);
-          userController.updateUserDetails(uid: user!.uid);
+          _userController.setUser(response.data);
+          _userController.updateUserDetails(uid: user!.uid);
           loggedIn = true;
           res = "success";
         } else {
@@ -244,7 +248,7 @@ class AuthMethods {
   Future<ResponseModel> getRestaurentData() async {
     String res = "some error occurred";
     try {
-      final data = {'user': userController.id};
+      final data = {'user': _userController.id};
       final response = await _dio.post(
         routes["get_restaurent"]!,
         data: data,
@@ -256,7 +260,7 @@ class AuthMethods {
       );
       if (response.statusCode == 200) {
         res = "success";
-        restaurantController.setModel(RestaurantModel.fromMap(response.data));
+        _restaurantController.setModel(RestaurantModel.fromMap(response.data));
       } else if (response.statusCode == 404) {
         res = "data not found";
       } else {
@@ -301,6 +305,7 @@ class AuthMethods {
 
   Future<ResponseModel> getUserWithPhoneNumber(
       {required String e164phoneNumber}) async {
+    print('get user with phone number: ' + e164phoneNumber);
     String res = "some error occurred";
     UserModel? user;
     try {
@@ -344,7 +349,7 @@ class AuthMethods {
       };
 
       final response = await _dio.post(
-        '${routes['update_user']!}${userController.id}/',
+        '${routes['update_user']!}${_userController.id}/',
         data: data,
       );
 
@@ -359,30 +364,30 @@ class AuthMethods {
     return ResponseModel(message: res);
   }
 
-  Future<ResponseModel> startSession()async {
+  Future<ResponseModel> startSession() async {
     String res = "some error occurred";
-    try{
-      String model,platform;
+    try {
+      String model, platform;
       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-      if(Platform.isAndroid){
+      if (Platform.isAndroid) {
         platform = "android";
         final device = await deviceInfo.androidInfo;
         model = device.model;
-      }else if(Platform.isIOS){
+      } else if (Platform.isIOS) {
         platform = "ios";
         final device = await deviceInfo.iosInfo;
         model = device.model;
-      }else{
+      } else {
         return ResponseModel(message: "device not supported");
-      }  
+      }
       final data = {
-        "device":model,
-        "id":userController.id,
-        "platform":platform,
-        "fcm_token":fcmToken,
-        "active":true, // mark true in start
+        "device": model,
+        "id": _userController.id,
+        "platform": platform,
+        "fcm_token": fcmToken,
+        "active": true, // mark true in start
       };
-      final response =await _dio.post(
+      final response = await _dio.post(
         routes["start_session"]!,
         data: data,
         options: dio.Options(
@@ -391,10 +396,10 @@ class AuthMethods {
           },
         ),
       );
-      if(response.statusCode == 200 || response.statusCode == 201){
+      if (response.statusCode == 200 || response.statusCode == 201) {
         res = "success";
       }
-    }catch(error){
+    } catch (error) {
       res = error.toString();
     }
     return ResponseModel(message: res);
@@ -403,10 +408,10 @@ class AuthMethods {
   Future<ResponseModel> checkSession() async {
     String res = "some error occurred";
     bool? active;
-    try{
+    try {
       final data = {
-        "id":userController.id,
-        "fcm_token":fcmToken,
+        "id": _userController.id,
+        "fcm_token": fcmToken,
       };
       final response = await _dio.post(
         routes["check_session"]!,
@@ -417,21 +422,21 @@ class AuthMethods {
           },
         ),
       );
-      if(response.statusCode == 200){
+      if (response.statusCode == 200) {
         active = response.data as bool;
         res = "success";
       }
-    }catch(error){
+    } catch (error) {
       res = error.toString();
     }
-    return ResponseModel(message: res,data: active);
+    return ResponseModel(message: res, data: active);
   }
 
   Future<ResponseModel> signOut() async {
     String res = "some error occurred";
     try {
       _auth.signOut();
-      userController.clearUserData();
+      _userController.clearUserData();
       res = "success";
     } catch (error) {
       res = error.toString();

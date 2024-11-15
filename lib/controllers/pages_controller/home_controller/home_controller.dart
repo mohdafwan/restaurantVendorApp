@@ -2,19 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:restaurant_vendor_app/controllers/RestaurantController/RestaurantController.dart';
 import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
+import 'package:restaurant_vendor_app/firebase/SocketClient/SocketClient.dart';
 import 'package:restaurant_vendor_app/models/home/corrent_order_ststus_model.dart';
-import 'package:web_socket_client/web_socket_client.dart';
+import 'package:dio/dio.dart' as dio;
 
 class CurrentOrderController extends GetxController {
   final box = GetStorage();
+  final socket = SocketClient.instance;
+  final dio.Dio _dio = dio.Dio();
+  final restaurantController = Get.find<RestaurantController>();
   var isLoading = true.obs;
   var isError = false.obs;
   var orderList = <OrderModel>[].obs;
   var allOrders = <OrderModel>[].obs;
   var filteredOrders = <OrderModel>[].obs;
   var searchHistory = <String>[].obs; // Store search history
-  final socket = WebSocket(Uri.parse(wsHost));
   // changes for home page
   var homePageOrderList = <OrderModel>[].obs; // for home page
   var todaysOrders = <OrderModel>[].obs; // for home page
@@ -44,7 +48,6 @@ class CurrentOrderController extends GetxController {
     fetchOrders();
     setDateLabel();
     loadSearchHistory();
-    socket.messages.listen(onChange);
     _searchController = TextEditingController();
     _searchController.addListener(() {
       if (_searchController.text.isNotEmpty) {
@@ -56,16 +59,21 @@ class CurrentOrderController extends GetxController {
         homePageOrderList.value = todaysOrders;
       }
     });
-  }
 
-  void onChange(dynamic data){
-    // implement
-    // on status update
-    // data => map => orderId => update order model
+    socket.listen((data) {
+      switch (data['type']) {
+        case 'new':
+          // allOrders.value.add(OrderModel.fromMap(data));
+          // applyFilter()
+          break;
 
-    // new data 
-    // data => map => list
+        case 'updated':
+          // orderMap
 
+          //
+          break;
+      }
+    });
   }
 
   void toggleStatusFilter(String status, bool isSelected) {
@@ -116,6 +124,18 @@ class CurrentOrderController extends GetxController {
         initialDate: DateTime.now(),
         firstDate: DateTime(2020),
         lastDate: DateTime.now(),
+        builder: (BuildContext context, Widget? child) {
+          return Theme(
+            data: ThemeData.light().copyWith(
+              primaryColor: const Color.fromRGBO(253, 71, 18, 1),
+              colorScheme: const ColorScheme.light(
+                  primary: Color.fromRGBO(253, 71, 18, 1)),
+              buttonTheme:
+                  const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            ),
+            child: child ?? Container(),
+          );
+        },
       );
       if (pickedDate != null) {
         dateLabel.value = "Today: ${_formatDate(pickedDate)}";
@@ -127,6 +147,18 @@ class CurrentOrderController extends GetxController {
         context: context,
         firstDate: DateTime(2020),
         lastDate: DateTime.now(),
+        builder: (BuildContext context, Widget? child) {
+          return Theme(
+            data: ThemeData.light().copyWith(
+              primaryColor: const Color.fromRGBO(253, 71, 18, 1),
+              colorScheme: const ColorScheme.light(
+                  primary: Color.fromRGBO(253, 71, 18, 1)),
+              buttonTheme:
+                  const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            ),
+            child: child ?? Container(),
+          );
+        },
       );
       if (pickedRange != null) {
         dateRange.value = pickedRange;
@@ -140,6 +172,18 @@ class CurrentOrderController extends GetxController {
         initialDate: DateTime.now(),
         firstDate: DateTime(2020),
         lastDate: DateTime.now(),
+        builder: (BuildContext context, Widget? child) {
+          return Theme(
+            data: ThemeData.light().copyWith(
+              primaryColor: const Color.fromRGBO(253, 71, 18, 1),
+              colorScheme: const ColorScheme.light(
+                  primary: Color.fromRGBO(253, 71, 18, 1)),
+              buttonTheme:
+                  const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            ),
+            child: child ?? Container(),
+          );
+        },
       );
       if (pickedDate != null) {
         selectedMonth.value = pickedDate.month;
@@ -154,31 +198,59 @@ class CurrentOrderController extends GetxController {
     try {
       isLoading(true);
       isError(false);
-      await Future.delayed(const Duration(seconds: 1));
-      allOrders.value = List<OrderModel>.generate(300, (index) {
-        DateTime date = DateTime.now().subtract(Duration(days: index));
-        OrderModel model = OrderModel(
-          orderId: '#1234$index',
-          orderNumber: '#8576$index',
-          status: index % 3 == 0
-              ? 'Ongoing'
-              : index % 3 == 1
-                  ? 'Order Ready'
-                  : 'Completed',
-          totalAmount: '₹${(index + 1) * 100}',
-          orderType: index % 2 == 0 ? 'Food' : 'Drink',
-          userId: '#52$index',
-          userName: 'User ${index + 1}',
-          date: DateFormat('MMM dd, yyyy').format(date),
-          time: DateFormat('h:mm a').format(date),
-          phoneNumber: '+91 91999919${100 + index}',
-        );
+
+      final response = await _dio.post(
+        "$host/restaurant/order-history/",
+        data: {
+          "id": restaurantController.id,
+        },
+        options: dio.Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+
+      if (response.statusCode != 200) {
+        isError(true);
+        return;
+      }
+
+      // List<Map<String, dynamic>> data = response.data;
+      List<Map<String, dynamic>> data =
+          List<Map<String, dynamic>>.from(response.data);
+      allOrders.value = data.map((entry) {
+        OrderModel model = OrderModel.fromMap(entry);
         orderMap[model.orderId] = model;
         return model;
-      });
+      }).toList();
+
+      // await Future.delayed(const Duration(seconds: 1));
+      // allOrders.value = List<OrderModel>.generate(300, (index) {
+      //   DateTime date = DateTime.now().subtract(Duration(days: index));
+      //   OrderModel model = OrderModel(
+      //     orderId: '#1234$index',
+      //     orderNumber: '#8576$index',
+      //     status: index % 3 == 0
+      //         ? 'Ongoing'
+      //         : index % 3 == 1
+      //             ? 'Order Ready'
+      //             : 'Completed',
+      //     totalAmount: '₹${(index + 1) * 100}',
+      //     orderType: index % 2 == 0 ? 'Food' : 'Drink',
+      //     userId: '#52$index',
+      //     userName: 'User ${index + 1}',
+      //     date: DateFormat('MMM dd, yyyy').format(date),
+      //     time: DateFormat('h:mm a').format(date),
+      //     phoneNumber: '+91 91999919${100 + index}',
+      //   );
+      //   orderMap[model.orderId] = model;
+      //   return model;
+      // });
 
       applyFilters();
     } catch (e) {
+      print("error :  $e");
       isError(true);
     } finally {
       isLoading(false);
@@ -211,8 +283,11 @@ class CurrentOrderController extends GetxController {
           .retainWhere((order) => selectedStatuses.contains(order.status));
     }
     if (selectedOrderTypes.isNotEmpty) {
-      tempOrders
-          .retainWhere((order) => selectedOrderTypes.contains(order.orderType));
+      tempOrders.retainWhere((order) {
+        return
+            // .retainWhere((order) => selectedOrderTypes.contains(order.orderType));
+            order.orderType.any((type) => selectedOrderTypes.contains(type));
+      });
     }
 
     orderList.assignAll(tempOrders);

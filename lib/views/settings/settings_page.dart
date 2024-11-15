@@ -35,7 +35,7 @@ class SettingsPage extends StatelessWidget {
           width: 24,
           child: InkWell(
             onTap: () {
-              Navigator.pop(context);
+              Get.find<DashboardController>().changeTabIndex(0);
             },
             //splashColor: Colors.grey,
             child: Image.asset(ImageConstants.backArrow),

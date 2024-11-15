@@ -24,9 +24,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop,result){
-        Get.find<DashboardController>().changeTabIndex(0);
-      },
+      // onPopInvokedWithResult: (didPop,result){
+      //   Get.find<DashboardController>().changeTabIndex(0);
+      // },
+         onPopInvoked: (didPop) {
+          Get.find<DashboardController>().changeTabIndex(0);
+         },
       child: Scaffold(
         backgroundColor: ColorPalette.backgroundColor,
         appBar: AppBar(

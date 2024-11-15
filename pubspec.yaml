@@ -39,12 +39,12 @@ dependencies:
   qr_flutter: ^4.1.0
   share_plus: ^10.0.0
   path_provider: ^2.1.4
-  win32: ^5.7.1
+  # win32: ^5.7.1
   get_storage: ^2.1.1
   qr_code_scanner: ^1.0.1
   flutter_switch: ^0.3.2
   device_info_plus: ^10.1.2
-  web_socket_client: ^0.1.5
+  web_socket_channel: ^3.0.1
 
 
 dev_dependencies:

@@ -9,6 +9,8 @@ import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
 import 'package:restaurant_vendor_app/routes/routes.dart';
 import 'package:restaurant_vendor_app/views/splashScreen/splash_screen.dart';
 
+import 'controllers/notification/notification_settrings_controller.dart';
+import 'firebase/firebase_api.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -19,8 +21,8 @@ void main() async {
   await GetStorage.init();
   Get.put(AuthMethods(), permanent: true);
   debugPaintBaselinesEnabled = false;
-  // Get.put(NotificationsSettingsController());
-  // await FirebaseApi().initNotifications();
+  Get.put(NotificationsSettingsController());
+  await FirebaseApi().initNotifications();
   // FirebaseAuth.instance.setLanguageCode('en');
   runApp(const MyApp());
 }

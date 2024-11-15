@@ -112,17 +112,20 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 }
               ),
               const SizedBox(width: 40),
-              GestureDetector(
-                onTap: () {
-                   dashController.changeTabIndex(2);
-                },
-                child: _navItem(
-                  svg: dashController.currentTab == 2
-                      ? 'assets/images/person_selected.svg'
-                      : 'assets/images/person.svg',
-                  label: 'Profile',
-                  isSelected: dashController.currentTab == 2,
-                ),
+              Obx((){
+                  return GestureDetector(
+                    onTap: () {
+                       dashController.changeTabIndex(2);
+                    },
+                    child: _navItem(
+                      svg: dashController.currentTab == 2
+                          ? 'assets/images/person_selected.svg'
+                          : 'assets/images/person.svg',
+                      label: 'Profile',
+                      isSelected: dashController.currentTab == 2,
+                    ),
+                  );
+                }
               ),
             ],
           ),
