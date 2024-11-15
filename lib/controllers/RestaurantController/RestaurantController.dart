@@ -57,9 +57,31 @@ class RestaurantController extends GetxController {
     );
     model.value = updatedRestaurant;
   }
+    void add(Label newLabel){
+    List<Label> newList = [...labels,newLabel];
+    model.value.labels = newList;
+    try {
+      _dio.put(
+        "$host/restaurant/$id/",
+        data: {
+          "labels": newList.map((label) => label.toMap()).toList(),
+        },
+        options: dio.Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+    }
+  }
 
-  void updateLabel(List<Label> newList){
-    model.value.labels = newList; // update locally first
+  void delete(String label){
+    List<Label> newList = labels.where((l)=> l.label != label).toList();
+    model.value.labels = newList;
     try {
       _dio.put(
         "$host/restaurant/$id/",

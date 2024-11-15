@@ -11,6 +11,7 @@ class HelpAndSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dashBoardController = Get.find<DashboardController>();
     return  Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -31,7 +32,9 @@ class HelpAndSettings extends StatelessWidget {
           width: 24,
           child: InkWell(
             onTap: () {
-              Navigator.pop(context);
+              if(dashBoardController.currentTab == 3){
+                dashBoardController.changeTabIndex(2);
+              }
             },
             //splashColor: Colors.grey,
             child: Image.asset(ImageConstants.backArrow,

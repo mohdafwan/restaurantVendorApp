@@ -192,7 +192,7 @@ class AuthMethods {
         "country": model.country,
         "restaurant_image": model.photoUrl,
         "user": _userController.id,
-        "labels":RestaurantModel.initialLabels.map((label) => label.toMap()).toList()
+        "labels":RestaurantModel.initialLabels.map((label) => label.toMap()).toList(),
       };
       final response = await _dio.post(
         routes['restaurant']!,

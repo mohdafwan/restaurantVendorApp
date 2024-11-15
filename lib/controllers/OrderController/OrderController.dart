@@ -162,7 +162,8 @@ class OrderController extends GetxController {
             .toList(), // making it lower-case
         "order_status": "ongoing", // initialize with on going
         "user": uid,
-        "resturant": restaurantController.id
+        "resturant": restaurantController.id,
+        "delivery_data":time
       };
       late dio.Response response;
       if(_orderId == null){

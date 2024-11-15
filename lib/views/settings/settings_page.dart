@@ -15,91 +15,109 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        centerTitle: true,
+    final dashBoardController = Get.find<DashboardController>();
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (value,_){
+        print("inside setting");
+        switch(dashBoardController.currentTab){
+          case 4:
+          dashBoardController.changeTabIndex(3);
+          return;
+          case 3:
+          dashBoardController.changeTabIndex(2);
+          return;
+          case 2:
+          dashBoardController.changeTabIndex(0);
+          return;
+        }
+      },
+      child: Scaffold(
         backgroundColor: Colors.white,
-        elevation: 0,
-        title: Text(
-          'Settings',
-          style: GoogleFonts.inter(
-            fontWeight: FontWeight.w600,
-            fontSize: 20,
-            color: ColorPalette.primaryText,
-          ),
-        ),
-        leading: Container(
-          margin: const EdgeInsets.only(left: 34),
-          height: 24,
-          width: 24,
-          child: InkWell(
-            onTap: () {
-              Get.find<DashboardController>().changeTabIndex(0);
-            },
-            //splashColor: Colors.grey,
-            child: Image.asset(ImageConstants.backArrow),
-          ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-               _buildPremiumCard(),
-               const SizedBox(height: 20),
-               OrderSummaryCard(),
-
-               const SizedBox(height: 20),
-               Padding(
-                 padding: const EdgeInsets.only(top:8.0, right: 20, bottom: 8, left: 20),
-                 child: SettingTile(
-                          title: TextConstants.label,
-                          icon: ImageConstants.label,
-                          onTap: (){
-                            Get.toNamed('/labels');
-                          }
-                        ),
-               ),
-                      Padding(
-                         padding: const EdgeInsets.only(top:8.0, right: 20, bottom: 8, left: 20),
-                        child: SettingTile(
-                          title: TextConstants.help,
-                          icon: ImageConstants.helpSettings,
-                          onTap: () => Get.find<DashboardController>().changeTabIndex(3),
-                        ),
-                      ),
-                      Padding(
-                         padding: const EdgeInsets.only(top:8.0, right: 20, bottom: 8, left: 20),
-                        child: SettingTile(
-                          title: TextConstants.support,
-                          icon: ImageConstants.supportChat,
-                          onTap: () => (){}
-                        ),
-                      ),
-                      Padding(
-                      padding: const EdgeInsets.only(top: 80,),
-                      child: Center(
-                      child: TextButton(
-                      onPressed: () => LogoutDialog.showLogoutDialog(context),
-                      child: Text(
-                      "Log out",
-                     style: GoogleFonts.inter(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: ColorPalette.greyText.withOpacity(0.5)
-                    ),
-                  ),
-              ),
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: Text(
+            'Settings',
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w600,
+              fontSize: 20,
+              color: ColorPalette.primaryText,
             ),
           ),
-            
-            ],
+          leading: Container(
+            margin: const EdgeInsets.only(left: 34),
+            height: 24,
+            width: 24,
+            child: InkWell(
+              onTap: () {
+                Get.find<DashboardController>().changeTabIndex(0);
+              },
+              //splashColor: Colors.grey,
+              child: Image.asset(ImageConstants.backArrow),
+            ),
           ),
         ),
-      )
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                 _buildPremiumCard(),
+                 const SizedBox(height: 20),
+                 OrderSummaryCard(),
+      
+                 const SizedBox(height: 20),
+                 Padding(
+                   padding: const EdgeInsets.only(top:8.0, right: 20, bottom: 8, left: 20),
+                   child: SettingTile(
+                            title: TextConstants.label,
+                            icon: ImageConstants.label,
+                            onTap: (){
+                              Get.toNamed('/labels');
+                            }
+                          ),
+                 ),
+                        Padding(
+                           padding: const EdgeInsets.only(top:8.0, right: 20, bottom: 8, left: 20),
+                          child: SettingTile(
+                            title: TextConstants.help,
+                            icon: ImageConstants.helpSettings,
+                            onTap: () => Get.find<DashboardController>().changeTabIndex(3),
+                          ),
+                        ),
+                        Padding(
+                           padding: const EdgeInsets.only(top:8.0, right: 20, bottom: 8, left: 20),
+                          child: SettingTile(
+                            title: TextConstants.support,
+                            icon: ImageConstants.supportChat,
+                            onTap: () => (){}
+                          ),
+                        ),
+                        Padding(
+                        padding: const EdgeInsets.only(top: 80,),
+                        child: Center(
+                        child: TextButton(
+                        onPressed: () => LogoutDialog.showLogoutDialog(context),
+                        child: Text(
+                        "Log out",
+                       style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: ColorPalette.greyText.withOpacity(0.5)
+                      ),
+                    ),
+                ),
+              ),
+            ),
+              
+              ],
+            ),
+          ),
+        )
+      ),
     ); 
  }
 }

@@ -330,4 +330,29 @@ class CurrentOrderController extends GetxController {
     searchHistory.remove(searchItem);
     box.write('searchHistory', searchHistory);
   }
+
+  Future<String?> updateStatus(int orderId,String status)async{
+    try {
+      final response = await _dio.put(
+        "$host/order/$orderId/",
+          data: {
+            "status":status,
+          },
+          options: dio.Options(
+            headers: {
+              'Content-Type': 'application/json',
+            },
+        ),
+      );
+      if(response.statusCode != 200){
+        return response.statusMessage;
+      }
+    }catch(error){
+      if (kDebugMode) {
+        print("inside update status error : $error");
+      }
+      return error.toString();
+    }
+    return null;
+  }
 }
