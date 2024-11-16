@@ -45,7 +45,8 @@ class AuthMethods {
     "restaurant": "$host/restaurant/",
     "get_restaurent": "$host/restuarant_check/",
     "start_session": "$host/startsession/",
-    "check_session": "$host/sessioncheck/"
+    "check_session": "$host/sessioncheck/",
+    "logout":"$host/logoutsession/"
   };
 
   Future<ResponseModel> signInUsingPhoneNumber() async {
@@ -435,7 +436,21 @@ class AuthMethods {
   Future<ResponseModel> signOut() async {
     String res = "some error occurred";
     try {
-      _auth.signOut();
+      await _auth.signOut();
+      _userController.clearUserData();
+      // send request to backend to end the session
+      await _dio.post(
+        routes['logout']!,
+        data: {
+          "id": _userController.id,
+          "fcm_token": fcmToken,
+        },
+        options: dio.Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
       _userController.clearUserData();
       res = "success";
     } catch (error) {
