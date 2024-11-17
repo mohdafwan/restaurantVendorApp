@@ -18,18 +18,33 @@ class SettingsPage extends StatelessWidget {
     final dashBoardController = Get.find<DashboardController>();
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (value,_){
-        print("inside setting");
-        switch(dashBoardController.currentTab){
-          case 4:
-          dashBoardController.changeTabIndex(3);
-          return;
-          case 3:
-          dashBoardController.changeTabIndex(2);
-          return;
-          case 2:
-          dashBoardController.changeTabIndex(0);
-          return;
+      // onPopInvokedWithResult: (value,_){
+      //   print("inside setting");
+      //   switch(dashBoardController.currentTab){
+      //     case 4:
+      //     dashBoardController.changeTabIndex(3);
+      //     return;
+      //     case 3:
+      //     dashBoardController.changeTabIndex(2);
+      //     return;
+      //     case 2:
+      //     dashBoardController.changeTabIndex(0);
+      //     return;
+      //   }
+      // },
+      onPopInvoked: (didPop) {
+        if(didPop){
+          switch(dashBoardController.currentTab){
+            case 4:
+            dashBoardController.changeTabIndex(3);
+            return;
+            case 3:
+            dashBoardController.changeTabIndex(2);
+            return;
+            case 2:
+            dashBoardController.changeTabIndex(0);
+            return;
+          }
         }
       },
       child: Scaffold(
@@ -97,7 +112,7 @@ class SettingsPage extends StatelessWidget {
                           ),
                         ),
                         Padding(
-                        padding: const EdgeInsets.only(top: 80,),
+                        padding: const EdgeInsets.only(top: 80,bottom: 20),
                         child: Center(
                         child: TextButton(
                         onPressed: () => LogoutDialog.showLogoutDialog(context),

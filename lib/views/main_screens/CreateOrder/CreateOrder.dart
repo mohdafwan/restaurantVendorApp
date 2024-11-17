@@ -11,7 +11,7 @@ import 'package:restaurant_vendor_app/views/main_screens/CreateOrder/components/
 import 'package:restaurant_vendor_app/widgets/Button.dart';
 
 class CreateOrder extends StatefulWidget {
-  final int? orderId;
+  final String? orderId;
   final bool phone;
   final bool mail;
   final bool uid;
@@ -33,13 +33,19 @@ class _CreateOrderState extends State<CreateOrder> {
   late OrderController controller;
   @override
   void initState() {
-    Get.delete<OrderController>();
-    controller = Get.put(OrderController(
-      encryptedString: widget.encryptedString,
-      orderId: widget.orderId,
-    ));
     super.initState();
+    // Initialize the controller only if it hasn't been initialized already.
+    if (!Get.isRegistered<OrderController>()) {
+      controller = Get.put(OrderController(
+        encryptedString: widget.encryptedString,
+        orderId: widget.orderId,
+      ));
+    } else {
+      controller =
+          Get.find<OrderController>(); // Retrieve the existing controller
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,10 +56,9 @@ class _CreateOrderState extends State<CreateOrder> {
         title: Text(
           widget.orderId != null ? "Edit Order" : "Create Order",
           style: GoogleFonts.inter(
-            fontWeight: FontWeight.w700,
-            fontSize: 20,
-            color: const Color.fromRGBO(30, 30, 30, 1)
-          ),
+              fontWeight: FontWeight.w700,
+              fontSize: 20,
+              color: const Color.fromRGBO(30, 30, 30, 1)),
         ),
       ),
       body: Padding(
@@ -65,30 +70,32 @@ class _CreateOrderState extends State<CreateOrder> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if(widget.phone)
-                  const OrderPhoneField(),
-                  if(widget.mail)
-                  const OrderEmailField(),
-                  if(widget.uid)
-                  Obx(() {
-                      return OrderUniqueIdField(preFill: controller.uid?.toString(),);
-                    }
-                  ),
-                  const SizedBox(height: 24,),
-                  Obx((){
-                      return OrderInputField(
-                        onChanged: (text) {
-                          controller.customerName = text;
-                        },
-                        preFill: controller.customerName,
-                        label: 'Customer Name',
-                        hintText: "Enter here",
+                  if (widget.phone) const OrderPhoneField(),
+                  if (widget.mail) const OrderEmailField(),
+                  if (widget.uid)
+                    Obx(() {
+                      return OrderUniqueIdField(
+                        preFill: controller.uid?.toString(),
                       );
-                    }
+                    }),
+                  const SizedBox(
+                    height: 24,
                   ),
-                  const SizedBox(height: 24,),
-                  if(widget.uid)
-                  Obx((){
+                  Obx(() {
+                    return OrderInputField(
+                      onChanged: (text) {
+                        controller.customerName = text;
+                      },
+                      preFill: controller.customerName,
+                      label: 'Customer Name',
+                      hintText: "Enter here",
+                    );
+                  }),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  if (widget.uid)
+                    Obx(() {
                       return OrderInputField(
                         onChanged: (text) {
                           controller.mail = text;
@@ -97,10 +104,9 @@ class _CreateOrderState extends State<CreateOrder> {
                         label: 'Email',
                         hintText: "Enter Email here",
                       );
-                    }
-                  ),
-                  if(!widget.uid)
-                  Obx((){
+                    }),
+                  if (!widget.uid)
+                    Obx(() {
                       return OrderInputField(
                         onChanged: (text) {
                           controller.uid = int.parse(text);
@@ -109,9 +115,10 @@ class _CreateOrderState extends State<CreateOrder> {
                         label: 'Unique Id',
                         hintText: "Enter Id here",
                       );
-                    }
+                    }),
+                  const SizedBox(
+                    height: 24,
                   ),
-                  const SizedBox(height: 24,),
                   OrderInputField(
                     onChanged: (text) {
                       controller.billId = int.parse(text);
@@ -120,7 +127,9 @@ class _CreateOrderState extends State<CreateOrder> {
                     hintText: "Enter Bill Id here",
                     digitOnly: true,
                   ),
-                  const SizedBox(height: 24,),
+                  const SizedBox(
+                    height: 24,
+                  ),
                   OrderInputField(
                     onChanged: (text) {
                       controller.date = text;
@@ -129,7 +138,9 @@ class _CreateOrderState extends State<CreateOrder> {
                     hintText: "Chooose Date",
                     date: true,
                   ),
-                  const SizedBox(height: 24,),
+                  const SizedBox(
+                    height: 24,
+                  ),
                   OrderInputField(
                     onChanged: (text) {
                       controller.time = text;
@@ -138,7 +149,9 @@ class _CreateOrderState extends State<CreateOrder> {
                     hintText: "Chooose Time",
                     time: true,
                   ),
-                  const SizedBox(height: 24,),
+                  const SizedBox(
+                    height: 24,
+                  ),
                   OrderInputField(
                     onChanged: (text) {
                       controller.amount = double.parse(text);
@@ -147,7 +160,9 @@ class _CreateOrderState extends State<CreateOrder> {
                     hintText: "Enter Amount here",
                     digitOnly: true,
                   ),
-                  const SizedBox(height: 24,),
+                  const SizedBox(
+                    height: 24,
+                  ),
                   OrderInputField(
                     onChanged: (text) {
                       controller.note = text;
@@ -156,18 +171,25 @@ class _CreateOrderState extends State<CreateOrder> {
                     hintText: "Enter Note here",
                     allowNull: true,
                   ),
-                  const SizedBox(height: 24,),
+                  const SizedBox(
+                    height: 24,
+                  ),
                   const OrderTags(),
-                  const SizedBox(height: 24,),
-                  Button(onPressed: () async {
-                    final status = await controller.submit();
-                    if(!context.mounted) return; // context safe
-                    if(status == null){
-                      showToastMessage(context, "Order Created Successfully");
-                    }else{
-                      showToastMessage(context, status);
-                    }
-                  }, text: "Save Changes")
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  Button(
+                      onPressed: () async {
+                        final status = await controller.submit();
+                        if (!context.mounted) return; // context safe
+                        if (status == null) {
+                          showToastMessage(
+                              context, "Order Created Successfully");
+                        } else {
+                          showToastMessage(context, status);
+                        }
+                      },
+                      text: "Save Changes")
                 ],
               ),
             ),

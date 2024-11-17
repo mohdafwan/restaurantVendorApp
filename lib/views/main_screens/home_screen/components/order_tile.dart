@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../constants/color_palette.dart';
+import '../../../../controllers/pages_controller/home_controller/home_controller.dart';
 import '../../../../models/home/corrent_order_ststus_model.dart';
+import '../../CreateOrder/CreateOrder.dart';
 import 'popup.dart';
 
 class OrderTile extends StatelessWidget {
@@ -64,63 +67,76 @@ class OrderTile extends StatelessWidget {
                       OngoingPopup(
                         onEdit: () =>
                             PopupController.showEditDialog(context, () {
-                          // Implement edit action
-                          Navigator.pop(context);
+                          print(order.orderId);
+                          Get.to(() => CreateOrder(orderId: order.orderId))!
+                              .then((value) => Navigator.pop(context));
                         }),
                         onDelete: () =>
-                            PopupController.showDeleteDialog(context, () {
-                          // Implement delete action
-                          Navigator.pop(context);
+                            PopupController.showDeleteDialog(context, () async {
+                          await Get.find<CurrentOrderController>()
+                              .deleteOrder(order.orderId)
+                              .then((value) => Navigator.pop(context));
                         }),
                       )
                     else if (order.status == 'Order Ready')
                       OrderReadyPopup(
                         onEdit: () =>
                             PopupController.showEditDialog(context, () {
+                          print(order.orderId);
+
                           // Implement edit action
-                          Navigator.pop(context);
+
+                          Get.to(() => CreateOrder(orderId: order.orderId))!
+                              .then((value) => Navigator.pop(context));
                         }),
                         onOngoing: () =>
                             PopupController.showRevertToOngoingDialog(context,
-                                () {
-                          // Mark as Ongoing action
-                          Navigator.pop(context);
+                                () async {
+                          await Get.find<CurrentOrderController>()
+                              .updateStatus(order.orderId, 'ongoing')
+                              .then((value) => Navigator.pop(context));
                         }),
                         onCompleted: () =>
                             PopupController.showRevertToCompletedDialog(context,
-                                () {
-                          // Mark as Completed action
-                          Navigator.pop(context);
+                                () async {
+                          await Get.find<CurrentOrderController>()
+                              .updateStatus(order.orderId, 'completed')
+                              .then((value) => Navigator.pop(context));
                         }),
                         onDelete: () =>
-                            PopupController.showDeleteDialog(context, () {
-                          // Implement delete action
-                          Navigator.pop(context);
+                            PopupController.showDeleteDialog(context, () async {
+                          await Get.find<CurrentOrderController>()
+                              .deleteOrder(order.orderId)
+                              .then((value) => Navigator.pop(context));
                         }),
                       )
                     else if (order.status == 'Completed')
                       CompletedPopup(
                         onEdit: () =>
                             PopupController.showEditDialog(context, () {
-                          // Implement edit action
-                          Navigator.pop(context);
+                          print(order.orderId);
+                          Get.to(() => CreateOrder(orderId: order.orderId))!
+                              .then((value) => Navigator.pop(context));
                         }),
                         onOngoing: () =>
                             PopupController.showRevertToOngoingDialog(context,
-                                () {
-                          // Mark as Ongoing action
-                          Navigator.pop(context);
+                                () async {
+                          await Get.find<CurrentOrderController>()
+                              .updateStatus(order.orderId, 'ongoing')
+                              .then((value) => Navigator.pop(context));
                         }),
                         onOrderReady: () =>
                             PopupController.showRevertToOrderReadyDialog(
-                                context, () {
-                          // Mark as Order Ready action
-                          Navigator.pop(context);
+                                context, () async {
+                          await Get.find<CurrentOrderController>()
+                              .updateStatus(order.orderId, 'order ready')
+                              .then((value) => Navigator.pop(context));
                         }),
                         onDelete: () =>
-                            PopupController.showDeleteDialog(context, () {
-                          // Implement delete action
-                          Navigator.pop(context);
+                            PopupController.showDeleteDialog(context, () async {
+                          await Get.find<CurrentOrderController>()
+                              .deleteOrder(order.orderId)
+                              .then((value) => Navigator.pop(context));
                         }),
                       ),
                   ],
@@ -203,7 +219,26 @@ class OrderTile extends StatelessWidget {
                           child: CustomButton(
                             text: 'Order Ready',
                             onPressed: () {
-                              // Action for Order Ready
+                              showDialog(
+                                context: context,
+                                builder: (context) => ConfirmOrderDialog(
+                                  onNo: () {
+                                    Navigator.pop(context);
+                                  },
+                                  onYes: () {
+                                    Get.find<CurrentOrderController>()
+                                        .updateStatus(
+                                      order.orderId,
+                                      'order ready',
+                                    )
+                                        .then(
+                                      (value) {
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  },
+                                ),
+                              );
                             },
                             backgroundColor: ColorPalette.primaryColor,
                             textColor: Colors.white,
@@ -306,7 +341,7 @@ class _OrderTypeBadge extends StatelessWidget {
     } else if (displayType == 'Drink') {
       badgeColor = Colors.purple;
     } else {
-      badgeColor = Colors.grey; // Default color for unspecified types
+      badgeColor = Colors.green; // Default color for unspecified types
     }
 
     return Container(

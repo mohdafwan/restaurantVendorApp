@@ -14,16 +14,16 @@ class OrderController extends GetxController {
   final restaurantController = Get.find<RestaurantController>();
   final dio.Dio _dio = dio.Dio();
 
-  int? _orderId;
+  String? _orderId;
 
-  OrderController({String? encryptedString, int? orderId}) {
+  OrderController({String? encryptedString, String? orderId}) {
     if (encryptedString == null) return;
-      _orderId = orderId;
-      final data = jsonDecode(
-          decryptData(encryptedString, 'HKSJVpYHoYPOXhQpLcqEKTqIGYt82rzp'));
-      customerName = data['name'];
-      mail = data['email'];
-      uid = int.parse(data['uid']);
+    _orderId = orderId;
+    final data = jsonDecode(
+        decryptData(encryptedString, 'HKSJVpYHoYPOXhQpLcqEKTqIGYt82rzp'));
+    customerName = data['name'];
+    mail = data['email'];
+    uid = int.parse(data['uid']);
   }
 
   String decryptData(String encryptedString, String apiKey) {
@@ -41,7 +41,7 @@ class OrderController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    if(_orderId != null){
+    if (_orderId != null) {
       findOrderById(id: _orderId!);
     }
   }
@@ -119,14 +119,14 @@ class OrderController extends GetxController {
         return;
       }
     } catch (error) {
-      if (kDebugMode){
+      if (kDebugMode) {
         debugPrint(
             "Error finding User in OrderController : ${error.toString()}");
       }
     }
   }
 
-  void findOrderById({required int id}) async {
+  void findOrderById({required String id}) async {
     try {
       final response = await _dio.get(
         '$host/order/$id/',
@@ -141,7 +141,7 @@ class OrderController extends GetxController {
         uid = response.data['user'];
       }
     } catch (error) {
-      if (kDebugMode){
+      if (kDebugMode) {
         debugPrint(
             "Error finding Order in OrderController : ${error.toString()}");
       }
@@ -163,10 +163,10 @@ class OrderController extends GetxController {
         "order_status": "ongoing", // initialize with on going
         "user": uid,
         "resturant": restaurantController.id,
-        "delivery_data":time
+        "delivery_data": time
       };
       late dio.Response response;
-      if(_orderId == null){
+      if (_orderId == null) {
         response = await _dio.post(
           "$host/order/",
           data: data,
@@ -176,7 +176,7 @@ class OrderController extends GetxController {
             },
           ),
         );
-      }else{
+      } else {
         data['id'] = _orderId;
         response = await _dio.put(
           "$host/order/$_orderId/",
@@ -189,7 +189,7 @@ class OrderController extends GetxController {
         );
       }
       if (response.statusCode != 200 && response.statusCode != 201) {
-        if(response.statusCode == 400) return "Order already Exists";
+        if (response.statusCode == 400) return "Order already Exists";
         return "Failed to ${_orderId == null ? 'Create' : 'Edit'} Order";
       }
     } catch (error) {
@@ -197,4 +197,6 @@ class OrderController extends GetxController {
     }
     return null;
   }
+
+  
 }

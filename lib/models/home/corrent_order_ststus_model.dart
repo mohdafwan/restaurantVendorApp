@@ -37,6 +37,29 @@ class OrderModel {
     return orderStatusMapping[status.toLowerCase()] ?? 'Unknown Status';
   }
 
+  static String formatDate(String? date) {
+    try {
+      return date != null && date.isNotEmpty
+          ? DateFormat('MMM dd, yyyy').format(DateTime.parse(date))
+          : "";
+    } catch (e) {
+      return ""; // Return empty if the date format is invalid
+    }
+  }
+
+  static String formatTime(String? time) {
+    try {
+      if (time != null && time.isNotEmpty) {
+        DateTime dateTime = DateTime.parse(time);
+        return DateFormat('hh:mm a')
+            .format(dateTime); // Format time (e.g., "12:57 PM")
+      }
+      return "";
+    } catch (e) {
+      return "";
+    }
+  }
+
   // Factory method to create an OrderModel instance from a map
   factory OrderModel.fromMap(Map<String, dynamic> entry) {
     return OrderModel(
@@ -44,13 +67,13 @@ class OrderModel {
       orderNumber: entry['bill_id'].toString(),
       status: getStandardizedStatus(entry['order_status'] ?? ''),
       totalAmount: entry['amount'].toString(),
-      orderType: List<String>.from(entry['tag'] ?? []), // Convert to List<String>
+      orderType:
+          List<String>.from(entry['tag'] ?? []), // Convert to List<String>
       userId: entry['user'].toString(),
       userName: entry['customer_name'],
-      date: entry['order_date'] != null
-          ? DateFormat('MMM dd, yyyy').format(DateTime.parse(entry['order_date']))
-          : "",
-      time: entry['delivery_data'] ?? '',
+      date: formatDate(entry['order_date']),
+
+      time: formatTime(entry['delivery_data']),
       phoneNumber: entry['phone_number'],
     );
   }

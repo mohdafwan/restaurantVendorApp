@@ -53,8 +53,7 @@ class CurrentOrderController extends GetxController {
     _searchController.addListener(() {
       if (_searchController.text.isNotEmpty) {
         homePageOrderList.value = todaysOrders
-            .where((model) =>
-                model.orderId.startsWith(_searchController.text))
+            .where((model) => model.orderId.startsWith(_searchController.text))
             .toList();
       } else {
         homePageOrderList.value = todaysOrders;
@@ -62,7 +61,7 @@ class CurrentOrderController extends GetxController {
     });
 
     socket.listen((data) {
-      if(kDebugMode){
+      if (kDebugMode) {
         print("data received : $data");
       }
       OrderModel model = OrderModel.fromMap(data);
@@ -126,6 +125,8 @@ class CurrentOrderController extends GetxController {
     if (selectedTab.value == 0) {
       final pickedDate = await showDatePicker(
         context: context,
+        confirmText: 'Apply',
+        cancelText: 'Cancel',
         initialDate: DateTime.now(),
         firstDate: DateTime(2020),
         lastDate: DateTime.now(),
@@ -150,6 +151,8 @@ class CurrentOrderController extends GetxController {
     } else if (selectedTab.value == 1) {
       final pickedRange = await showDateRangePicker(
         context: context,
+        saveText: 'Set Date',
+        cancelText: 'Cancel',
         firstDate: DateTime(2020),
         lastDate: DateTime.now(),
         builder: (BuildContext context, Widget? child) {
@@ -174,6 +177,8 @@ class CurrentOrderController extends GetxController {
     } else if (selectedTab.value == 2) {
       final pickedDate = await showDatePicker(
         context: context,
+        confirmText: 'Apply',
+        cancelText: 'Cancel',
         initialDate: DateTime.now(),
         firstDate: DateTime(2020),
         lastDate: DateTime.now(),
@@ -220,6 +225,7 @@ class CurrentOrderController extends GetxController {
         isError(true);
         return;
       }
+      print("response : ${response.data}");
 
       List<Map<String, dynamic>> data =
           List<Map<String, dynamic>>.from(response.data);
@@ -331,28 +337,62 @@ class CurrentOrderController extends GetxController {
     box.write('searchHistory', searchHistory);
   }
 
-  Future<String?> updateStatus(int orderId,String status)async{
+  Future<String?> updateStatus(String orderId, String status) async {
     try {
       final response = await _dio.put(
         "$host/order/$orderId/",
-          data: {
-            "status":status,
+        data: {
+          "status": status,
+        },
+        options: dio.Options(
+          headers: {
+            'Content-Type': 'application/json',
           },
-          options: dio.Options(
-            headers: {
-              'Content-Type': 'application/json',
-            },
         ),
       );
-      if(response.statusCode != 200){
+      // if (response.statusCode != 200) {
+      //   return response.statusMessage;
+      // }
+      if (response.statusCode == 200) {
+        // Update the order in the list with the new status
+        OrderModel updatedOrder = OrderModel.fromMap(response.data);
+        int index = orderList.indexWhere((order) => order.orderId == orderId);
+        if (index != -1) {
+          orderList[index] = updatedOrder;
+        }
+        // You can update other relevant lists as needed, like homePageOrderList
+        homePageOrderList.refresh();
+      } else {
         return response.statusMessage;
       }
-    }catch(error){
+    } catch (error) {
       if (kDebugMode) {
         print("inside update status error : $error");
       }
       return error.toString();
     }
     return null;
+  }
+
+  //deleteOrder(order.orderId);
+  Future<void> deleteOrder(String id) async {
+    // Get.snackbar("Delete", "Deleting Order");
+    // show a loading dialog
+    Get.dialog(
+      const Center(
+        child: CircularProgressIndicator(),
+      ),
+      barrierDismissible: false,
+    );
+    try {
+      final response = await _dio.delete(
+        '$host/order/$id/',
+      );
+      if (response.statusCode != 204) {
+        Get.snackbar("Error", "Failed to delete Order");
+      }
+    } catch (error) {
+      Get.snackbar("Error", "Failed to delete Order");
+    }
   }
 }

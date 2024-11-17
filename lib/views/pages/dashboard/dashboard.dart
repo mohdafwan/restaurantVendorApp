@@ -14,6 +14,9 @@ class Dashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!Get.isRegistered<DashboardController>()) {
+      Get.put(DashboardController());
+    }
     return GetBuilder<DashboardController>(builder: (controller) {
       return Scaffold(
         body: IndexedStack(
@@ -26,7 +29,8 @@ class Dashboard extends StatelessWidget {
             EditProfilePage(),
           ],
         ),
-        bottomNavigationBar: const BottomNavBar(), // uncomment order and profile onTap when they are created in navBar
+        bottomNavigationBar:
+            const BottomNavBar(), // uncomment order and profile onTap when they are created in navBar
       );
     });
   }

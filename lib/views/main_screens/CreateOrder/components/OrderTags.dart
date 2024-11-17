@@ -71,7 +71,7 @@ class _OrderTagsState extends State<OrderTags> {
                     : null,
               ),
               child: ExpansionTile(
-                minTileHeight: 32,
+                // minTileHeight: 32,
                 title: Text(
                   controller.tags!.isEmpty
                       ? 'Choose Tag'
