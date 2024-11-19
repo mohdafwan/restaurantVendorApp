@@ -1,9 +1,9 @@
+import 'package:dio/dio.dart' as dio;
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
 import 'package:restaurant_vendor_app/models/RestaurantModel/Restaurant.model.dart';
 import 'package:restaurant_vendor_app/models/label/label.model.dart';
-import 'package:dio/dio.dart' as dio;
 
 class RestaurantController extends GetxController {
   Rx<RestaurantModel> model = RestaurantModel().obs;
@@ -101,6 +101,28 @@ class RestaurantController extends GetxController {
     }
   }
 
+void updateLabel(int index, String? name, int? color){
+
+    model.value.labels[index] = Label(label: name ?? model.value.labels[index].label, color: color?? model.value.labels[index].color.value);
+   
+    try {
+      _dio.put(
+        "$host/restaurant/$id/",
+        data: {
+          "labels": labels.map((label) => label.toMap()).toList(),
+        },
+        options: dio.Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+    }
+  }
   void clearData() {
     model.value = RestaurantModel();
   }

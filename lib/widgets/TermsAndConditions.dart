@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TermsAndConditons extends StatelessWidget {
@@ -31,7 +32,8 @@ class TermsAndConditons extends StatelessWidget {
             ),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
-                // handle terms and conditions tap
+               
+                Get.toNamed("/t&c");
               },
           ),
           const TextSpan(

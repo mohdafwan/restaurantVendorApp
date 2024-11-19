@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurant_vendor_app/constants/color_palette.dart';
 import 'package:restaurant_vendor_app/constants/imageConstants.dart';
+import 'package:restaurant_vendor_app/controllers/RestaurantController/RestaurantController.dart';
+import 'package:restaurant_vendor_app/models/label/label.model.dart';
+import 'package:restaurant_vendor_app/views/Labels/food_label.dart';
 import 'package:restaurant_vendor_app/views/Labels/widgets/add_label.dart';
 import 'package:restaurant_vendor_app/views/Labels/widgets/label_tile.dart';
 
@@ -15,15 +19,14 @@ class Labels extends StatefulWidget {
 class _LabelsState extends State<Labels> {
 
   // List to store labels
-  final List<String> labels = [
-    'Delivered',
-    'Not Delivered',
-    'Pickup',
-    'Order'
-    'Food'
-  ];
+  final List<String> labels = [];
+
+  void labelList(){
+
+  }
 
 final TextEditingController _labelController = TextEditingController();
+final restaurantController = Get.find<RestaurantController>();
 
   // Function to show the Add Label dialog
   void _showAddLabelDialog() {
@@ -40,8 +43,10 @@ final TextEditingController _labelController = TextEditingController();
             },
             onSave: (String labelText) {
               if (labelText.isNotEmpty) {
+                restaurantController.add(Label(label: labelText));
                 setState(() {
-                  labels.add(labelText); // Add the new label
+                  labels.add(labelText);
+                   // Add the new label
                 });
                 _labelController.clear(); // Clear the text field
                 Navigator.pop(context); // Close the bottom sheet
@@ -102,31 +107,69 @@ final TextEditingController _labelController = TextEditingController();
           )
         ],
       ),
-      body: const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 18),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              LabelTile(title: 'Delivered',),
-               SizedBox(height: 5,),
-              LabelTile(title: 'Not Delivered',),
-              SizedBox(height: 5,),
-              LabelTile(title: 'Pickup',),
-               SizedBox(height: 5,),
-              LabelTile(title: 'Order',),
-              SizedBox(height: 5,),
-              LabelTile(title: 'Delivered',),
-              SizedBox(height: 5,),
-              LabelTile(title: 'Not Delivered',),
-               SizedBox(height: 5,),
-              LabelTile(title: 'Pickup',),
-               SizedBox(height: 5,),
-              LabelTile(title: 'Order',),
-            ],
-          ),
-        ),
-      ),
+      //body:
+      // const Padding(
+      //   padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 18),
+      //   child: SingleChildScrollView(
+      //     child: Column(
+      //       children: [
+      //         LabelTile(title: 'Delivered',),
+      //          SizedBox(height: 5,),
+      //         LabelTile(title: 'Not Delivered',),
+      //         SizedBox(height: 5,),
+      //         LabelTile(title: 'Pickup',),
+      //          SizedBox(height: 5,),
+      //         LabelTile(title: 'Order',),
+      //         SizedBox(height: 5,),
+      //         LabelTile(title: 'Delivered',),
+      //         SizedBox(height: 5,),
+      //         LabelTile(title: 'Not Delivered',),
+      //          SizedBox(height: 5,),
+      //         LabelTile(title: 'Pickup',),
+      //          SizedBox(height: 5,),
+      //         LabelTile(title: 'Order',),
+      //       ],
+      //     ),
+      //   ),
+      // ),
+     body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18),
+        child: Obx(() {
+          // Use Obx to listen to the labels list in the controller
+          final labels = restaurantController.labels;
 
+          if (labels.isEmpty) {
+            return const Center(
+              child: Text('No labels available'),
+            );
+          }
+
+          return ListView.builder(
+            itemCount: labels.length,
+            itemBuilder: (context, index) {
+              final label = labels[index];
+              return Column(
+                children: [
+                  LabelTile(
+                    title: label.label,
+                    color: Color(label.color.value),
+                    onTap: () {
+            // Navigate to FoodLabel and pass data
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FoodLabel(labelModel: label),
+              ),
+            );
+          },
+                  ),
+                  const SizedBox(height: 5),
+                ],
+              );
+            },
+          );
+        }),
+      ),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurant_vendor_app/constants/color_palette.dart';
 import 'package:restaurant_vendor_app/constants/imageConstants.dart';
 
+
 class AddLabel extends StatefulWidget {
   final String title;
   final String hintText;
@@ -27,6 +28,10 @@ class AddLabel extends StatefulWidget {
 
 class _AddLabelState extends State<AddLabel> {
   bool isSaveEnabled = false;
+  
+
+  
+
 
   @override
   void initState() {

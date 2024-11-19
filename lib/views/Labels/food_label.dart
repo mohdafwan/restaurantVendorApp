@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurant_vendor_app/constants/color_palette.dart';
 import 'package:restaurant_vendor_app/constants/imageConstants.dart';
+import 'package:restaurant_vendor_app/models/label/label.model.dart';
 import 'package:restaurant_vendor_app/views/Labels/widgets/popup_menu.dart';
 
 class FoodLabel extends StatefulWidget {
-  const FoodLabel({super.key});
+  final Label labelModel;
+  const FoodLabel({super.key, required this.labelModel});
 
   @override
   State<FoodLabel> createState() => _FoodLabelState();
@@ -42,7 +44,7 @@ class _FoodLabelState extends State<FoodLabel> {
       ),
       const SizedBox(width: 5),
             Text(
-              'Food',
+              widget.labelModel.label,
               style: GoogleFonts.inter(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
@@ -73,7 +75,7 @@ class _FoodLabelState extends State<FoodLabel> {
           width: 24,
           child: InkWell(
             onTap: () {
-              showPopupMenu(context, _updateColor);
+              showPopupMenu(context, _updateColor, widget.labelModel.label);
             },
             //splashColor: Colors.grey,
             child: Padding(

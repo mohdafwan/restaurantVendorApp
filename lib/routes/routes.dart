@@ -1,9 +1,7 @@
 import 'package:get/get.dart';
 import 'package:restaurant_vendor_app/views/EditProfileView/EditProfilePage.dart';
 import 'package:restaurant_vendor_app/views/Labels/change_color_edit_label.dart';
-import 'package:restaurant_vendor_app/views/Labels/food_label.dart';
 import 'package:restaurant_vendor_app/views/Labels/labels.dart';
-import 'package:restaurant_vendor_app/views/Labels/new_food_label.dart';
 import 'package:restaurant_vendor_app/views/LoginView/loginPage.dart';
 import 'package:restaurant_vendor_app/views/SignUpView/signUpPage.dart';
 import 'package:restaurant_vendor_app/views/SignUpView/signUpPage2.dart';
@@ -116,19 +114,16 @@ class AppRoutes {
       page: () => const Labels(),
     ),
 
-    GetPage(
-      name: '/foodLabel',
-      page: () => const FoodLabel(),
-    ),
+   
 
     GetPage(
       name: '/changeColorEditLabel',
       page: () => const ChangeColorEditLabel(),
     ),
-    GetPage(
-      name: '/newFoodLabel',
-      page: () => const NewFoodLabel(),
-    ),
+    // GetPage(
+    //   name: '/newFoodLabel',
+    //   page: () => const NewFoodLabel(),
+    // ),
 GetPage(
       name: '/editProfilePage',
       page: () => const EditProfilePage(),

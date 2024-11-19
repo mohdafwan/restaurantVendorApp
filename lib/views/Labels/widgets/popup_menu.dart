@@ -1,8 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurant_vendor_app/constants/color_palette.dart';
+import 'package:restaurant_vendor_app/controllers/RestaurantController/RestaurantController.dart';
 import 'package:restaurant_vendor_app/views/Labels/change_color_edit_label.dart';
 import 'package:restaurant_vendor_app/views/Labels/widgets/color_picker_grid.dart';
 import 'package:restaurant_vendor_app/views/Labels/widgets/delete_dialog.dart';
@@ -31,8 +33,10 @@ const List<Color> colorOptions = [
   Colors.blueGrey
 ];
 
+final restaurantController = Get.find<RestaurantController>();
 // Function to show the popup menu
-void showPopupMenu(BuildContext context, Function(Color) onColorSelected) {
+void showPopupMenu(BuildContext context, Function(Color) onColorSelected, String? labelName) {
+  
   showMenu<String>(
     elevation: 2,
     //shadowColor: Color(0xff101828).withOpacity(0.06),
@@ -88,7 +92,7 @@ void showPopupMenu(BuildContext context, Function(Color) onColorSelected) {
       MaterialPageRoute(builder: (context)=> const ChangeColorEditLabel()));
     }
     else if (value == 'Delete Label') {
-      showDeleteDialog(context);
+      showDeleteDialog(context, labelName);
     }
     // Handle other menu options if needed
   });
@@ -111,7 +115,7 @@ void showColorPickerBottomSheet(BuildContext context, Function(Color) onColorSel
 }
 
 // Function to show the delete confirmation dialog
-void showDeleteDialog(BuildContext context) {
+void showDeleteDialog(BuildContext context, String? labelName) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -119,6 +123,7 @@ void showDeleteDialog(BuildContext context) {
         onConfirm: () {
           // Delete the label (implement your delete logic here)
           print("Label deleted"); // Replace with actual delete logic
+                restaurantController.delete(labelName?? '');
           
           Navigator.of(context).pop();
         },

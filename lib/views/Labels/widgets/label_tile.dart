@@ -4,11 +4,13 @@ import 'package:restaurant_vendor_app/constants/color_palette.dart';
 import 'package:restaurant_vendor_app/constants/imageConstants.dart';
 
 class LabelTile extends StatelessWidget {
+  final Color color;
   final String title;
   final VoidCallback? onTap;
 
   const LabelTile({
     super.key,
+    required this.color,
     required this.title,
     this.onTap,
   });
@@ -19,9 +21,9 @@ class LabelTile extends StatelessWidget {
       onTap: onTap,
       leading: Container(
         padding: const EdgeInsets.all(8),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: ColorPalette.circleicon,
+          color: color,
         ),
         child: Image.asset(ImageConstants.arrowboard, 
         height: 14, width: 19,
