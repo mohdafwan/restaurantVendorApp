@@ -18,19 +18,29 @@ class Dashboard extends StatelessWidget {
       Get.put(DashboardController());
     }
     return GetBuilder<DashboardController>(builder: (controller) {
-      return Scaffold(
-        body: IndexedStack(
-          index: controller.tabIndex.value,
-          children: const [
-            HomePage(),
-            HomeScreen(),
-            SettingsPage(),
-            HelpAndSettings(),
-            EditProfilePage(),
-          ],
+      return WillPopScope(
+        onWillPop: () async {
+          if (controller.tabIndex.value > 0) {
+            controller.tabIndex.value -= controller.tabIndex.value == 2 ? 2:1;
+            controller.update();
+            return false;
+          } else {
+            return true;
+          }
+        },
+        child: Scaffold(
+          body: IndexedStack(
+            index: controller.tabIndex.value,
+            children: const [
+              HomePage(),
+              HomeScreen(),
+              SettingsPage(),
+              HelpAndSettings(),
+              EditProfilePage(),
+            ],
+          ),
+          bottomNavigationBar: const BottomNavBar(),
         ),
-        bottomNavigationBar:
-            const BottomNavBar(), // uncomment order and profile onTap when they are created in navBar
       );
     });
   }

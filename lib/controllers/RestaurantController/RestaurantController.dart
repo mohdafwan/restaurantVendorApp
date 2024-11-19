@@ -57,14 +57,13 @@ class RestaurantController extends GetxController {
     );
     model.value = updatedRestaurant;
   }
-    void add(Label newLabel){
-    List<Label> newList = [...labels,newLabel];
-    model.value.labels = newList;
-    try {
-      _dio.put(
+  Future<void> updateLabels(List<Label> newLabels) async {
+    model.value.labels = newLabels;
+    try{
+      final response = await _dio.put(
         "$host/restaurant/$id/",
         data: {
-          "labels": newList.map((label) => label.toMap()).toList(),
+          "labels": newLabels.map((label) => label.toMap()).toList(),
         },
         options: dio.Options(
           headers: {
@@ -72,34 +71,16 @@ class RestaurantController extends GetxController {
           },
         ),
       );
-    } catch (error) {
+      if(kDebugMode && response.statusCode != 200 ){
+        print("error updating labels : ${response.statusMessage}");
+      }
+    }catch(error){
       if (kDebugMode) {
-        print(error);
+        print("error updating labels");
       }
     }
   }
-
-  void delete(String label){
-    List<Label> newList = labels.where((l)=> l.label != label).toList();
-    model.value.labels = newList;
-    try {
-      _dio.put(
-        "$host/restaurant/$id/",
-        data: {
-          "labels": newList.map((label) => label.toMap()).toList(),
-        },
-        options: dio.Options(
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        ),
-      );
-    } catch (error) {
-      if (kDebugMode) {
-        print(error);
-      }
-    }
-  }
+  
 
   void clearData() {
     model.value = RestaurantModel();

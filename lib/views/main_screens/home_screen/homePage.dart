@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -80,7 +81,9 @@ class _HomePageState extends State<HomePage> {
                       );
                     }catch(error){
                       // just printing for now , till update came from backend team
-                      print(error);
+                      if (kDebugMode) {
+                        print(error);
+                      }
                     }
                   }
                 },

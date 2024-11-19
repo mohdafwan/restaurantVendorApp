@@ -139,9 +139,12 @@ class _OrderTagsState extends State<OrderTags> {
                       width: 176,
                       child: Button(
                         onPressed: () {
-                          restaurentController.add(Label(
+                          restaurentController.updateLabels([
+                            Label(
                               label: tagNameController.text,
-                            ));
+                            ),
+                            ...restaurentController.labels,
+                          ]);
                           setState(() {
                             tagNameController.clear();
                             editing = false;
