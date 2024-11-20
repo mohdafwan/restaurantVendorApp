@@ -16,74 +16,47 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dashBoardController = Get.find<DashboardController>();
-    return PopScope(
-      canPop: false,
-      // onPopInvokedWithResult: (value,_){
-      //   print("inside setting");
-      //   switch(dashBoardController.currentTab){
-      //     case 4:
-      //     dashBoardController.changeTabIndex(3);
-      //     return;
-      //     case 3:
-      //     dashBoardController.changeTabIndex(2);
-      //     return;
-      //     case 2:
-      //     dashBoardController.changeTabIndex(0);
-      //     return;
-      //   }
-      // },
-      onPopInvoked: (didPop) {
-        if(didPop){
-          switch(dashBoardController.currentTab){
-            case 4:
-            dashBoardController.changeTabIndex(3);
-            return;
-            case 3:
-            dashBoardController.changeTabIndex(2);
-            return;
-            case 2:
-            dashBoardController.changeTabIndex(0);
-            return;
-          }
-        }
-      },
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          elevation: 0,
-          title: Text(
-            'Settings',
-            style: GoogleFonts.inter(
-              fontWeight: FontWeight.w600,
-              fontSize: 20,
-              color: ColorPalette.primaryText,
-            ),
-          ),
-          leading: Container(
-            margin: const EdgeInsets.only(left: 34),
-            height: 24,
-            width: 24,
-            child: InkWell(
-              onTap: () {
-                Get.find<DashboardController>().changeTabIndex(0);
-              },
-              //splashColor: Colors.grey,
-              child: Image.asset(ImageConstants.backArrow),
-            ),
+        elevation: 0,
+        title: Text(
+          'Settings',
+          style: GoogleFonts.inter(
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+            color: ColorPalette.primaryText,
           ),
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
+        leading: Container(
+          margin: const EdgeInsets.only(left: 34),
+          height: 24,
+          width: 24,
+          child: InkWell(
+            onTap: () {
+              dashBoardController.changeTabIndex(0);
+            },
+            //splashColor: Colors.grey,
+            child: Image.asset(ImageConstants.backArrow),
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                  _buildPremiumCard(),
                  const SizedBox(height: 20),
-                 OrderSummaryCard(),
-      
+                 Padding(
+                   padding: const EdgeInsets.only(left: 20.0, right: 15.0),
+                   child: OrderSummaryCard(),
+                 ),
+                
                  const SizedBox(height: 20),
                  Padding(
                    padding: const EdgeInsets.only(top:8.0, right: 20, bottom: 8, left: 20),
@@ -111,28 +84,26 @@ class SettingsPage extends StatelessWidget {
                             onTap: () => (){}
                           ),
                         ),
-                        Padding(
-                        padding: const EdgeInsets.only(top: 80,bottom: 20),
-                        child: Center(
+                        //const Spacer(),
+                        Center(
                         child: TextButton(
                         onPressed: () => LogoutDialog.showLogoutDialog(context),
                         child: Text(
                         "Log out",
-                       style: GoogleFonts.inter(
+                                             style: GoogleFonts.inter(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
                         color: ColorPalette.greyText.withOpacity(0.5)
-                      ),
-                    ),
-                ),
-              ),
-            ),
+                                            ),
+                                          ),
+                                      ),
+                                    ),
               
               ],
             ),
           ),
-        )
-      ),
+        ),
+      )
     ); 
  }
 }
@@ -174,7 +145,7 @@ class SettingsPage extends StatelessWidget {
                 ),
               ],
             ),
-            Button(onPressed: () {}, text: 'Upgrade', width: 78,
+            Button(onPressed: () {}, text: 'Upgrade', width: 80,
             height: 30,
             fontSize: 12,),
           ],

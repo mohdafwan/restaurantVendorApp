@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:restaurant_vendor_app/views/EditProfileView/EditProfilePage.dart';
-import 'package:restaurant_vendor_app/views/Labels/change_color_edit_label.dart';
 import 'package:restaurant_vendor_app/views/Labels/labels.dart';
 import 'package:restaurant_vendor_app/views/LoginView/loginPage.dart';
 import 'package:restaurant_vendor_app/views/SignUpView/signUpPage.dart';
@@ -116,10 +115,10 @@ class AppRoutes {
 
    
 
-    GetPage(
-      name: '/changeColorEditLabel',
-      page: () => const ChangeColorEditLabel(),
-    ),
+    // GetPage(
+    //   name: '/changeColorEditLabel',
+    //   page: () => const ChangeColorEditLabel(),
+    // ),
     // GetPage(
     //   name: '/newFoodLabel',
     //   page: () => const NewFoodLabel(),

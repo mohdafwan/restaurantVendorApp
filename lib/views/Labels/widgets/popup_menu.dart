@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurant_vendor_app/constants/color_palette.dart';
 import 'package:restaurant_vendor_app/controllers/RestaurantController/RestaurantController.dart';
+import 'package:restaurant_vendor_app/models/label/label.model.dart';
 import 'package:restaurant_vendor_app/views/Labels/change_color_edit_label.dart';
 import 'package:restaurant_vendor_app/views/Labels/widgets/color_picker_grid.dart';
 import 'package:restaurant_vendor_app/views/Labels/widgets/delete_dialog.dart';
@@ -35,7 +36,9 @@ const List<Color> colorOptions = [
 
 final restaurantController = Get.find<RestaurantController>();
 // Function to show the popup menu
-void showPopupMenu(BuildContext context, Function(Color) onColorSelected, String? labelName) {
+void showPopupMenu(BuildContext context, 
+Function(Color) onColorSelected, 
+Label label, int index) {
   
   showMenu<String>(
     elevation: 2,
@@ -89,12 +92,16 @@ void showPopupMenu(BuildContext context, Function(Color) onColorSelected, String
     }
     else if (value == 'Edit Label') {
       Navigator.push(context,
-      MaterialPageRoute(builder: (context)=> const ChangeColorEditLabel()));
+      MaterialPageRoute(
+      builder: (context)=> ChangeColorEditLabel(
+        label: label,
+      )
+      ),
+      );
     }
     else if (value == 'Delete Label') {
-      showDeleteDialog(context, labelName);
+      showDeleteDialog(context, label.label, index);
     }
-    // Handle other menu options if needed
   });
 }
 
@@ -115,7 +122,7 @@ void showColorPickerBottomSheet(BuildContext context, Function(Color) onColorSel
 }
 
 // Function to show the delete confirmation dialog
-void showDeleteDialog(BuildContext context, String? labelName) {
+void showDeleteDialog(BuildContext context, String? labelName, int index) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -123,7 +130,9 @@ void showDeleteDialog(BuildContext context, String? labelName) {
         onConfirm: () {
           // Delete the label (implement your delete logic here)
           print("Label deleted"); // Replace with actual delete logic
-                restaurantController.delete(labelName?? '');
+          final newList =  restaurantController.labels;
+          newList.removeAt(index);
+          restaurantController.updateLabels(newList);
           
           Navigator.of(context).pop();
         },

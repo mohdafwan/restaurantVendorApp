@@ -7,19 +7,31 @@ import 'package:restaurant_vendor_app/views/Labels/widgets/popup_menu.dart';
 
 class FoodLabel extends StatefulWidget {
   final Label labelModel;
-  const FoodLabel({super.key, required this.labelModel});
+  final int index;
+  const FoodLabel({super.key, required this.labelModel,
+  required this.index});
 
   @override
   State<FoodLabel> createState() => _FoodLabelState();
 }
 
 class _FoodLabelState extends State<FoodLabel> {
-  Color selectedColor = Colors.white;
+  Color selectedColor = label.color.value;
 
   void _updateColor(Color color){
     setState(() {
       selectedColor = color;
     });
+    // Update the label in the controller
+  final updatedLabel = Label(
+    label: widget.labelModel.label,
+    color: selectedColor.value,
+  );
+
+  final labels = List<Label>.from(restaurantController.labels);
+  labels[widget.index] = updatedLabel;
+
+  restaurantController.updateLabels(labels);
   }
   @override
   Widget build(BuildContext context) {
@@ -33,9 +45,9 @@ class _FoodLabelState extends State<FoodLabel> {
           children: [
           Container(
         padding: const EdgeInsets.all(10),
-        decoration: const BoxDecoration(
+        decoration:  BoxDecoration(
           shape: BoxShape.circle,
-          color: ColorPalette.circleicon,
+          color: selectedColor,
         ),
         child: Image.asset(
           ImageConstants.arrowboard, 
@@ -75,7 +87,7 @@ class _FoodLabelState extends State<FoodLabel> {
           width: 24,
           child: InkWell(
             onTap: () {
-              showPopupMenu(context, _updateColor, widget.labelModel.label);
+              showPopupMenu(context, _updateColor, widget.labelModel, widget.index);
             },
             //splashColor: Colors.grey,
             child: Padding(

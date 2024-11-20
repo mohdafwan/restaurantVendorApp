@@ -43,7 +43,9 @@ final restaurantController = Get.find<RestaurantController>();
             },
             onSave: (String labelText) {
               if (labelText.isNotEmpty) {
-                restaurantController.add(Label(label: labelText));
+                restaurantController.updateLabels([
+                  Label(label: labelText, ),
+                  ...restaurantController.labels]);
                 setState(() {
                   labels.add(labelText);
                    // Add the new label
@@ -158,7 +160,7 @@ final restaurantController = Get.find<RestaurantController>();
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => FoodLabel(labelModel: label),
+                builder: (context) => FoodLabel(labelModel: label, index : index),
               ),
             );
           },
