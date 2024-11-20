@@ -58,7 +58,7 @@ class RestaurantController extends GetxController {
     model.value = updatedRestaurant;
   }
   Future<void> updateLabels(List<Label> newLabels) async {
-    model.value.labels = newLabels;
+    updateRestaurantDetails(labels: newLabels);
     try{
       final response = await _dio.put(
         "$host/restaurant/$id/",
@@ -81,8 +81,6 @@ class RestaurantController extends GetxController {
     }
   }
   
-
-
   void clearData() {
     model.value = RestaurantModel();
   }

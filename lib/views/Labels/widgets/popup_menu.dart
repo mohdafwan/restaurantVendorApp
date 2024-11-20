@@ -95,6 +95,7 @@ Label label, int index) {
       MaterialPageRoute(
       builder: (context)=> ChangeColorEditLabel(
         label: label,
+        index: index,
       )
       ),
       );

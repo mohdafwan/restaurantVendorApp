@@ -12,6 +12,7 @@ import 'package:restaurant_vendor_app/controllers/pages_controller/home_controll
 import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
 import 'package:restaurant_vendor_app/views/main_screens/home_screen/components/OperationalDaySheet.dart';
 import 'package:restaurant_vendor_app/views/main_screens/home_screen/components/order_tile.dart';
+import 'package:restaurant_vendor_app/views/main_screens/home_screen/components/total_order_card.dart';
 import 'package:restaurant_vendor_app/widgets/Button.dart';
 import 'package:restaurant_vendor_app/widgets/CustomCircularProgressIndicator.dart';
 import 'package:dio/dio.dart' as dio;
@@ -125,21 +126,29 @@ class _HomePageState extends State<HomePage> {
                       return SliverFillRemaining(
                         child: _noDataMessage(),
                       );
-                    } else {
-                      return Obx((){
-                          return SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 30.0,vertical: 12),
-                                  child: OrderTile(
-                                    order:
-                                        currentOrderController.homePageOrderList[index],
+                  } else {
+                    return Obx(() {
+                      return SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            if (index == 0) {
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20.0, right: 15.0),
+                                child: OrderSummaryCard(),
+                              );
+                            }
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 30.0, vertical: 12),
+                              child: OrderTile(
+                                order:
+                                        currentOrderController.homePageOrderList[index-1],
                                   ),
                                 );
                               },
                               childCount:
-                                  currentOrderController.homePageOrderList.length,
+                                  currentOrderController.homePageOrderList.length + 1,
                             ),
                           );
                         }
@@ -193,7 +202,15 @@ class _HomePageState extends State<HomePage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const SizedBox(
-          height: 54,
+          height: 14,
+        ),
+        if(restaurentController.status!)
+        Padding(
+          padding: const EdgeInsets.only(left: 20.0, right: 15.0),
+          child: OrderSummaryCard(),
+        ),
+        const SizedBox(
+          height: 14,
         ),
         SvgPicture.asset(
           'assets/homeImages/OrderNotPlaced.svg',

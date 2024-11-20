@@ -9,8 +9,9 @@ import '../../models/label/label.model.dart';
 
 class ChangeColorEditLabel extends StatefulWidget {
   final Label label;
+  final int index;
   const ChangeColorEditLabel({super.key,
-  required this.label});
+  required this.label, required this.index});
 
   @override
   State<ChangeColorEditLabel> createState() => _ChangeColorEditLabelState();
@@ -153,33 +154,24 @@ class _ChangeColorEditLabelState extends State<ChangeColorEditLabel> {
                         color: themeColor),
                     ),
                   ),
-                  const SizedBox(width: 30,),
+                  const SizedBox(
+                    width: 30,
+                  ),
                   TextButton(
                     onPressed: () {
-                      String updatedLabelName = textEditingController.text.trim();
-                      //Color updatedColor = selectedColor;
+                      if(textEditingController.text.isEmpty) return;
+                      // Create a new list with the updated label
+                      final updatedLabels =restaurantController.labels;
+                      updatedLabels[widget.index].label = textEditingController.text.trim();
+                      // Update the labels in the controller
+                      restaurantController.updateLabels(updatedLabels);
 
-                      final updatedLabel = Label(
-                        label: updatedLabelName,
-                        color: updatedColor.value,
-                      ); 
-                       // Create a new list with the updated label
-                            final updatedLabels = restaurantController.labels.map((label) {
-                              if (label.label == widget.label.label) {
-                                // Replace the old label with the updated label
-                                return updatedLabel;
-                              }
-                              return label;
-                            }).toList();
-
-                            // Update the labels in the controller
-                            restaurantController.updateLabels(updatedLabels);
-
-                            // Optionally, close the dialog or clear the text field after saving
-                            Navigator.pop(context); // Close the modal/dialog
-                  },
-                    child: Text("Save",
-                    style: GoogleFonts.inter(
+                      // Optionally, close the dialog or clear the text field after saving
+                      Navigator.pop(context); // Close the modal/dialog
+                    },
+                    child: Text(
+                      "Save",
+                      style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
                       color: ColorPalette.saveText,

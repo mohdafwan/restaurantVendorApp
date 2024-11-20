@@ -109,43 +109,16 @@ final restaurantController = Get.find<RestaurantController>();
           )
         ],
       ),
-      //body:
-      // const Padding(
-      //   padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 18),
-      //   child: SingleChildScrollView(
-      //     child: Column(
-      //       children: [
-      //         LabelTile(title: 'Delivered',),
-      //          SizedBox(height: 5,),
-      //         LabelTile(title: 'Not Delivered',),
-      //         SizedBox(height: 5,),
-      //         LabelTile(title: 'Pickup',),
-      //          SizedBox(height: 5,),
-      //         LabelTile(title: 'Order',),
-      //         SizedBox(height: 5,),
-      //         LabelTile(title: 'Delivered',),
-      //         SizedBox(height: 5,),
-      //         LabelTile(title: 'Not Delivered',),
-      //          SizedBox(height: 5,),
-      //         LabelTile(title: 'Pickup',),
-      //          SizedBox(height: 5,),
-      //         LabelTile(title: 'Order',),
-      //       ],
-      //     ),
-      //   ),
-      // ),
      body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18),
         child: Obx(() {
           // Use Obx to listen to the labels list in the controller
           final labels = restaurantController.labels;
-
           if (labels.isEmpty) {
             return const Center(
               child: Text('No labels available'),
             );
           }
-
           return ListView.builder(
             itemCount: labels.length,
             itemBuilder: (context, index) {
@@ -156,14 +129,15 @@ final restaurantController = Get.find<RestaurantController>();
                     title: label.label,
                     color: Color(label.color.value),
                     onTap: () {
-            // Navigate to FoodLabel and pass data
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => FoodLabel(labelModel: label, index : index),
-              ),
-            );
-          },
+                      // Navigate to FoodLabel and pass data
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              FoodLabel(labelModel: label, index: index),
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(height: 5),
                 ],

@@ -16,23 +16,23 @@ class FoodLabel extends StatefulWidget {
 }
 
 class _FoodLabelState extends State<FoodLabel> {
-  Color selectedColor = label.color.value;
+  late Color selectedColor;
+  @override
+  void initState() {
+    selectedColor = widget.labelModel.color;
+    super.initState();
+  }
 
   void _updateColor(Color color){
     setState(() {
       selectedColor = color;
     });
     // Update the label in the controller
-  final updatedLabel = Label(
-    label: widget.labelModel.label,
-    color: selectedColor.value,
-  );
-
-  final labels = List<Label>.from(restaurantController.labels);
-  labels[widget.index] = updatedLabel;
-
-  restaurantController.updateLabels(labels);
+  final labels = restaurantController.labels;
+  labels[widget.index].color = selectedColor; // set color
+  restaurantController.updateLabels(labels); // update the observable values
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
