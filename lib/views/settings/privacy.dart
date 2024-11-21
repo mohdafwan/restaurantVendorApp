@@ -5,14 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
 import 'package:restaurant_vendor_app/widgets/CustomCircularProgressIndicator.dart';
 
-
-// Map<String, String> data = {
-//   "Clause 1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Viverra condimentum eget purus in. Consectetur eget id morbi amet amet, in. Ipsum viverra pretium tellus neque. Ullamcorper suspendisse aenean leo pharetra in sit semper et. Amet quam placerat sem.",
-//   "Clause 2": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Viverra condimentum eget purus in. Consectetur eget id morbi amet amet, in. Ipsum viverra pretium tellus neque. Ullamcorper suspendisse aenean leo pharetra in sit semper et. Amet quam placerat sem.",
-//   "Clause 3": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Viverra condimentum eget purus in. Consectetur eget id morbi amet amet, in. Ipsum viverra pretium tellus neque. Ullamcorper suspendisse aenean leo pharetra in sit semper et. Amet quam placerat sem.",
-//   "Clause 4": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Viverra condimentum eget purus in. Consectetur eget id morbi amet amet, in. Ipsum viverra pretium tellus neque. Ullamcorper suspendisse aenean leo pharetra in sit semper et. Amet quam placerat sem."
-// };
-
 class PrivacyPoliciesView extends StatelessWidget {
   const PrivacyPoliciesView({super.key});
 
@@ -21,7 +13,9 @@ class PrivacyPoliciesView extends StatelessWidget {
     try {
       final response = await _dio.get("$host/policy/");
       if (response.statusCode == 200 && response.data != null) {
-        return response.data;
+        final data = response.data as Map<String, dynamic>;
+        final result = data.map((key, value) => MapEntry(key.toString(), value.toString()));
+        return result;
       }
     } catch (error) {
       if (kDebugMode) {
