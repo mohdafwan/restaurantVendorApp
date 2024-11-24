@@ -67,6 +67,7 @@ class CurrentOrderController extends GetxController {
       OrderModel model = OrderModel.fromMap(data);
       switch (data['type']) {
         case 'new':
+          if(orderMap[model.orderId] != null) break;
           orderMap[model.orderId] = model;
           allOrders.add(model);
           applyFilters();
