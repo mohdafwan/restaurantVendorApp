@@ -102,7 +102,6 @@ class _HomePageState extends State<HomePage> {
         child: Obx((){
             return CustomScrollView(
               slivers: [
-                // Wrap search bar with SliverToBoxAdapter
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -123,10 +122,10 @@ class _HomePageState extends State<HomePage> {
                         child: Center(child: Text('Error loading orders')),
                       );
                     } else if (currentOrderController.todaysOrders.isEmpty) {
-                      return SliverFillRemaining(
+                      return SliverToBoxAdapter(
                         child: _noDataMessage(),
                       );
-                  } else {
+                    } else {
                     return Obx(() {
                       return SliverList(
                         delegate: SliverChildBuilderDelegate(
@@ -154,19 +153,11 @@ class _HomePageState extends State<HomePage> {
                         }
                       );
                     }
-                  }),
+                  })
             
                 // Show offline message if the restaurant is offline
-                if (!restaurentController.status!)
+                  else
                   SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                      child: _noDataMessage(),
-                    ),
-                  ),
-                
-                if(restaurentController.status! && currentOrderController.todaysOrders.isEmpty)
-                SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 30.0),
                       child: _noDataMessage(),
@@ -178,6 +169,8 @@ class _HomePageState extends State<HomePage> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 16),
                         Button(onPressed: () {

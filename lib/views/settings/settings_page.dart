@@ -82,7 +82,9 @@ class SettingsPage extends StatelessWidget {
                 child: SettingTile(
                     title: TextConstants.support,
                     icon: ImageConstants.supportChat,
-                    onTap: () => () {}),
+                    onTap: (){
+                       Get.find<DashboardController>().changeTabIndex(5);
+                    }),
               ),
               const Spacer(flex: 5,),
               Center(

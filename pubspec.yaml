@@ -59,6 +59,7 @@ flutter:
 
   
   assets:
+    - assets/chatImages/
     - assets/onboardingImg/
     - assets/images/
     - assets/phoneNumberAssets/

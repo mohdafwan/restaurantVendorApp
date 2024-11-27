@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurant_vendor_app/constants/color_palette.dart';
 import 'package:restaurant_vendor_app/constants/text_constants.dart';
+import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
 
 class LogoutDialog {
   static void showLogoutDialog(BuildContext context) {
@@ -35,7 +37,7 @@ class LogoutDialog {
                 GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
-                    // Add logout from current device logic here
+                    Get.find<AuthMethods>().signOut();
                   },
                   child: Text(
                     TextConstants.currentDevice,
