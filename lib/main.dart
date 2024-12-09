@@ -11,6 +11,7 @@ import 'package:restaurant_vendor_app/views/splashScreen/splash_screen.dart';
 import 'controllers/notification/notification_settrings_controller.dart';
 import 'firebase/firebase_api.dart';
 import 'firebase_options.dart';
+import 'views/subscription/subscription_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,7 +48,7 @@ class MyApp extends StatelessWidget {
               Theme.of(context).textTheme,
             ),
           ),
-         home: const SplashScreen(),
+         home: const SubscriptionPage(),
          getPages: AppRoutes.routes,
          ),
     );

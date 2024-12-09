@@ -5,10 +5,15 @@ const Color fontColor = Color.fromRGBO(30, 30, 30, 1);
 const Color themeColor = Color.fromRGBO(252, 68, 14, 1);
 const Color grey = Colors.grey;
 
+
 class ColorPalette {
   // Primary and Secondary Colors
   static const Color primaryColor = Color(0xffFE6E39);
   static const Color secondaryColor = Color(0xffF7F9FA);
+  // dark primary colro
+  static const Color darkPrimaryColor = Color(0xff4B0804);
+//card color
+static Color cardColor = const Color(0xffFCFAFA);
 
   // Text Colors
   static const Color textColor = Color(0xff141C24);
