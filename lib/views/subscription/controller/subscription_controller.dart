@@ -6,6 +6,8 @@ class SubscriptionController extends GetxController {
   var isLoading = true.obs;
 
   var subscriptionPlans = <SubscriptionPlan>[].obs;
+   var selectedPlan = Rx<SubscriptionPlan?>(null);
+  var selectedPrice = Rx<PlanPrice?>(null);
   @override
   void onInit() {
     super.onInit();
@@ -23,5 +25,9 @@ class SubscriptionController extends GetxController {
     } finally {
       isLoading(false);
     }
+  }
+   void selectPlan(SubscriptionPlan plan, PlanPrice price) {
+    selectedPlan.value = plan;
+    selectedPrice.value = price;
   }
 }

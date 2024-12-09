@@ -5,13 +5,15 @@ import 'package:restaurant_vendor_app/constants/imageConstants.dart';
 
 class SettingTile extends StatelessWidget {
   final String title;
-  final String icon;
+  final String? icon;
+  final Icon? materialIcon;
   final VoidCallback? onTap;
 
   const SettingTile({
     super.key,
     required this.title,
-    required this.icon,
+     this.icon,
+    this.materialIcon,
     this.onTap,
   });
 
@@ -25,7 +27,7 @@ class SettingTile extends StatelessWidget {
           shape: BoxShape.circle,
           color: ColorPalette.circleicon,
         ),
-        child: Image.asset(icon, height: 24, width: 24,
+        child: materialIcon ?? Image.asset(icon!, height: 24, width: 24,
         fit: BoxFit.cover,),
       ),
       title: Text(

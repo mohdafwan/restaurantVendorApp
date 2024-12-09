@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurant_vendor_app/models/ChatModel/ChatSubContactModel.dart';
 import 'package:restaurant_vendor_app/models/ChatModel/Message.dart';
 import 'package:restaurant_vendor_app/views/Chat&Ticket/ChatPage/components/ChatSubContactTile.dart';
 import 'package:restaurant_vendor_app/widgets/Button.dart';
+
+import '../../tickets/raise_ticket.dart';
 
 List<ChatSubContactTile> dummy = [
   ChatSubContactTile(
@@ -52,7 +55,7 @@ List<ChatSubContactTile> dummy = [
         issue: ChatSubContactModel.PAYOUT_REQUEST,
         status: ChatSubContactModel.OPEN),
   ),
-   ChatSubContactTile(
+  ChatSubContactTile(
     model: ChatSubContactModel(
         id: 12348,
         time: DateTime.now(),
@@ -87,14 +90,15 @@ class _ChatPageState extends State<ChatPage> {
         title: Text(
           "Chats",
           style: GoogleFonts.inter(
-            fontWeight: FontWeight.w600,
-            fontSize: 24,
-            color: const Color.fromRGBO(68, 68, 68, 1)
-          ),
+              fontWeight: FontWeight.w600,
+              fontSize: 24,
+              color: const Color.fromRGBO(68, 68, 68, 1)),
         ),
         actions: [
           Button(
-            onPressed: () {},
+            onPressed: () {
+              Get.to(() => const SubmitIssuePage());
+            },
             text: "Raise Ticket",
             fontWeight: FontWeight.w500,
             fontSize: 12,
@@ -140,14 +144,18 @@ class _ChatPageState extends State<ChatPage> {
                       selected: true,
                       onSelected: (value) {},
                     ),
-                    const SizedBox(width: 10,),
+                    const SizedBox(
+                      width: 10,
+                    ),
                     _tags(
                       context: context,
                       label: 'Open',
                       selected: false,
                       onSelected: (value) {},
                     ),
-                    const SizedBox(width: 10,),
+                    const SizedBox(
+                      width: 10,
+                    ),
                     _tags(
                       context: context,
                       label: 'Closed',
@@ -158,34 +166,28 @@ class _ChatPageState extends State<ChatPage> {
                 ),
               ),
             ),
-
             SliverList(
-              delegate: SliverChildBuilderDelegate((context,index){
+              delegate: SliverChildBuilderDelegate((context, index) {
                 return dummy[index];
-                },
-                childCount: dummy.length
-              ),
+              }, childCount: dummy.length),
             )
-
           ],
         ),
       ),
     );
   }
 
-    Widget _searchBar() {
+  Widget _searchBar() {
     return Container(
       height: 40,
       padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 13),
       decoration: BoxDecoration(
-        color: const Color.fromRGBO(255, 255, 255, 1),
-        borderRadius: BorderRadius.circular(8),
-        border:
-            Border.all(
+          color: const Color.fromRGBO(255, 255, 255, 1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
             width: 1,
             color: const Color.fromRGBO(181, 181, 195, 1),
-          )
-      ),
+          )),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -210,10 +212,9 @@ class _ChatPageState extends State<ChatPage> {
                 border: InputBorder.none,
                 hintText: "Search",
                 hintStyle: GoogleFonts.inter(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 14,
-                  color: const Color.fromRGBO(201, 201, 201, 1)
-                ),
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                    color: const Color.fromRGBO(201, 201, 201, 1)),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 13,
                   vertical: 8,
@@ -231,29 +232,27 @@ class _ChatPageState extends State<ChatPage> {
   Widget _tags(
       {required BuildContext context,
       required String label,
-    required bool selected,
-    required void Function(bool value)? onSelected
-  }) {
+      required bool selected,
+      required void Function(bool value)? onSelected}) {
     return ChoiceChip(
       showCheckmark: false,
       selectedColor: const Color.fromRGBO(255, 244, 237, 1),
-      backgroundColor:const Color.fromRGBO(248, 249, 245, 1),
+      backgroundColor: const Color.fromRGBO(248, 249, 245, 1),
       surfaceTintColor: Colors.transparent,
       label: Text(
         label,
       ),
       labelStyle: GoogleFonts.inter(
-        fontWeight: FontWeight.w600,
-        fontSize: 12,
-        color: selected
-            ? const Color.fromRGBO(254, 110, 57, 1)
-            : const Color.fromRGBO(95, 99, 104, 1)
-      ),
+          fontWeight: FontWeight.w600,
+          fontSize: 12,
+          color: selected
+              ? const Color.fromRGBO(254, 110, 57, 1)
+              : const Color.fromRGBO(95, 99, 104, 1)),
       selected: selected,
       onSelected: onSelected,
       side: BorderSide.none,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
     );
   }
 }

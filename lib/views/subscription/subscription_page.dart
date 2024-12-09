@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '../../constants/color_palette.dart';
@@ -20,7 +21,30 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Subscription Plans")),
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: ColorPalette.backgroundColor,
+        foregroundColor: ColorPalette.backgroundColor,
+        surfaceTintColor: ColorPalette.backgroundColor,
+        title: const Text(
+          "Subscription Plans",
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            color: ColorPalette.textColor,
+          ),
+        ),
+        centerTitle: false,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Get.back();
+          },
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -45,70 +69,110 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: Colors.grey, width: 0.5)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              "Your previous balance of ₹200 will be updated.",
-              style: TextStyle(color: Colors.black54),
+      bottomNavigationBar: Obx(() {
+        final controller = Get.find<SubscriptionController>();
+        return Visibility(
+          visible: controller.selectedPlan.value != null &&
+              controller.selectedPrice.value != null,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade200,
+                  blurRadius: 4,
+                  offset: const Offset(0, -2),
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                RichText(
-                  text: const TextSpan(
-                    text: "₹599:/",
-                    style: TextStyle(color: Colors.black),
-                    children: [
-                      TextSpan(
-                        text: "₹299",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.lineThrough,
+                if (controller.selectedPlan.value != null &&
+                    controller.selectedPrice.value != null)
+                  Text(
+                    "Selected: ${controller.selectedPlan.value!.name}, ₹${controller.selectedPrice.value!.price}",
+                    style: const TextStyle(color: Colors.black54),
+                  ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    if (controller.selectedPrice.value != null)
+                      RichText(
+                        text: TextSpan(
+                          text: "₹${controller.selectedPrice.value!.price}/",
+                          style: const TextStyle(
+                            color: Color(0xff1E1E1E),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          children: [
+                            TextSpan(
+                              text:
+                                  "₹${controller.selectedPrice.value!.oldPrice}",
+                              style: const TextStyle(
+                                color: Colors.black54,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                decoration: TextDecoration.lineThrough,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 44,
-                      width: 120,
-                      child: CustomButton(
-                        onPressed: () {
-                          // Handle continue button
-                        },
-                        backgroundColor: ColorPalette.primaryColor,
-                        textColor: Colors.white,
-                        fontSize: 14,
-                        height: 44,
-                        borderRadius: 10,
-                        text: 'Continue',
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    IconButton(
-                      onPressed: () {
-                        // Handle close action
-                      },
-                      icon: const Icon(Icons.close, color: Colors.red),
+                    Row(
+                      children: [
+                        SizedBox(
+                          height: 44,
+                          width: 120,
+                          child: CustomButton(
+                            onPressed: () {
+                              controller.selectedPlan.value == null ||
+                                      controller.selectedPrice.value == null
+                                  ? null
+                                  : print(
+                                      "OK: ${controller.selectedPlan.value!.name}, ₹${controller.selectedPrice.value!.price}");
+                            },
+                            backgroundColor: ColorPalette.primaryColor,
+                            textColor: Colors.white,
+                            fontSize: 14,
+                            height: 44,
+                            borderRadius: 10,
+                            text: 'Continue',
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton(
+                          onPressed: () {
+                            // Clear the selected values when the icon is pressed
+                            controller.selectedPlan.value = null;
+                            controller.selectedPrice.value = null;
+                          },
+                          splashRadius: 20,
+                          icon: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: ColorPalette.primaryColor.withOpacity(0.1),
+                            ),
+                            padding: const EdgeInsets.all(8),
+                            child: const Icon(
+                              Icons.close,
+                              color: Color(0xff445275),
+                              size: 16,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      }),
     );
   }
 }

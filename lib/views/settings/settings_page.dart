@@ -10,6 +10,9 @@ import 'package:restaurant_vendor_app/views/settings/widgets/logout_dialog.dart'
 import 'package:restaurant_vendor_app/views/settings/widgets/setting_tile.dart';
 import 'package:restaurant_vendor_app/widgets/Button.dart';
 
+import '../deviceManage/manage_device_page.dart';
+import '../subscription/subscription_page.dart';
+
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
@@ -50,11 +53,11 @@ class SettingsPage extends StatelessWidget {
             children: [
               _buildPremiumCard(),
               const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 15.0),
-                child: OrderSummaryCard(),
-              ),
-          
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 20.0, right: 15.0),
+              //   child: OrderSummaryCard(),
+              // ),
+
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.only(
@@ -82,11 +85,26 @@ class SettingsPage extends StatelessWidget {
                 child: SettingTile(
                     title: TextConstants.support,
                     icon: ImageConstants.supportChat,
-                    onTap: (){
-                       Get.find<DashboardController>().changeTabIndex(5);
+                    onTap: () {
+                      Get.find<DashboardController>().changeTabIndex(5);
                     }),
               ),
-              const Spacer(flex: 5,),
+              Padding(
+                padding: const EdgeInsets.only(
+                    top: 8.0, right: 20, bottom: 8, left: 20),
+                child: SettingTile(
+                  title: 'Manage Devices',
+                  materialIcon: const Icon(Icons.devices),
+                  onTap: () {
+                    Get.to(
+                      () => const ManageDevicesPage(),
+                    );
+                  },
+                ),
+              ),
+              const Spacer(
+                flex: 5,
+              ),
               Center(
                 child: TextButton(
                   onPressed: () => LogoutDialog.showLogoutDialog(context),
@@ -99,7 +117,9 @@ class SettingsPage extends StatelessWidget {
                   ),
                 ),
               ),
-              const Spacer(flex: 1,),
+              const Spacer(
+                flex: 1,
+              ),
             ],
           ),
         ));
@@ -144,7 +164,11 @@ Widget _buildPremiumCard() {
             ],
           ),
           Button(
-            onPressed: () {},
+            onPressed: () {
+              Get.to(
+                () => const SubscriptionPage(),
+              );
+            },
             text: 'Upgrade',
             width: 80,
             height: 30,
