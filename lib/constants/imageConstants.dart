@@ -24,7 +24,10 @@ static String threedots = "assets/images/labels/threedots.png";
 static String colorPalette = "assets/images/labels/colorPallete.png";
 static String checkIcon = "assets/images/labels/check.png";
 
- 
+ //raise ticket support
+static String dropArrow = 'asset/images/raise_support_ticket/image.png';
+static String attachFile = 'asset/images/raise_support_ticket/attach_file.png';
+
 
   
 }

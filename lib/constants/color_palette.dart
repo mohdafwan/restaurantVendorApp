@@ -56,4 +56,17 @@ static const Color labelBg = Color(0xffFFFFFF);
 static const Color saveLabelHiglight = Color(0xff303030);
 static const Color allDevice = Color(0xffFC440E);
 static const Color dividerColor = Color(0xffEAECF0);
+
+//ticket & chat
+static const Color buttonColor = Color(0xffFD4712);
+static const Color textfieldColor = Color(0xffF7F8F9);
+static const Color personColor = Color(0xff5F6368);
+static const Color online = Color(0xffBDC1CA);
+static const Color showOnline = Color(0xff49F1A1);
+static const Color divider = Color(0xffF2F4F5);
+static const Color textField = Color(0xffF8F9F5);
+static const Color hintText = Color(0xff72777A);
+static const Color receiverContainer = Color(0xffEAF4FC);
+static const Color userIcon = Color(0xffF3F3F2);
+static const Color receiverIcon = Color(0xffF2F4F7);
 }

@@ -6,8 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurant_vendor_app/constants/color_palette.dart';
 import 'package:restaurant_vendor_app/firebase/AuthMethods/AuthMethods.dart';
-import 'package:restaurant_vendor_app/routes/routes.dart';
-import 'package:restaurant_vendor_app/views/splashScreen/splash_screen.dart';
+import 'package:restaurant_vendor_app/views/ticket_&_chat_support.dart/raise_support_ticket.dart';
 
 import 'controllers/notification/notification_settrings_controller.dart';
 import 'firebase/firebase_api.dart';
@@ -48,8 +47,8 @@ class MyApp extends StatelessWidget {
               Theme.of(context).textTheme,
             ),
           ),
-         home: const SplashScreen(),
-         getPages: AppRoutes.routes,
+         home: RaiseSupportTicket(),
+         //getPages: AppRoutes.routes,
          ),
     );
   }

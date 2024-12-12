@@ -1,8 +1,10 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:restaurant_vendor_app/controllers/dashboard_controller/dashboard_controller.dart';
+
 import '../../controllers/tickets/raise_ticket.dart';
 import '../../utils/imagePicker.dart';
 import '../../widgets/textfield.dart';
@@ -185,8 +187,7 @@ class _SubmitIssuePageState extends State<SubmitIssuePage> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return TicketSubmitPopup(
-                                      ticketId: issueTicketController
-                                          .ticketId); // Pass the ticket ID
+                                      ticketId: issueTicketController.ticketId); // Pass the ticket ID
                                 },
                               );
                             } else {
@@ -211,7 +212,7 @@ class _SubmitIssuePageState extends State<SubmitIssuePage> {
                         },
                         style: TextButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
-                              vertical: 15.0, horizontal: 30.0),
+                          vertical: 15.0, horizontal: 30.0),
                           textStyle: const TextStyle(fontSize: 16),
                           backgroundColor: Colors.black,
                           foregroundColor: Colors.white,
